@@ -78,27 +78,12 @@ impl Axes {
 }
 
 impl Hit for AxesObject {
-    fn hit(&self, r: &Ray, t: Interval) -> Option<HitRecord> {
-        let mut record = None;
-        let mut closest = t.max;
+    fn hit(&self, rec: &mut HitRecord, r: &Ray) {
         for obj in &self.lines {
-            match obj.hit(r, Interval { max: closest, ..t }) {
-                None => (),
-                Some(rec) => {
-                    closest = rec.t;
-                    record = Some(rec);
-                }
-            }
+            obj.hit(rec, r)
         }
         for obj in &self.balls {
-            match obj.hit(r, Interval { max: closest, ..t }) {
-                None => (),
-                Some(rec) => {
-                    closest = rec.t;
-                    record = Some(rec);
-                }
-            }
+            obj.hit(rec, r)
         }
-        record
     }
 }

@@ -6,6 +6,7 @@ use crate::primitives::*;
 use crate::composite_molecules::*;
 use crate::composite_craddle::*;
 use crate::composite_axes::*;
+use crate::EPSILON;
 
 // Warning:
 // To get a working multithreading, and because I was tired of cryptic errors:
@@ -80,35 +81,35 @@ pub enum Object {
 }
 
 impl Hit for Primitive {
-    fn hit(&self, r: &Ray, t: Interval) -> Option<HitRecord> {
+    fn hit(&self, rec: &mut HitRecord, r: &Ray) {
         match self {
-            Primitive::Sphere(s) => s.hit(r, t),
-            Primitive::InfinitePlane(s) => s.hit(r, t),
-            Primitive::Triangle(s) => s.hit(r, t),
-            Primitive::Parallelogram(s) => s.hit(r, t),
-            Primitive::Rhombus(s) => s.hit(r, t),
-            Primitive::EmptyCylinder(s) => s.hit(r, t),
-            Primitive::Disc(s) => s.hit(r, t),
-            Primitive::Cylinder(s) => s.hit(r, t),
+            Primitive::Sphere(s) => s.hit(rec, r),
+            Primitive::InfinitePlane(s) => s.hit(rec, r),
+            Primitive::Triangle(s) => s.hit(rec, r),
+            Primitive::Parallelogram(s) => s.hit(rec, r),
+            Primitive::Rhombus(s) => s.hit(rec, r),
+            Primitive::EmptyCylinder(s) => s.hit(rec, r),
+            Primitive::Disc(s) => s.hit(rec, r),
+            Primitive::Cylinder(s) => s.hit(rec, r),
         }
     }
 }
 
 impl Hit for Composite {
-    fn hit(&self, r: &Ray, t: Interval) -> Option<HitRecord> {
+    fn hit(&self, rec: &mut HitRecord, r: &Ray) {
         match self {
-            Composite::NewtonCraddle(s) => s.hit(r, t),
-            Composite::Molecule(s) => s.hit(r, t),
-            Composite::Axes(s) => s.hit(r, t),
+            Composite::NewtonCraddle(s) => s.hit(rec, r),
+            Composite::Molecule(s) => s.hit(rec, r),
+            Composite::Axes(s) => s.hit(rec, r),
         }
     }
 }
 
 impl Hit for Object {
-    fn hit(&self, r: &Ray, t: Interval) -> Option<HitRecord> {
+    fn hit(&self, rec: &mut HitRecord, r: &Ray) {
         match self {
-            Object::Primitive(o) => o.hit(r, t),
-            Object::Composite(o) => o.hit(r, t),
+            Object::Primitive(o) => o.hit(rec, r),
+            Object::Composite(o) => o.hit(rec, r),
         }
     }
 }
@@ -116,20 +117,15 @@ impl Hit for Object {
 
 #[derive(Copy, Clone, Debug)]
 pub struct HitRecord {
+    pub active: bool,
     pub t: f64,
     pub pos: Vec3,
     pub normal: Vec3,
     pub texture: Texture,
 }
 
-#[derive(Copy, Clone, Debug)]
-pub struct Interval {
-    pub min: f64,
-    pub max: f64,
-}
-
 pub trait Hit {
-    fn hit(&self, r: &Ray, t: Interval) -> Option<HitRecord>;
+    fn hit(&self, rec: &mut HitRecord, r: &Ray);
 }
 
 #[derive(Clone)]
@@ -146,20 +142,11 @@ impl World {
 }
 
 
-impl Hit for World {
-    fn hit(&self, r: &Ray, t: Interval) -> Option<HitRecord> {
-        let mut record = None;
-        let mut closest = t.max;
+impl World {
+    fn hit(&self, rec: &mut HitRecord, r: &Ray) {
         for obj in &self.0 {
-            match obj.hit(r, Interval { max: closest, ..t }) {
-                None => (),
-                Some(rec) => {
-                    closest = rec.t;
-                    record = Some(rec);
-                }
-            }
+            obj.hit(rec, r)
         }
-        record
     }
 }
 
@@ -197,7 +184,7 @@ pub fn scatter(incident: &Ray, record: &HitRecord) -> Option<(RGB, Ray)> {
                     -record.normal
                 }
             };
-            if scattered.dir.dot(&normal) > crate::primitives::EPSILON {
+            if scattered.dir.dot(&normal) > EPSILON {
                 Some((attenuation, scattered))
             } else {
                 None
@@ -230,7 +217,15 @@ pub fn scatter(incident: &Ray, record: &HitRecord) -> Option<(RGB, Ray)> {
 
 
 pub fn color(r: &Ray, w: &World, depth: i32) -> RGB {
-    if let Some(record) = w.hit(r, Interval { min: 0.001, max: 1000. }) {
+    let mut record = HitRecord {
+        active: false,
+        t: 1000.,
+        pos: Vec3::new(0.0, 0.0, 0.0),
+        normal: Vec3::new(0.0, 0.0, 0.0),
+        texture: Texture::Lambertian(RGB::new(0.0, 0.0, 0.0)),
+    };
+    w.hit(&mut record, r);
+    if record.active {
         if depth < 100 {
             if let Some((attenuation, scattered)) = scatter(r, &record) {
                 attenuation * color(&scattered, &w, depth+1)

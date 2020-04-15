@@ -198,7 +198,7 @@ impl Molecule {
         let oxygen = atom_builder(rad1, OXYGEN);
         let hydrogen = atom_builder(rad2, HYDROGEN);
         let link = link_builder(rad3);
-        
+
         let [t, u, v, w, x, y, z] = self.directions();
         // ... And build the molecule skeleton
         let c1 = self.c_ref;
@@ -234,27 +234,12 @@ impl MoleculeObject {
 
 
 impl Hit for MoleculeObject {
-    fn hit(&self, r: &Ray, t: Interval) -> Option<HitRecord> {
-        let mut record = None;
-        let mut closest = t.max;
+    fn hit(&self, rec: &mut HitRecord, r: &Ray) {
         for obj in &self.atoms {
-            match obj.hit(r, Interval { max: closest, ..t }) {
-                None => (),
-                Some(rec) => {
-                    closest = rec.t;
-                    record = Some(rec);
-                }
-            }
+            obj.hit(rec, r)
         }
         for obj in &self.links {
-            match obj.hit(r, Interval { max: closest, ..t }) {
-                None => (),
-                Some(rec) => {
-                    closest = rec.t;
-                    record = Some(rec);
-                }
-            }
+            obj.hit(rec, r)
         }
-        record
     }
 }

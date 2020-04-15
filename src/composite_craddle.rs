@@ -208,36 +208,15 @@ impl NewtonCraddle {
 }
 
 impl Hit for NewtonCraddleObject {
-    fn hit(&self, r: &Ray, t: Interval) -> Option<HitRecord> {
-        let mut record = None;
-        let mut closest = t.max;
+    fn hit(&self, rec: &mut HitRecord, r: &Ray) {
         for obj in &self.stand {
-            match obj.hit(r, Interval { max: closest, ..t }) {
-                None => (),
-                Some(rec) => {
-                    closest = rec.t;
-                    record = Some(rec);
-                }
-            }
+            obj.hit(rec, r)
         }
         for obj in &self.beads {
-            match obj.hit(r, Interval { max: closest, ..t }) {
-                None => (),
-                Some(rec) => {
-                    closest = rec.t;
-                    record = Some(rec);
-                }
-            }
+            obj.hit(rec, r)
         }
         for obj in &self.threads {
-            match obj.hit(r, Interval { max: closest, ..t }) {
-                None => (),
-                Some(rec) => {
-                    closest = rec.t;
-                    record = Some(rec);
-                }
-            }
+            obj.hit(rec, r)
         }
-        record
     }
 }

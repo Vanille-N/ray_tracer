@@ -1,8 +1,7 @@
 use crate::hitable::*;
 use crate::ray::Ray;
 use crate::vec3::Vec3;
-
-pub const EPSILON: f64 = 0.000001;
+use crate::EPSILON;
 
 #[derive(Copy, Clone, Debug)]
 pub struct Sphere {
@@ -18,7 +17,7 @@ impl Sphere {
 }
 
 impl Hit for Sphere {
-    fn hit(&self, r: &Ray, t: Interval) -> Option<HitRecord> {
+    fn hit(&self, rec: &mut HitRecord, r: &Ray) {
         let oc = r.orig - self.center;
         let a = r.dir.dot_self();
         let b = oc.dot(&r.dir);
@@ -26,23 +25,22 @@ impl Hit for Sphere {
         let discriminant = b.powi(2) - a * c;
         if discriminant > EPSILON {
             let temp = (- b - (b.powi(2) - a * c).sqrt()) / a;
-            if t.min < temp && temp < t.max {
-                let t = temp;
-                let pos = r.project(t);
-                let normal = (pos - self.center) / self.radius;
-                let texture = self.texture;
-                return Some(HitRecord { t, pos, normal, texture })
+            if EPSILON < temp && temp < rec.t {
+                rec.active = true;
+                rec.t = temp;
+                rec.pos = r.project(temp);
+                rec.normal = (rec.pos - self.center) / self.radius;
+                rec.texture = self.texture;
             }
             let temp = (- b + (b.powi(2) - a * c).sqrt()) / a;
-            if t.min < temp && temp < t.max {
-                let t = temp;
-                let pos = r.project(t);
-                let normal = (pos - self.center) / self.radius;
-                let texture = self.texture;
-                return Some(HitRecord { t, pos, normal, texture })
+            if EPSILON < temp && temp < rec.t {
+                rec.active = true;
+                rec.t = temp;
+                rec.pos = r.project(temp);
+                rec.normal = (rec.pos - self.center) / self.radius;
+                rec.texture = self.texture;
             }
         }
-        None
     }
 }
 
@@ -61,23 +59,20 @@ impl InfinitePlane {
 }
 
 impl Hit for InfinitePlane {
-    fn hit(&self, r: &Ray, t: Interval) -> Option<HitRecord> {
+    fn hit(&self, rec: &mut HitRecord, r: &Ray) {
         let a = r.orig;
         let b = r.dir;
         let bn = b.dot(&self.normal);
         if bn.abs() < EPSILON {
-            None
+            return;
         } else {
             let temp = - (a - self.orig).dot(&self.normal) / bn;
-            if t.min < temp && temp < t.max {
-                Some(HitRecord {
-                    t: temp,
-                    pos: r.project(temp),
-                    normal: self.normal.unit(),
-                    texture: self.texture,
-                })
-            } else {
-                None
+            if EPSILON < temp && temp < rec.t {
+                rec.active = true;
+                rec.t = temp;
+                rec.pos = r.project(temp);
+                rec.normal = self.normal.unit();
+                rec.texture = self.texture;
             }
         }
     }
@@ -99,21 +94,18 @@ impl Triangle {
 
 
 impl Hit for Triangle {
-    fn hit(&self, r: &Ray, t: Interval) -> Option<HitRecord> {
+    fn hit(&self, rec: &mut HitRecord, r: &Ray) {
         let det = -self.u.cross(&self.v).dot(&r.dir);
         let w = r.orig - self.a;
         let a = -w.cross(&self.v).dot(&r.dir) / det;
         let b = -self.u.cross(&w).dot(&r.dir) / det;
         let temp = self.u.cross(&self.v).dot(&w) / det;
-        if a > 0. && b > 0. && a + b < 1. && t.min < temp && temp < t.max {
-            Some(HitRecord {
-                t: temp,
-                pos: r.project(temp),
-                normal: self.u.cross(&self.v).unit(),
-                texture: self.texture,
-            })
-        } else {
-            None
+        if a > 0. && b > 0. && a + b < 1. && EPSILON < temp && temp < rec.t {
+            rec.active = true;
+            rec.t = temp;
+            rec.pos = r.project(temp);
+            rec.normal = self.u.cross(&self.v).unit();
+            rec.texture = self.texture;
         }
     }
 }
@@ -133,21 +125,18 @@ impl Parallelogram {
 }
 
 impl Hit for Parallelogram {
-    fn hit(&self, r: &Ray, t: Interval) -> Option<HitRecord> {
+    fn hit(&self, rec: &mut HitRecord, r: &Ray) {
         let det = -self.u.cross(&self.v).dot(&r.dir);
         let w = r.orig - self.a;
         let a = -w.cross(&self.v).dot(&r.dir) / det;
         let b = -self.u.cross(&w).dot(&r.dir) / det;
         let temp = self.u.cross(&self.v).dot(&w) / det;
-        if a > 0. && b > 0. && a < 1. && b < 1. && t.min < temp && temp < t.max {
-            Some(HitRecord {
-                t: temp,
-                pos: r.project(temp),
-                normal: self.u.cross(&self.v).unit(),
-                texture: self.texture,
-            })
-        } else {
-            None
+        if a > 0. && b > 0. && a < 1. && b < 1. && EPSILON < temp && temp < rec.t {
+            rec.active = true;
+            rec.t = temp;
+            rec.pos = r.project(temp);
+            rec.normal = self.u.cross(&self.v).unit();
+            rec.texture = self.texture;
         }
     }
 }
@@ -192,8 +181,8 @@ impl Rhombus {
         };//
         let s5 = Parallelogram {
             a: self.a + self.w,
-            u: self.v,
-            v: self.u,
+            u: self.u,
+            v: self.v,
             texture: self.texture,
         };
         let s6 = Parallelogram {
@@ -207,19 +196,10 @@ impl Rhombus {
 }
 
 impl Hit for RhombusObject {
-    fn hit(&self, r: &Ray, t: Interval) -> Option<HitRecord> {
-        let mut record = None;
-        let mut closest = t.max;
+    fn hit(&self, rec: &mut HitRecord, r: &Ray) {
         for obj in &self.0 {
-            match obj.hit(r, Interval { max: closest, ..t }) {
-                None => (),
-                Some(rec) => {
-                    closest = rec.t;
-                    record = Some(rec);
-                }
-            }
+            obj.hit(rec, r);
         }
-        record
     }
 }
 
@@ -240,7 +220,7 @@ impl EmptyCylinder {
 
 
 impl Hit for EmptyCylinder {
-    fn hit(&self, r: &Ray, t: Interval) -> Option<HitRecord> {
+    fn hit(&self, rec: &mut HitRecord, r: &Ray) {
         let ab = self.center2 - self.center1;
         let ao = r.orig - self.center1;
         let aoxab = ao.cross(&ab);
@@ -252,10 +232,10 @@ impl Hit for EmptyCylinder {
 
         let det = b.powi(2) - 4.0 * a * c;
         if det < EPSILON {
-            return None;
+            return;
         }
         let temp = -(b + det.sqrt()) / (2.0 * a);
-        if t.min < temp && temp < t.max {
+        if EPSILON < temp && temp < rec.t {
             let pos = r.project(temp);
             let u = pos - self.center1;
             let udir = ab.unit();
@@ -263,17 +243,12 @@ impl Hit for EmptyCylinder {
             let p = u.dot(&udir);
             if 0.0 < p && p < maxlen {
                 let v = (u - udir * u.dot(&udir)).unit();
-                Some(HitRecord {
-                    t: temp,
-                    pos: pos,
-                    normal: v.unit(),
-                    texture: self.texture,
-                })
-            } else {
-                None
+                rec.active = true;
+                rec.t = temp;
+                rec.pos = pos;
+                rec.normal = v.unit();
+                rec.texture = self.texture;
             }
-        } else {
-            None
         }
     }
 }
@@ -294,29 +269,24 @@ impl Disc {
 }
 
 impl Hit for Disc {
-    fn hit(&self, r: &Ray, t: Interval) -> Option<HitRecord> {
+    fn hit(&self, rec: &mut HitRecord, r: &Ray) {
         let a = r.orig;
         let b = r.dir;
         let bn = b.dot(&self.normal);
         if bn.abs() < EPSILON {
-            None
+            return;
         } else {
             let temp = - (a - self.center).dot(&self.normal) / bn;
-            if t.min < temp && temp < t.max {
+            if EPSILON < temp && temp < rec.t {
                 let pos = r.project(temp);
                 let dist = (pos - self.center).len();
                 if dist < self.radius {
-                    Some(HitRecord {
-                        t: temp,
-                        pos: pos,
-                        normal: self.normal.unit(),
-                        texture: self.texture,
-                    })
-                } else {
-                    None
+                    rec.active = true;
+                    rec.t = temp;
+                    rec.pos = pos;
+                    rec.normal = self.normal.unit();
+                    rec.texture = self.texture;
                 }
-            } else {
-                None
             }
         }
     }
@@ -366,29 +336,9 @@ impl Cylinder {
 }
 
 impl Hit for CylinderObject {
-    fn hit(&self, r: &Ray, t: Interval) -> Option<HitRecord> {
-        let mut record = None;
-        let mut closest = t.max;
-        match self.side.hit(r, Interval { max: closest, ..t }) {
-            None => (),
-            Some(rec) => {
-                closest = rec.t;
-                record = Some(rec);
-            }
-        }
-        match self.cap1.hit(r, Interval { max: closest, ..t }) {
-            None => (),
-            Some(rec) => {
-                closest = rec.t;
-                record = Some(rec);
-            }
-        }
-        match self.cap2.hit(r, Interval { max: closest, ..t }) {
-            None => (),
-            Some(rec) => {
-                record = Some(rec);
-            }
-        }
-        record
+    fn hit(&self, rec: &mut HitRecord, r: &Ray) {
+        self.side.hit(rec, r);
+        self.cap1.hit(rec, r);
+        self.cap2.hit(rec, r);
     }
 }

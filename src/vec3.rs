@@ -1,5 +1,7 @@
 use std::ops;
 
+use crate::EPSILON;
+
 #[derive(Debug, Copy, Clone)]
 pub struct Vec3 {
     pub x: f64,
@@ -49,7 +51,7 @@ impl Vec3 {
         let u = self.unit();
         let dt = u.dot(normal);
         let discriminant = 1.0 - rel_idx.powi(2) * (1.0 - dt.powi(2));
-        if discriminant > crate::primitives::EPSILON {
+        if discriminant > EPSILON {
             Some((u - *normal * dt) * rel_idx - *normal * discriminant.sqrt())
         } else {
             None
