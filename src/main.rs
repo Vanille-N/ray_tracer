@@ -28,7 +28,7 @@ use composite_molecules::*;
 
 fn main() {
     let mut rng = rand::thread_rng();
-    let nj = 200; // width in pixels
+    let nj = 400; // width in pixels
     let ni = 200; // height in pixels
     let ns = 50; // number of samples per pixel
     let mut out1 = File::create(".out1.txt").unwrap();
@@ -57,50 +57,22 @@ fn main() {
         nj as f64 / ni as f64, // aspect ratio
     );
     let mut w = World::new();
-    // let center = Sphere {
-    //     center: Vec3::new(-0.0, 0.0, -1.0),
-    //     radius: 0.5,
-    //     texture: Texture::Lambertian(RGB::new(0.8, 0.3, 0.3)),
-    // };
     let ground = InfinitePlane {
         orig: Vec3::new(0.0, -10.0, 0.0),
         normal: Vec3::new(0.0, 1.0, 0.0),
         texture: Texture::Metal(RGB::new(0.2, 0.2, 0.1), 0.1),
     }.build().wrap();
-    // let left = Sphere {
-    //     center: Vec3::new(1.0, 0.0, -1.0),
-    //     radius: 0.5,
-    //     texture: Texture::Metal(RGB::new(0.8, 0.6, 0.2), 0.0),
-    // };
-    // let right = Sphere {
-    //     center: Vec3::new(-1.0, 0.0, -1.0),
-    //     radius: 0.5,
-    //     texture: Texture::Lambertian(RGB::new(0.3, 0.5, 0.6)),
-    // };
     let sun = Sphere {
         center: Vec3::new(-100.0, 100.0, -50.0),
         radius: 50.0,
         texture: Texture::Light(RGB::new(3.0, 3.0, 3.0)),
     }.build().wrap();
-    // let cube = Rhombus {
-    //     a: Vec3::new(2.0, 0.0, 1.0),
-    //     u: Vec3::new(0.0, 0.0, 1.0),
-    //     v: Vec3::new(0.0, 1.0, 0.0),
-    //     w: Vec3::new(1.0, 0.0, 0.0),
-    //     texture: Texture::Metal(RGB::new(0.6, 0.2, 0.7), 0.1),
-    // }.build();
     let craddle = NewtonCraddle {
         a: Vec3::new(-20.0, -10.0, -20.0),
         u: Vec3::new(20.0 * 0.5, 0.0, 20.0 * 0.87),
         v: Vec3::new(20.0 * 0.87, 0.0, -20.0 * 0.5),
         w: Vec3::new(0.0, 20.0, 0.0),
     }.build().wrap();
-    // let cyl = Cylinder {
-    //     center1: Vec3::new(0.0, 0.5, 0.0),
-    //     center2: Vec3::new(0.0, 0.5, 1.0),
-    //     radius: 0.01,
-    //     texture: Texture::Metal(RGB::new(0.2, 0.2, 0.2), 0.0),
-    // }.build();
     let cyc = Molecule {
         c_ref: Vec3::new(-5.0, 0.7, 17.0),
         up: Vec3::new(0.3, 0.3, 0.0),
@@ -121,16 +93,12 @@ fn main() {
         up: Vec3::new(0.1, 0.3, 0.0),
         fwd: Vec3::new(-1.0, 0.5, 1.0),
     }.ethanol().build().wrap();
-    //w.push(cube);
-    //w.push(center);
     w.push(ground);
     w.push(cyc);
     w.push(water);
     w.push(craddle);
     w.push(methane);
     w.push(ethanol);
-    // //w.push(left);
-    // //w.push(right);
     w.push(sun);
     let mut writers = [
         (3, out4, ni4, cam.clone(), w.clone()),
