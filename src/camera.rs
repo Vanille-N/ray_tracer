@@ -32,8 +32,8 @@ impl Camera {
         let eye = {
             let angle_rad = angle * std::f64::consts::PI / 180.;
             let rise_rad = rise * std::f64::consts::PI / 180.;
-            let x = angle_rad.cos();
-            let z = angle_rad.sin();
+            let x = angle_rad.sin();
+            let z = angle_rad.cos();
             let y = rise_rad.sin();
             Vec3::new(x, y, z).unit() * distance
         };
