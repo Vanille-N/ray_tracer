@@ -177,7 +177,7 @@ impl Rhombus {
             u: self.v,
             v: self.w,
             texture: self.texture,
-        };
+        };//
         let s3 = Parallelogram {
             a: self.a,
             u: self.w,
@@ -189,11 +189,11 @@ impl Rhombus {
             u: self.w,
             v: self.u,
             texture: self.texture,
-        };
+        };//
         let s5 = Parallelogram {
             a: self.a + self.w,
-            u: self.u,
-            v: self.v,
+            u: self.v,
+            v: self.u,
             texture: self.texture,
         };
         let s6 = Parallelogram {
@@ -201,7 +201,7 @@ impl Rhombus {
             u: self.v,
             v: self.w,
             texture: self.texture,
-        };
+        };//
         Primitive::Rhombus(RhombusObject([s1, s2, s3, s4, s5, s6]))
     }
 }
