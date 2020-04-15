@@ -24,20 +24,19 @@ pub struct MoleculeObject {
 }
 
 impl Molecule {
-    fn directions(self) -> [Vec3; 8] {
+    fn directions(self) -> [Vec3; 7] {
         let zz = self.up.unit();
         let yy = self.fwd.cross(&self.up).unit();
         let xx = zz.cross(&yy).unit();
         // Abstract away link directions
         let x = zz;
         let v =  xx * 0.00 + yy * 0.87 + zz * 0.50;
-        let s =  xx * 0.74 - yy * 0.44 + zz * 0.50;
+        let t =  xx * 0.74 - yy * 0.44 + zz * 0.50;
         let u = -xx * 0.74 - yy * 0.44 + zz * 0.50;
-        let t = -x;
-        let z = -v;
-        let w = -s;
-        let y = -u;
-        [s, t, u, v, w, x, y, z]
+        let z =  xx * 0.74 - yy * 0.44 - zz * 0.50;
+        let w = -xx * 0.74 - yy * 0.44 - zz * 0.50;
+        let y =  xx * 0.00 + yy * 0.87 - zz * 0.50;
+        [t, u, v, w, x, y, z]
     }
 
     pub fn cyclohexanol(self) -> MoleculeObject {
@@ -74,31 +73,31 @@ impl Molecule {
             texture: Texture::Lambertian(LGREY),
         };
 
-        let [s, t, u, v, w, x, y, z] = self.directions();
+        let [t, u, v, w, x, y, z] = self.directions();
         // ... And build the molecule skeleton
         let c1 = self.c_ref;
-        let c2 = c1 + w * len1;
-        let c3 = c1 + y * len1;
+        let c2 = c1 - t * len1;
+        let c3 = c1 - u * len1;
         let c4 = c2 + v * len1;
         let c5 = c3 + v * len1;
-        let c6 = c4 + y * len1;
+        let c6 = c4 - u * len1;
         let n = c6 + v * len1;
         let c7 = n + x * len1;
-        let o = c1 + z * len1;
+        let o = c1 - v * len1;
         // Then add all hydrogens
-        let h1 = o + s * len2;
+        let h1 = o + t * len2;
         let h2 = c1 + x * len2;
-        let h3 = c2 + t * len2;
+        let h3 = c2 - x * len2;
         let h4 = c2 + u * len2;
-        let h5 = c3 + t * len2;
-        let h6 = c3 + s * len2;
+        let h5 = c3 - x * len2;
+        let h6 = c3 + t * len2;
         let h7 = c4 + x * len2;
-        let h8 = c4 + w * len2;
+        let h8 = c4 - t * len2;
         let h9 = c5 + x * len2;
-        let h10 = c5 + y * len2;
-        let h11 = c6 + t * len2;
-        let h12 = n + w * len2;
-        let h13 = c7 + s * len2;
+        let h10 = c5 - u * len2;
+        let h11 = c6 - x * len2;
+        let h12 = n - t * len2;
+        let h13 = c7 + t * len2;
         let h14 = c7 + v * len2;
         let h15 = c7 + u * len2;
 
@@ -150,11 +149,11 @@ impl Molecule {
             texture: Texture::Lambertian(LGREY),
         };
 
-        let [s, t, u, v, w, x, y, z] = self.directions();
+        let [t, u, v, w, x, y, z] = self.directions();
         // ... And build the molecule skeleton
         let o = self.c_ref;
         let h1 = o + x * len2;
-        let h2 = o + z * len2;
+        let h2 = o - v * len2;
 
 
         MoleculeObject {
@@ -191,13 +190,13 @@ impl Molecule {
             texture: Texture::Lambertian(LGREY),
         };
 
-        let [s, t, u, v, w, x, y, z] = self.directions();
+        let [t, u, v, w, x, y, z] = self.directions();
         // ... And build the molecule skeleton
         let c = self.c_ref;
         let h1 = c + x * len2;
-        let h2 = c + y * len2;
-        let h3 = c + z * len2;
-        let h4 = c + w * len2;
+        let h2 = c - u * len2;
+        let h3 = c - v * len2;
+        let h4 = c - t * len2;
 
 
         MoleculeObject {
@@ -240,17 +239,17 @@ impl Molecule {
             texture: Texture::Lambertian(LGREY),
         };
 
-        let [s, t, u, v, w, x, y, z] = self.directions();
+        let [t, u, v, w, x, y, z] = self.directions();
         // ... And build the molecule skeleton
         let c1 = self.c_ref;
-        let c2 = c1 + z * len1;
-        let o = c1 + w * len1;
+        let c2 = c1 - v * len1;
+        let o = c1 - t * len1;
         let h1 = c1 + x * len2;
-        let h2 = c1 + y * len2;
+        let h2 = c1 - u * len2;
         let h3 = o + v * len2;
-        let h4 = c2 + s * len2;
+        let h4 = c2 + t * len2;
         let h5 = c2 + u * len2;
-        let h6 = c2 + t * len2;
+        let h6 = c2 - x * len2;
 
 
         MoleculeObject {
