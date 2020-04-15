@@ -1,0 +1,6 @@
+/target
+.*.txt
+*.ppm
+exec
+*.png
+*.jpg

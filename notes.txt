@@ -1,0 +1,27 @@
+*** Here is a sample of the kind of subtle bugs that sneaked into the code ***
+These are non-breaking bugs that merely affect the appearance of objects.
+It goes to show how difficult it is to track such flaws.
+
+## The half-transparent metal
+Due to a sign error in module hitable, in the reflect function, metals used
+to be reflective from one direction, and transparent from the other. When only
+spheres were used, it was invisible because only the outside was accessible
+to rays.
+Even when the ground was made an infinite plane the problem remained hidden
+because by chance only one side of it was visible. The problem was made
+apparent when a cube was constructed, as by chance three of its sides were
+flipped. It took ~1h to identify the problem and add three mere lines of logic
+to handle the two sides, one with a minus side.
+
+
+## The super-reflective lambertian
+This one is even more subtle.
+I had forgotten to normalize the vector normal to a plane. This had no effect
+on spheres and was invisible on the 1x1x1 Newton's Craddle, as the normal
+vector happened to be a unit vector by chance. When The Craddle was expanded to
+5x5x5, its upmost surface became even more reflective than metals.
+Because the real reflected ray is chosen to point at random towards a point
+within a unit sphere of the ideal calculated reflected ray's end, it completely
+messed up reflection when a normal vector with huge length was introduced.
+Indeed, ±1 unit from the end of a 25-meter long vector is barely distinguishable
+from no deviation at all.
