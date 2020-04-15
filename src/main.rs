@@ -1,7 +1,9 @@
+#![allow(dead_code)]
+
 extern crate rand;
 extern crate rayon;
 //extern crate cmd_lib;
-use rand::Rng;
+//use rand::Rng;
 //use cmd_lib::run_cmd;
 use std::fs::File;
 use std::io::prelude::*;
@@ -16,6 +18,7 @@ mod camera;
 mod primitives;
 mod composite_craddle;
 mod composite_molecules;
+mod composite_axes;
 
 use vec3::Vec3;
 use rgb::RGB;
@@ -24,18 +27,19 @@ use camera::Camera;
 use primitives::*;
 use composite_craddle::*;
 use composite_molecules::*;
+use composite_axes::*;
 
 
 fn main() {
-    let mut rng = rand::thread_rng();
+    //let mut rng = rand::thread_rng();
     let nj = 400; // width in pixels
     let ni = 200; // height in pixels
-    let ns = 50; // number of samples per pixel
-    let mut out1 = File::create(".out1.txt").unwrap();
-    let mut out2 = File::create(".out2.txt").unwrap();
-    let mut out3 = File::create(".out3.txt").unwrap();
-    let mut out4 = File::create(".out4.txt").unwrap();
-    let mut file = File::create("img.ppm").unwrap();
+    let ns = 100; // number of samples per pixel
+    let out1 = File::create(".out1.txt").unwrap();
+    let out2 = File::create(".out2.txt").unwrap();
+    let out3 = File::create(".out3.txt").unwrap();
+    let out4 = File::create(".out4.txt").unwrap();
+    let _ = File::create("img.ppm").unwrap();
     let ni1 = 0..ni/4;
     let ni2 = ni/4..ni/2;
     let ni3 = ni/2..3*ni/4;
@@ -48,57 +52,79 @@ fn main() {
     //     nj as f64 / ni as f64, // aspect ratio
     // );
     let cam = Camera::new_relative(
-        Vec3::new(-10.0, 0.0, 0.0), // target
-        17.0, // angle (degrees)
-        45.0, // rise (degrees)
-        55.0, // distance (meters),
+        Vec3::new(0.0, 0.0, 0.0), // target
+        30.0, // angle (degrees)
+        30.0, // rise (degrees)
+        20.0, // distance (meters),
         0.0, // tilt (degrees)
         50.0, // aperture (degrees)
         nj as f64 / ni as f64, // aspect ratio
     );
     let mut w = World::new();
     let ground = InfinitePlane {
-        orig: Vec3::new(0.0, -10.0, 0.0),
+        orig: Vec3::new(0.0, -0.5, 0.0),
         normal: Vec3::new(0.0, 1.0, 0.0),
-        texture: Texture::Metal(RGB::new(0.2, 0.2, 0.1), 0.1),
+        texture: Texture::Metal(RGB::new(0.8, 0.8, 0.0), 0.0),
     }.build().wrap();
+    let axes = Axes(2.0).build().wrap();
     let sun = Sphere {
         center: Vec3::new(-100.0, 100.0, -50.0),
         radius: 50.0,
         texture: Texture::Light(RGB::new(3.0, 3.0, 3.0)),
     }.build().wrap();
-    let craddle = NewtonCraddle {
-        a: Vec3::new(-20.0, -10.0, -20.0),
-        u: Vec3::new(20.0 * 0.5, 0.0, 20.0 * 0.87),
-        v: Vec3::new(20.0 * 0.87, 0.0, -20.0 * 0.5),
-        w: Vec3::new(0.0, 20.0, 0.0),
+    // let craddle = NewtonCraddle {
+    //     a: Vec3::new(-20.0, -10.0, -20.0),
+    //     u: Vec3::new(20.0 * 0.5, 0.0, 20.0 * 0.87),
+    //     v: Vec3::new(20.0 * 0.87, 0.0, -20.0 * 0.5),
+    //     w: Vec3::new(0.0, 20.0, 0.0),
+    // }.build().wrap();
+    // let cyc = Molecule {
+    //     c_ref: Vec3::new(-5.0, 0.7, 17.0),
+    //     up: Vec3::new(0.3, 0.3, 0.0),
+    //     fwd: Vec3::new(-1.0, 0.5, 1.0),
+    // }.cyclohexanol().build().wrap();
+    // let water = Molecule {
+    //     c_ref: Vec3::new(-10.0, 10.0, 30.0),
+    //     up: Vec3::new(0.1, 0.3, 0.0),
+    //     fwd: Vec3::new(-1.0, 0.5, 1.0),
+    // }.water().build().wrap();
+    // let methane = Molecule {
+    //     c_ref: Vec3::new(6.0, -5.0, 0.0),
+    //     up: Vec3::new(0.1, 0.3, 0.0),
+    //     fwd: Vec3::new(-1.0, 0.5, 1.0),
+    // }.methane().build().wrap();
+    // let ethanol = Molecule {
+    //     c_ref: Vec3::new(-10.0, 1.0, -43.0),
+    //     up: Vec3::new(0.1, 0.3, 0.0),
+    //     fwd: Vec3::new(-1.0, 0.5, 1.0),
+    // }.ethanol().build().wrap();
+    let obj1 = Rhombus {
+        a: Vec3::new(0.0, -1.0, 0.0),
+        u: Vec3::new(0.0, 0.0, 1.0),
+        v:  Vec3::new(2.0, 0.0, 0.5),
+        w:  Vec3::new(0.0, 1.0, 0.0),
+        texture: Texture::Dielectric(RGB::new(0.9, 0.9, 0.9), 1.5),
     }.build().wrap();
-    let cyc = Molecule {
-        c_ref: Vec3::new(-5.0, 0.7, 17.0),
-        up: Vec3::new(0.3, 0.3, 0.0),
-        fwd: Vec3::new(-1.0, 0.5, 1.0),
-    }.cyclohexanol().build().wrap();
-    let water = Molecule {
-        c_ref: Vec3::new(-10.0, 10.0, 30.0),
-        up: Vec3::new(0.1, 0.3, 0.0),
-        fwd: Vec3::new(-1.0, 0.5, 1.0),
-    }.water().build().wrap();
-    let methane = Molecule {
-        c_ref: Vec3::new(6.0, -5.0, 0.0),
-        up: Vec3::new(0.1, 0.3, 0.0),
-        fwd: Vec3::new(-1.0, 0.5, 1.0),
-    }.methane().build().wrap();
-    let ethanol = Molecule {
-        c_ref: Vec3::new(-10.0, 1.0, -43.0),
-        up: Vec3::new(0.1, 0.3, 0.0),
-        fwd: Vec3::new(-1.0, 0.5, 1.0),
-    }.ethanol().build().wrap();
+    let ball2 = Sphere {
+        center: Vec3::new(1.0, 0.0, -5.0),
+        radius: 0.5,
+        texture: Texture::Metal(RGB::new(0.8, 0.6, 0.2), 0.0),
+    }.build().wrap();
+    let ball3 = Sphere {
+        center: Vec3::new(-1.0, 0.0, 0.0),
+        radius: 0.5,
+        texture: Texture::Lambertian(RGB::new(0.9, 0.9, 0.1)),
+    }.build().wrap();
     w.push(ground);
-    w.push(cyc);
-    w.push(water);
-    w.push(craddle);
-    w.push(methane);
-    w.push(ethanol);
+    w.push(obj1);
+    w.push(ball2);
+    w.push(ball3);
+    w.push(axes);
+    // w.push(cyc);
+    // w.push(water);
+    // w.push(craddle);
+    // w.push(methane);
+    // w.push(ethanol);
     w.push(sun);
     let mut writers = [
         (3, out4, ni4, cam.clone(), w.clone()),

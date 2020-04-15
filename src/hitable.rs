@@ -5,6 +5,7 @@ use crate::rgb::RGB;
 use crate::primitives::*;
 use crate::composite_molecules::*;
 use crate::composite_craddle::*;
+use crate::composite_axes::*;
 
 // Warning:
 // To get a working multithreading, and because I was tired of cryptic errors:
@@ -63,6 +64,7 @@ impl Primitive {
 pub enum Composite {
     NewtonCraddle(NewtonCraddleObject),
     Molecule(MoleculeObject),
+    Axes(AxesObject),
 }
 
 impl Composite {
@@ -97,6 +99,7 @@ impl Hit for Composite {
         match self {
             Composite::NewtonCraddle(s) => s.hit(r, t),
             Composite::Molecule(s) => s.hit(r, t),
+            Composite::Axes(s) => s.hit(r, t),
         }
     }
 }
