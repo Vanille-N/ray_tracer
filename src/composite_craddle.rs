@@ -24,174 +24,178 @@ impl NewtonCraddle {
         let plastic = Texture::Lambertian(RGB::new(0.1, 0.1, 0.1));
         let steel = Texture::Metal(RGB::new(0.8, 0.6, 0.2), 0.0);
         let nylon = Texture::Lambertian(RGB::new(0.9, 0.9, 0.9));
+        let len = self.w.len();
+        let w = self.w.unit() * len; // Upwards
+        let u = self.v.cross(&w).unit() * len;
+        let v = w.cross(&u).unit() * len;
         let pedestal = Rhombus {
-            a: self.a, u: self.u, v: self.v, w: self.w * 0.1,
+            a: self.a, u: u, v: v, w: w * 0.1,
             texture: plastic,
         }.build();
         let pillar1 = EmptyCylinder {
-            center1: self.a + self.v * 0.1 + self.u * 0.1,
-            center2: self.a + self.v * 0.1 + self.u * 0.1 + self.w,
-            radius: self.v.len() * 0.03,
+            center1: self.a + v * 0.1 + u * 0.1,
+            center2: self.a + v * 0.1 + u * 0.1 + w,
+            radius: v.len() * 0.03,
             texture: plastic,
         }.build();
         let pillar2 = EmptyCylinder {
-            center1: self.a + self.v * 0.9 + self.u * 0.1,
-            center2: self.a + self.v * 0.9 + self.u * 0.1 + self.w,
-            radius: self.v.len() * 0.03,
+            center1: self.a + v * 0.9 + u * 0.1,
+            center2: self.a + v * 0.9 + u * 0.1 + w,
+            radius: v.len() * 0.03,
             texture: plastic,
         }.build();
         let pillar3 = EmptyCylinder {
-            center1: self.a + self.v * 0.9 + self.u * 0.9,
-            center2: self.a + self.v * 0.9 + self.u * 0.9 + self.w,
-            radius: self.v.len() * 0.03,
+            center1: self.a + v * 0.9 + u * 0.9,
+            center2: self.a + v * 0.9 + u * 0.9 + w,
+            radius: v.len() * 0.03,
             texture: plastic,
         }.build();
         let pillar4 = EmptyCylinder {
-            center1: self.a + self.v * 0.1 + self.u * 0.9,
-            center2: self.a + self.v * 0.1 + self.u * 0.9 + self.w,
-            radius: self.v.len() * 0.03,
+            center1: self.a + v * 0.1 + u * 0.9,
+            center2: self.a + v * 0.1 + u * 0.9 + w,
+            radius: v.len() * 0.03,
             texture: plastic,
         }.build();
         let bar1 = EmptyCylinder {
-            center1: self.a + self.v * 0.1 + self.u * 0.1 + self.w,
-            center2: self.a + self.v * 0.9 + self.u * 0.1 + self.w,
-            radius: self.v.len() * 0.03,
+            center1: self.a + v * 0.1 + u * 0.1 + w,
+            center2: self.a + v * 0.9 + u * 0.1 + w,
+            radius: v.len() * 0.03,
             texture: plastic,
         }.build();
         let bar2 = EmptyCylinder {
-            center1: self.a + self.v * 0.1 + self.u * 0.9 + self.w,
-            center2: self.a + self.v * 0.9 + self.u * 0.9 + self.w,
-            radius: self.v.len() * 0.03,
+            center1: self.a + v * 0.1 + u * 0.9 + w,
+            center2: self.a + v * 0.9 + u * 0.9 + w,
+            radius: v.len() * 0.03,
             texture: plastic,
         }.build();
         let smoothtop1 = Sphere {
-            center: self.a + self.v * 0.1 + self.u * 0.1 + self.w,
-            radius: self.v.len() * 0.03,
+            center: self.a + v * 0.1 + u * 0.1 + w,
+            radius: v.len() * 0.03,
             texture: plastic,
         }.build();
         let smoothtop2 = Sphere {
-            center: self.a + self.v * 0.1 + self.u * 0.9 + self.w,
-            radius: self.v.len() * 0.03,
+            center: self.a + v * 0.1 + u * 0.9 + w,
+            radius: v.len() * 0.03,
             texture: plastic,
         }.build();
         let smoothtop3 = Sphere {
-            center: self.a + self.v * 0.9 + self.u * 0.9 + self.w,
-            radius: self.v.len() * 0.03,
+            center: self.a + v * 0.9 + u * 0.9 + w,
+            radius: v.len() * 0.03,
             texture: plastic,
         }.build();
         let smoothtop4 = Sphere {
-            center: self.a + self.v * 0.9 + self.u * 0.1 + self.w,
-            radius: self.v.len() * 0.03,
+            center: self.a + v * 0.9 + u * 0.1 + w,
+            radius: v.len() * 0.03,
             texture: plastic,
         }.build();
-        let r = self.u.len() * 0.7 / 10.0;
+        let r = u.len() * 0.7 / 10.0;
         let sphere1 = Sphere {
-            center: self.a + self.u * 0.5 + self.v * 0.15 + self.v.unit() * r + self.w * 0.3,
+            center: self.a + u * 0.5 + v * 0.15 + v.unit() * r + w * 0.3,
             radius: r,
             texture: steel,
         };
         let ring1 = Sphere {
-            center: sphere1.center + self.w.unit() * r,
+            center: sphere1.center + w.unit() * r,
             radius: r * 0.3,
             texture: plastic,
         };
         let thread1a = EmptyCylinder {
             center1: ring1.center,
-            center2: ring1.center + self.u * 0.40 + self.w * 0.64,
+            center2: ring1.center + u * 0.40 + w * 0.64,
             radius: r * 0.03,
             texture: nylon,
         }.build();
         let thread1b = EmptyCylinder {
             center1: ring1.center,
-            center2: ring1.center - self.u * 0.40 + self.w * 0.64,
+            center2: ring1.center - u * 0.40 + w * 0.64,
             radius: r * 0.03,
             texture: nylon,
         }.build();
         let sphere2 = Sphere {
-            center: self.a + self.u * 0.5 + self.v * 0.15 + self.v.unit() * 3. * r + self.w * 0.3,
+            center: self.a + u * 0.5 + v * 0.15 + v.unit() * 3. * r + w * 0.3,
             radius: r,
             texture: steel,
         };
         let ring2 = Sphere {
-            center: sphere2.center + self.w.unit() * r,
+            center: sphere2.center + w.unit() * r,
             radius: r * 0.3,
             texture: plastic,
         };
         let thread2a = EmptyCylinder {
             center1: ring2.center,
-            center2: ring2.center + self.u * 0.40 + self.w * 0.64,
+            center2: ring2.center + u * 0.40 + w * 0.64,
             radius: r * 0.03,
             texture: nylon,
         }.build();
         let thread2b = EmptyCylinder {
             center1: ring2.center,
-            center2: ring2.center - self.u * 0.40 + self.w * 0.64,
+            center2: ring2.center - u * 0.40 + w * 0.64,
             radius: r * 0.03,
             texture: nylon,
         }.build();
         let sphere3 = Sphere {
-            center: self.a + self.u * 0.5 + self.v * 0.15 + self.v.unit() * 5. * r + self.w * 0.3,
+            center: self.a + u * 0.5 + v * 0.15 + v.unit() * 5. * r + w * 0.3,
             radius: r,
             texture: steel,
         };
         let ring3 = Sphere {
-            center: sphere3.center + self.w.unit() * r,
+            center: sphere3.center + w.unit() * r,
             radius: r * 0.3,
             texture: plastic,
         };
         let thread3a = EmptyCylinder {
             center1: ring3.center,
-            center2: ring3.center + self.u * 0.40 + self.w * 0.64,
+            center2: ring3.center + u * 0.40 + w * 0.64,
             radius: r * 0.03,
             texture: nylon,
         }.build();
         let thread3b = EmptyCylinder {
             center1: ring3.center,
-            center2: ring3.center - self.u * 0.40 + self.w * 0.64,
+            center2: ring3.center - u * 0.40 + w * 0.64,
             radius: r * 0.03,
             texture: nylon,
         }.build();
         let sphere4 = Sphere {
-            center: self.a + self.u * 0.5 + self.v * 0.15 + self.v.unit() * 7. * r + self.w * 0.3,
+            center: self.a + u * 0.5 + v * 0.15 + v.unit() * 7. * r + w * 0.3,
             radius: r,
             texture: steel,
         };
         let ring4 = Sphere {
-            center: sphere4.center + self.w.unit() * r,
+            center: sphere4.center + w.unit() * r,
             radius: r * 0.3,
             texture: plastic,
         };
         let thread4a = EmptyCylinder {
             center1: ring4.center,
-            center2: ring4.center + self.u * 0.40 + self.w * 0.64,
+            center2: ring4.center + u * 0.40 + w * 0.64,
             radius: r * 0.03,
             texture: nylon,
         }.build();
         let thread4b = EmptyCylinder {
             center1: ring4.center,
-            center2: ring4.center - self.u * 0.40 + self.w * 0.64,
+            center2: ring4.center - u * 0.40 + w * 0.64,
             radius: r * 0.03,
             texture: nylon,
         }.build();
         let sphere5 = Sphere {
-            center: self.a + self.u * 0.5 + self.v * 0.15 + self.v.unit() * 9. * r + self.w * 0.3,
+            center: self.a + u * 0.5 + v * 0.15 + v.unit() * 9. * r + w * 0.3,
             radius: r,
             texture: steel,
         };
         let ring5 = Sphere {
-            center: sphere5.center + self.w.unit() * r,
+            center: sphere5.center + w.unit() * r,
             radius: r * 0.3,
             texture: plastic,
         };
         let thread5a = EmptyCylinder {
             center1: ring5.center,
-            center2: ring5.center + self.u * 0.40 + self.w * 0.64,
+            center2: ring5.center + u * 0.40 + w * 0.64,
             radius: r * 0.03,
             texture: nylon,
         }.build();
         let thread5b = EmptyCylinder {
             center1: ring5.center,
-            center2: ring5.center - self.u * 0.40 + self.w * 0.64,
+            center2: ring5.center - u * 0.40 + w * 0.64,
             radius: r * 0.03,
             texture: nylon,
         }.build();
