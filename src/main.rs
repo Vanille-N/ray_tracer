@@ -29,7 +29,7 @@ use composite_craddle::*;
 use composite_molecules::*;
 use composite_axes::*;
 
-
+#[allow(unused_variables)]
 fn main() {
     //let mut rng = rand::thread_rng();
     let nj = 400; // width in pixels
@@ -55,16 +55,16 @@ fn main() {
         Vec3::new(0.0, 0.0, 0.0), // target
         30.0, // angle (degrees)
         30.0, // rise (degrees)
-        20.0, // distance (meters),
+        50.0, // distance (meters),
         0.0, // tilt (degrees)
         50.0, // aperture (degrees)
         nj as f64 / ni as f64, // aspect ratio
     );
     let mut w = World::new();
     let ground = InfinitePlane {
-        orig: Vec3::new(0.0, -0.5, 0.0),
+        orig: Vec3::new(0.0, -10.0, 0.0),
         normal: Vec3::new(0.0, 1.0, 0.0),
-        texture: Texture::Metal(RGB::new(0.8, 0.8, 0.0), 0.0),
+        texture: Texture::Metal(RGB::new(0.4, 0.5, 0.2), 0.3),
     }.build().wrap();
     let axes = Axes(2.0).build().wrap();
     let sun = Sphere {
@@ -78,11 +78,11 @@ fn main() {
     //     v: Vec3::new(20.0 * 0.87, 0.0, -20.0 * 0.5),
     //     w: Vec3::new(0.0, 20.0, 0.0),
     // }.build().wrap();
-    // let cyc = Molecule {
-    //     c_ref: Vec3::new(-5.0, 0.7, 17.0),
-    //     up: Vec3::new(0.3, 0.3, 0.0),
-    //     fwd: Vec3::new(-1.0, 0.5, 1.0),
-    // }.cyclohexanol().build().wrap();
+    let cyc = Molecule {
+        c_ref: Vec3::new(-5.0, 0.7, 17.0),
+        up: Vec3::new(0.3, 0.3, 0.0),
+        fwd: Vec3::new(-1.0, 0.5, 1.0),
+    }.cyclohexanol().build().wrap();
     // let water = Molecule {
     //     c_ref: Vec3::new(-10.0, 10.0, 30.0),
     //     up: Vec3::new(0.1, 0.3, 0.0),
@@ -116,10 +116,11 @@ fn main() {
         texture: Texture::Lambertian(RGB::new(0.9, 0.9, 0.1)),
     }.build().wrap();
     w.push(ground);
-    w.push(obj1);
-    w.push(ball2);
-    w.push(ball3);
-    w.push(axes);
+    //w.push(obj1);
+    //w.push(ball2);
+    //w.push(ball3);
+    //w.push(axes);
+    w.push(cyc);
     // w.push(cyc);
     // w.push(water);
     // w.push(craddle);

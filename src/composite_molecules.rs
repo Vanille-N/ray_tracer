@@ -10,6 +10,11 @@ const BLUE: RGB = RGB { r: 0.0, g: 0.2, b: 0.7 };
 const WHITE: RGB = RGB { r: 0.9, g: 0.9, b: 0.9 };
 const LGREY: RGB = RGB { r: 0.7, g: 0.7, b: 0.7 };
 
+const CARBON: Texture = Texture::Metal(BLACK, 0.0);
+const OXYGEN: Texture = Texture::Metal(RED, 0.0);
+const HYDROGEN: Texture = Texture::Metal(WHITE, 0.0);
+const NITROGEN: Texture = Texture::Metal(BLUE, 0.0);
+
 #[derive(Clone, Copy)]
 pub struct Molecule {
     pub c_ref: Vec3,
@@ -22,6 +27,24 @@ pub struct MoleculeObject {
     pub atoms: Vec<Sphere>,
     pub links: Vec<EmptyCylinder>,
 }
+
+fn atom_builder(r: f64, texture: Texture) -> Box<dyn Fn(Vec3) -> Sphere> {
+    Box::new(move |u| Sphere {
+        center: u,
+        radius: r,
+        texture: texture,
+    })
+}
+
+fn link_builder(r: f64) -> Box<dyn Fn(Vec3, Vec3) -> EmptyCylinder> {
+    Box::new(move |c1, c2| EmptyCylinder {
+        center1: c1,
+        center2: c2,
+        radius: r,
+        texture: Texture::Lambertian(LGREY),
+    })
+}
+
 
 #[allow(unused_variables)]
 impl Molecule {
@@ -47,32 +70,11 @@ impl Molecule {
         let rad3 = len * 0.3;
         let len1 = len * 5.0;
         let len2 = len * 3.0;
-        let carbon = |u| Sphere {
-            center: u,
-            radius: rad1,
-            texture: Texture::Metal(BLACK, 0.0),
-        };
-        let oxygen = |u| Sphere {
-            center: u,
-            radius: rad1,
-            texture: Texture::Metal(RED, 0.0),
-        };
-        let nitrogen = |u| Sphere {
-            center: u,
-            radius: rad1,
-            texture: Texture::Metal(BLUE, 0.0),
-        };
-        let hydrogen = |u| Sphere {
-            center: u,
-            radius: rad2,
-            texture: Texture::Metal(WHITE, 0.0),
-        };
-        let link = |c1, c2| EmptyCylinder {
-            center1: c1,
-            center2: c2,
-            radius: rad3,
-            texture: Texture::Lambertian(LGREY),
-        };
+        let carbon = atom_builder(rad1, CARBON);
+        let oxygen = atom_builder(rad1, OXYGEN);
+        let nitrogen = atom_builder(rad1, NITROGEN);
+        let hydrogen = atom_builder(rad2, HYDROGEN);
+        let link = link_builder(rad3);
 
         let [t, u, v, w, x, y, z] = self.directions();
         // ... And build the molecule skeleton
@@ -133,22 +135,9 @@ impl Molecule {
         let rad3 = len * 0.3;
         let len1 = len * 5.0;
         let len2 = len * 3.0;
-        let oxygen = |u| Sphere {
-            center: u,
-            radius: rad1,
-            texture: Texture::Metal(RED, 0.0),
-        };
-        let hydrogen = |u| Sphere {
-            center: u,
-            radius: rad2,
-            texture: Texture::Metal(WHITE, 0.0),
-        };
-        let link = |c1, c2| EmptyCylinder {
-            center1: c1,
-            center2: c2,
-            radius: rad3,
-            texture: Texture::Lambertian(LGREY),
-        };
+        let oxygen = atom_builder(rad1, OXYGEN);
+        let hydrogen = atom_builder(rad2, HYDROGEN);
+        let link = link_builder(rad3);
 
         let [t, u, v, w, x, y, z] = self.directions();
         // ... And build the molecule skeleton
@@ -174,22 +163,9 @@ impl Molecule {
         let rad3 = len * 0.3;
         let len1 = len * 5.0;
         let len2 = len * 3.0;
-        let carbon = |u| Sphere {
-            center: u,
-            radius: rad1,
-            texture: Texture::Metal(BLACK, 0.0),
-        };
-        let hydrogen = |u| Sphere {
-            center: u,
-            radius: rad2,
-            texture: Texture::Metal(WHITE, 0.0),
-        };
-        let link = |c1, c2| EmptyCylinder {
-            center1: c1,
-            center2: c2,
-            radius: rad3,
-            texture: Texture::Lambertian(LGREY),
-        };
+        let carbon = atom_builder(rad1, CARBON);
+        let hydrogen = atom_builder(rad2, HYDROGEN);
+        let link = link_builder(rad3);
 
         let [t, u, v, w, x, y, z] = self.directions();
         // ... And build the molecule skeleton
@@ -218,28 +194,11 @@ impl Molecule {
         let rad3 = len * 0.3;
         let len1 = len * 5.0;
         let len2 = len * 3.0;
-        let carbon = |u| Sphere {
-            center: u,
-            radius: rad1,
-            texture: Texture::Metal(BLACK, 0.0),
-        };
-        let oxygen = |u| Sphere {
-            center: u,
-            radius: rad1,
-            texture: Texture::Metal(RED, 0.0),
-        };
-        let hydrogen = |u| Sphere {
-            center: u,
-            radius: rad2,
-            texture: Texture::Metal(WHITE, 0.0),
-        };
-        let link = |c1, c2| EmptyCylinder {
-            center1: c1,
-            center2: c2,
-            radius: rad3,
-            texture: Texture::Lambertian(LGREY),
-        };
-
+        let carbon = atom_builder(rad1, CARBON);
+        let oxygen = atom_builder(rad1, OXYGEN);
+        let hydrogen = atom_builder(rad2, HYDROGEN);
+        let link = link_builder(rad3);
+        
         let [t, u, v, w, x, y, z] = self.directions();
         // ... And build the molecule skeleton
         let c1 = self.c_ref;
