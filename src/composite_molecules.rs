@@ -23,6 +23,7 @@ pub struct MoleculeObject {
     pub links: Vec<EmptyCylinder>,
 }
 
+#[allow(unused_variables)]
 impl Molecule {
     fn directions(self) -> [Vec3; 7] {
         let zz = self.up.unit();
