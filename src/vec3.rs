@@ -49,7 +49,7 @@ impl Vec3 {
         let u = self.unit();
         let dt = u.dot(normal);
         let discriminant = 1.0 - rel_idx.powi(2) * (1.0 - dt.powi(2));
-        if discriminant > 0. {
+        if discriminant > crate::primitives::EPSILON {
             Some((u - *normal * dt) * rel_idx - *normal * discriminant.sqrt())
         } else {
             None
