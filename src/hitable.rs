@@ -166,6 +166,13 @@ pub enum Texture {
     Lambertian(RGB),
     Metal(RGB, f64),
     Light(RGB),
+    Dielectric(RGB, f64),
+}
+
+//  https://en.wikipedia.org/wiki/Schlick's_approximation
+fn schlick(cos: f64, idx: f64) -> f64 {
+    let r = ((1.0 - idx) / (1.0 + idx)).powi(2);
+    r + (1.0 - r) * (1.0 - cos).powi(5)
 }
 
 pub fn scatter(incident: &Ray, record: &HitRecord) -> Option<(RGB, Ray)> {
@@ -187,13 +194,34 @@ pub fn scatter(incident: &Ray, record: &HitRecord) -> Option<(RGB, Ray)> {
                     -record.normal
                 }
             };
-            if scattered.dir.dot(&normal) > 0.01 {
+            if scattered.dir.dot(&normal) > crate::primitives::EPSILON {
                 Some((attenuation, scattered))
             } else {
                 None
             }
         }
         Texture::Light(_) => None,
+        Texture::Dielectric(shade, idx) => {
+            let reflected = incident.dir.reflect(&record.normal);
+            let (ext_normal, rel_idx, cos) = {
+                if incident.dir.dot(&record.normal) > 0.0 {
+                    (-record.normal, idx, idx * incident.dir.dot(&record.normal) / incident.dir.len())
+                } else {
+                    (record.normal, 1.0 / idx, -incident.dir.dot(&record.normal) / incident.dir.len())
+                }
+            };
+            match incident.dir.refract(&ext_normal, rel_idx) {
+                None => Some((shade, Ray { orig: record.pos, dir: reflected })),
+                Some(refracted) => {
+                    let prob_reflect = schlick(cos, idx);
+                    if rand::random::<f64>() < prob_reflect {
+                        Some((shade, Ray { orig: record.pos, dir: reflected }))
+                    } else {
+                        Some((shade, Ray { orig: record.pos, dir: refracted }))
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -208,6 +236,7 @@ pub fn color(r: &Ray, w: &World, depth: i32) -> RGB {
                     Texture::Lambertian(color) => color,
                     Texture::Metal(color, _) => color,
                     Texture::Light(color) => color,
+                    Texture::Dielectric(color, _) => color,
                 }
             }
         } else {
@@ -215,6 +244,7 @@ pub fn color(r: &Ray, w: &World, depth: i32) -> RGB {
                 Texture::Lambertian(color) => color,
                 Texture::Metal(color, _) => color,
                 Texture::Light(color) => color,
+                Texture::Dielectric(color, _) => color,
             }
         }
     } else {
