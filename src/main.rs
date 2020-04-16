@@ -16,7 +16,7 @@ mod vec3;
 mod hitable;
 mod camera;
 mod primitives;
-mod composite_craddle;
+mod composite_cradle;
 mod composite_molecules;
 mod composite_axes;
 
@@ -25,7 +25,7 @@ use rgb::RGB;
 use hitable::*;
 use camera::Camera;
 use primitives::*;
-use composite_craddle::*;
+use composite_cradle::*;
 use composite_molecules::*;
 use composite_axes::*;
 
@@ -54,10 +54,10 @@ fn main() {
     //     nj as f64 / ni as f64, // aspect ratio
     // );
     let cam = Camera::new_relative(
-        Vec3::new(0.0, 0.3, 0.0), // target
+        Vec3::new(0.0, 0.3, 0.25), // target
         90.0, // angle (degrees)
         45.0, // rise (degrees)
-        2.0, // distance (meters),
+        1.5, // distance (meters),
         0.0, // tilt (degrees)
         40.0, // aperture (degrees)
         nj as f64 / ni as f64, // aspect ratio
@@ -66,7 +66,7 @@ fn main() {
     let ground = InfinitePlane {
         orig: Vec3::new(0.0, 0.0, 0.0),
         normal: Vec3::new(0.0, 1.0, 0.0),
-        texture: Texture::Metal(RGB::new(0.4, 0.5, 0.2), 0.2),
+        texture: Texture::Metal(RGB::new(0.2, 0.2, 0.2), 0.1),
     }.build().wrap();
     let axes = Axes(2.0).build().wrap();
     let sun = Sphere {
@@ -74,7 +74,7 @@ fn main() {
         radius: 30.0,
         texture: Texture::Light(RGB::new(3.0, 3.0, 3.0)),
     }.build().wrap();
-    let craddle = NewtonCraddle {
+    let cradle = NewtonCradle {
         a: Vec3::new(-0.5, 0.0, -0.5),
         u: Vec3::new(0.0, 0.0, 1.0),
         v: Vec3::new(1.0, 0.0, 0.0),
@@ -118,7 +118,7 @@ fn main() {
     //     texture: Texture::Lambertian(RGB::new(0.9, 0.9, 0.1)),
     // }.build().wrap();
     let n2 = Molecule {
-        c_ref: Vec3::new(0.0, 0.5, 0.0),
+        c_ref: Vec3::new(0.0, 0.3, 0.0),
         up: Vec3::new(0.0, 0.0, 0.1),
         fwd: Vec3::new(0.0, 0.1, 0.0),
     }.dinitrogen().build().wrap();
@@ -128,7 +128,7 @@ fn main() {
     //w.push(cyc);
     //w.push(methane);
     //w.push(ethanol);
-    //w.push(craddle);
+    //w.push(cradle);
     w.push(sun);
     let mut writers = [
         (3, out4, ni4, cam.clone(), w.clone()),

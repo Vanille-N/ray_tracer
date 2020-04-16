@@ -4,7 +4,7 @@ use crate::ray::Ray;
 use crate::rgb::RGB;
 use crate::primitives::*;
 use crate::composite_molecules::*;
-use crate::composite_craddle::*;
+use crate::composite_cradle::*;
 use crate::composite_axes::*;
 use crate::EPSILON;
 
@@ -63,7 +63,7 @@ impl Primitive {
 
 #[derive(Clone)]
 pub enum Composite {
-    NewtonCraddle(NewtonCraddleObject),
+    NewtonCradle(NewtonCradleObject),
     Molecule(MoleculeObject),
     Axes(AxesObject),
 }
@@ -98,7 +98,7 @@ impl Hit for Primitive {
 impl Hit for Composite {
     fn hit(&self, rec: &mut HitRecord, r: &Ray) {
         match self {
-            Composite::NewtonCraddle(s) => s.hit(rec, r),
+            Composite::NewtonCradle(s) => s.hit(rec, r),
             Composite::Molecule(s) => s.hit(rec, r),
             Composite::Axes(s) => s.hit(rec, r),
         }

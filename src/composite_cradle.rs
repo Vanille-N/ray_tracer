@@ -5,7 +5,7 @@ use crate::rgb::RGB;
 use crate::primitives::*;
 
 #[derive(Clone, Copy)]
-pub struct NewtonCraddle {
+pub struct NewtonCradle {
     pub a: Vec3,
     pub u: Vec3,
     pub v: Vec3,
@@ -13,13 +13,13 @@ pub struct NewtonCraddle {
 }
 
 #[derive(Clone)]
-pub struct NewtonCraddleObject {
+pub struct NewtonCradleObject {
     stand: [Primitive; 11],
     beads: [Primitive; 10],
     threads: [Primitive; 10],
 }
 
-impl NewtonCraddle {
+impl NewtonCradle {
     pub fn build(self) -> Composite {
         let plastic = Texture::Lambertian(RGB::new(0.1, 0.1, 0.1));
         let steel = Texture::Metal(RGB::new(0.8, 0.6, 0.2), 0.0);
@@ -199,7 +199,7 @@ impl NewtonCraddle {
             radius: r * 0.03,
             texture: nylon,
         }.build();
-        Composite::NewtonCraddle(NewtonCraddleObject {
+        Composite::NewtonCradle(NewtonCradleObject {
             stand: [pedestal, pillar1, pillar2, pillar3, pillar4, bar1, bar2, smoothtop1, smoothtop2, smoothtop3, smoothtop4],
             beads: [sphere1.build(), sphere2.build(), sphere3.build(), sphere4.build(), sphere5.build(), ring1.build(), ring2.build(), ring3.build(), ring4.build(), ring5.build()],
             threads: [thread1a, thread1b, thread2a, thread2b, thread3a, thread3b, thread4a, thread4b, thread5a, thread5b],
@@ -207,7 +207,7 @@ impl NewtonCraddle {
     }
 }
 
-impl Hit for NewtonCraddleObject {
+impl Hit for NewtonCradleObject {
     fn hit(&self, rec: &mut HitRecord, r: &Ray) {
         for obj in &self.stand {
             obj.hit(rec, r)
