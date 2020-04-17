@@ -316,6 +316,78 @@ impl Molecule {
                 ],
         }
     }
+
+    pub fn benzene(self) -> MoleculeObject {
+        let len = self.fwd.len();
+        let [rad1, rad2, rad3, len1, len2] = dimensions(len);
+        let carbon = atom_builder(rad1, CARBON);
+        let hydrogen = atom_builder(rad2, HYDROGEN);
+        let link = link_builder(rad3);
+        let double = double_builder(rad3);
+
+        let [t, u, v, w, x, y, z] = self.directions();
+
+        let c1 = self.c_ref;
+        let c2 = c1 + v * len1;
+        let c3 = c2 + x * len1;
+        let c4 = c3 - y * len1;
+        let c5 = c4 - v * len1;
+        let c6 = c5 - x * len1;
+
+        let h1 = c1 - x * len2;
+        let h2 = c2 + y * len2;
+        let h3 = c3 + v * len2;
+        let h4 = c4 + x * len2;
+        let h5 = c5 - y * len2;
+        let h6 = c6 - v * len2;
+
+        let (l12, [l23a, l23b], l34, [l45a, l45b], l56, [l61a, l61b]) = (link(c1, c2), double(c2, c3, u), link(c3, c4), double(c4, c5, u), link(c5, c6), double(c6, c1, u));
+
+        MoleculeObject {
+            atoms: vec![carbon(c1), carbon(c2), carbon(c3), carbon(c4), carbon(c5), carbon(c6), hydrogen(h1), hydrogen(h2), hydrogen(h3), hydrogen(h4), hydrogen(h5), hydrogen(h6)],
+            links: vec![l12, l23a, l23b, l34, l45a, l45b, l56, l61a, l61b, link(c1, h1), link(c2, h2), link(c3, h3), link(c4, h4), link(c5, h5), link(c6, h6)],
+        }
+    }
+
+    pub fn test(self) -> MoleculeObject {
+        let len = self.fwd.len();
+        let [rad1, _, rad3, len1, _] = dimensions(len);
+
+        let [t, u, v, w, x, y, z] = self.directions();
+        let link = link_builder(rad3);
+
+        let o = self.c_ref;
+        let ot = o + t * len1;
+        let ou = o + u * len1;
+        let ov = o + v * len1;
+        let ow = o + w * len1;
+        let ox = o + x * len1;
+        let oy = o + y * len1;
+        let oz = o + z * len1;
+
+        MoleculeObject {
+            atoms: vec![
+                atom_builder(rad1,
+                    Texture::Lambertian(RGB::new(0., 0., 0.)))(o),
+                atom_builder(rad1,
+                    Texture::Lambertian(RGB::new(1., 0., 0.)))(ot),
+                atom_builder(rad1,
+                    Texture::Lambertian(RGB::new(0., 1., 0.)))(ou),
+                atom_builder(rad1,
+                    Texture::Lambertian(RGB::new(0., 0., 1.)))(ov),
+                atom_builder(rad1,
+                    Texture::Lambertian(RGB::new(1., 1., 0.)))(ow),
+                atom_builder(rad1,
+                    Texture::Lambertian(RGB::new(1., 0., 1.)))(ox),
+                atom_builder(rad1,
+                    Texture::Lambertian(RGB::new(0., 1., 1.)))(oy),
+                atom_builder(rad1,
+                    Texture::Lambertian(RGB::new(1., 1., 1.)))(oz),
+                ],
+            links: vec![link(o, ot), link(o, ou), link(o, ov), link(o, ow), link(o, ox), link(o, oy), link(o, oz)],
+        }
+    }
+
 }
 
 impl MoleculeObject {

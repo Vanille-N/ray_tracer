@@ -100,12 +100,12 @@ fn main() {
 fn build_world() -> (i32, i32, i32, Camera, World) {
     let nj = 2000; // width in pixels
     let ni = 2000; // height in pixels
-    let ns = 100; // number of samples per pixel
+    let ns = 50; // number of samples per pixel
     let cam = Camera::new_relative(
-        Vec3::new(0.0, 0.3, 0.25), // target
-        90.0, // angle (degrees)
+        Vec3::new(0.0, 0.3, 1.0), // target
+        120.0, // angle (degrees)
         45.0, // rise (degrees)
-        1.5, // distance (meters),
+        10.0, // distance (meters),
         0.0, // tilt (degrees)
         40.0, // aperture (degrees)
         nj as f64 / ni as f64, // aspect ratio
@@ -128,11 +128,11 @@ fn build_world() -> (i32, i32, i32, Camera, World) {
         v: Vec3::new(1.0, 0.0, 0.0),
         w: Vec3::new(0.0, 1.0, 0.0),
     }.build();
-    // let cyc = Molecule {
-    //     c_ref: Vec3::new(-5.0, 0.7, 17.0),
-    //     up: Vec3::new(0.3, 0.3, 0.0),
-    //     fwd: Vec3::new(-1.0, 0.5, 1.0),
-    // }.cyclohexanol().build();
+    let cyc = Molecule {
+        c_ref: Vec3::new(-5.0, 0.7, 17.0),
+        up: Vec3::new(0.3, 0.3, 0.0),
+        fwd: Vec3::new(-1.0, 0.5, 1.0),
+    }.cyclohexanol().build();
     // let water = Molecule {
     //     c_ref: Vec3::new(0.0, 0.0, 0.0),
     //     up: Vec3::new(0.0, 1.0, 0.0),
@@ -165,15 +165,19 @@ fn build_world() -> (i32, i32, i32, Camera, World) {
     //     radius: 0.5,
     //     texture: Texture::Lambertian(RGB::new(0.9, 0.9, 0.1)),
     // }.build();
-    let n2 = Molecule {
-        c_ref: Vec3::new(0.0, 0.3, 0.0),
-        up: Vec3::new(0.0, 0.0, 0.1),
-        fwd: Vec3::new(0.0, 0.1, 0.0),
-    }.dinitrogen().build();
+    // let n2 = Molecule {
+    //     c_ref: Vec3::new(0.0, 0.3, 0.0),
+    //     up: Vec3::new(0.0, 0.0, 0.1),
+    //     fwd: Vec3::new(0.0, 0.1, 0.0),
+    // }.test().build();
+    let benzene = Molecule {
+        c_ref: Vec3::new(0.0, 0.5, 0.0),
+        up: Vec3::new(0.0, 0.1, 0.1),
+        fwd: Vec3::new(0.0, 0.0, 0.2),
+    }.benzene().build();
     w.push(ground);
-    w.push_vec(n2);
+    w.push_vec(benzene);
     //w.push(water);
-    //w.push(cyc);
     //w.push(methane);
     //w.push(ethanol);
     //w.push(cradle);
