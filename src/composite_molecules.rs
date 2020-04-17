@@ -320,18 +320,13 @@ impl Molecule {
 
 impl MoleculeObject {
     pub fn build(self) -> Composite {
-        Composite::Molecule(self)
-    }
-}
-
-
-impl Hit for MoleculeObject {
-    fn hit(&self, rec: &mut HitRecord, r: &Ray) {
-        for obj in &self.atoms {
-            obj.hit(rec, r)
+        let mut res = Vec::new();
+        for x in self.atoms {
+            res.push(x.build());
         }
-        for obj in &self.links {
-            obj.hit(rec, r)
+        for x in self.links {
+            res.push(x.build());
         }
+        res
     }
 }

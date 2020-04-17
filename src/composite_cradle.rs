@@ -12,13 +12,6 @@ pub struct NewtonCradle {
     pub w: Vec3,
 }
 
-#[derive(Clone)]
-pub struct NewtonCradleObject {
-    stand: [Primitive; 11],
-    beads: [Primitive; 10],
-    threads: [Primitive; 10],
-}
-
 impl NewtonCradle {
     pub fn build(self) -> Composite {
         let plastic = Texture::Lambertian(RGB::new(0.1, 0.1, 0.1));
@@ -199,24 +192,6 @@ impl NewtonCradle {
             radius: r * 0.03,
             texture: nylon,
         }.build();
-        Composite::NewtonCradle(NewtonCradleObject {
-            stand: [pedestal, pillar1, pillar2, pillar3, pillar4, bar1, bar2, smoothtop1, smoothtop2, smoothtop3, smoothtop4],
-            beads: [sphere1.build(), sphere2.build(), sphere3.build(), sphere4.build(), sphere5.build(), ring1.build(), ring2.build(), ring3.build(), ring4.build(), ring5.build()],
-            threads: [thread1a, thread1b, thread2a, thread2b, thread3a, thread3b, thread4a, thread4b, thread5a, thread5b],
-        })
-    }
-}
-
-impl Hit for NewtonCradleObject {
-    fn hit(&self, rec: &mut HitRecord, r: &Ray) {
-        for obj in &self.stand {
-            obj.hit(rec, r)
-        }
-        for obj in &self.beads {
-            obj.hit(rec, r)
-        }
-        for obj in &self.threads {
-            obj.hit(rec, r)
-        }
+        vec![pedestal, pillar1, pillar2, pillar3, pillar4, bar1, bar2, smoothtop1, smoothtop2, smoothtop3, smoothtop4, sphere1.build(), sphere2.build(), sphere3.build(), sphere4.build(), sphere5.build(), ring1.build(), ring2.build(), ring3.build(), ring4.build(), ring5.build(), thread1a, thread1b, thread2a, thread2b, thread3a, thread3b, thread4a, thread4b, thread5a, thread5b]
     }
 }

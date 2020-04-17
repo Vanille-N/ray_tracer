@@ -38,8 +38,6 @@ use crate::EPSILON;
 // From the point of view of someone creating objects, it does require implementing
 // the `build` method on all objects. Since complex objects already require it, this
 // can be considered a minimal hassle.
-// From the point of view of the user, the only change is having to call
-// `x.build().wrap()`
 // Altogether it seems to be a small price to pay for access to multithreading and
 // relief from manually managing lifetimes.
 
@@ -53,31 +51,6 @@ pub enum Primitive {
     EmptyCylinder(EmptyCylinder),
     Disc(Disc),
     Cylinder(CylinderObject),
-}
-
-impl Primitive {
-    pub fn wrap(self) -> Object {
-        Object::Primitive(self)
-    }
-}
-
-#[derive(Clone)]
-pub enum Composite {
-    NewtonCradle(NewtonCradleObject),
-    Molecule(MoleculeObject),
-    Axes(AxesObject),
-}
-
-impl Composite {
-    pub fn wrap(self) -> Object {
-        Object::Composite(self)
-    }
-}
-
-#[derive(Clone)]
-pub enum Object {
-    Primitive(Primitive),
-    Composite(Composite),
 }
 
 impl Hit for Primitive {
@@ -95,25 +68,7 @@ impl Hit for Primitive {
     }
 }
 
-impl Hit for Composite {
-    fn hit(&self, rec: &mut HitRecord, r: &Ray) {
-        match self {
-            Composite::NewtonCradle(s) => s.hit(rec, r),
-            Composite::Molecule(s) => s.hit(rec, r),
-            Composite::Axes(s) => s.hit(rec, r),
-        }
-    }
-}
-
-impl Hit for Object {
-    fn hit(&self, rec: &mut HitRecord, r: &Ray) {
-        match self {
-            Object::Primitive(o) => o.hit(rec, r),
-            Object::Composite(o) => o.hit(rec, r),
-        }
-    }
-}
-
+pub type Composite = Vec<Primitive>;
 
 #[derive(Copy, Clone, Debug)]
 pub struct HitRecord {
@@ -129,15 +84,21 @@ pub trait Hit {
 }
 
 #[derive(Clone)]
-pub struct World(Vec<Object>);
+pub struct World(Composite);
 
 impl World {
     pub fn new() -> Self {
         Self(Vec::new())
     }
 
-    pub fn push(&mut self, x: Object) {
+    pub fn push(&mut self, x: Primitive) {
         self.0.push(x);
+    }
+
+    pub fn push_vec(&mut self, v: Composite) {
+        for x in v {
+            self.0.push(x)
+        }
     }
 }
 

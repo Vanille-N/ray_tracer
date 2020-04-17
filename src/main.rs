@@ -98,8 +98,8 @@ fn main() {
 
 
 fn build_world() -> (i32, i32, i32, Camera, World) {
-    let nj = 200; // width in pixels
-    let ni = 200; // height in pixels
+    let nj = 2000; // width in pixels
+    let ni = 2000; // height in pixels
     let ns = 100; // number of samples per pixel
     let cam = Camera::new_relative(
         Vec3::new(0.0, 0.3, 0.25), // target
@@ -115,63 +115,63 @@ fn build_world() -> (i32, i32, i32, Camera, World) {
         orig: Vec3::new(0.0, 0.0, 0.0),
         normal: Vec3::new(0.0, 1.0, 0.0),
         texture: Texture::Metal(RGB::new(0.2, 0.2, 0.2), 0.1),
-    }.build().wrap();
-    let axes = Axes(2.0).build().wrap();
+    }.build();
+    let axes = Axes(2.0).build();
     let sun = Sphere {
         center: Vec3::new(-100.0, 100.0, -100.0),
         radius: 30.0,
         texture: Texture::Light(RGB::new(3.0, 3.0, 3.0)),
-    }.build().wrap();
+    }.build();
     let cradle = NewtonCradle {
         a: Vec3::new(-0.5, 0.0, -0.5),
         u: Vec3::new(0.0, 0.0, 1.0),
         v: Vec3::new(1.0, 0.0, 0.0),
         w: Vec3::new(0.0, 1.0, 0.0),
-    }.build().wrap();
+    }.build();
     // let cyc = Molecule {
     //     c_ref: Vec3::new(-5.0, 0.7, 17.0),
     //     up: Vec3::new(0.3, 0.3, 0.0),
     //     fwd: Vec3::new(-1.0, 0.5, 1.0),
-    // }.cyclohexanol().build().wrap();
+    // }.cyclohexanol().build();
     // let water = Molecule {
     //     c_ref: Vec3::new(0.0, 0.0, 0.0),
     //     up: Vec3::new(0.0, 1.0, 0.0),
     //     fwd: Vec3::new(-1.0, 0.5, 1.0),
-    // }.water().build().wrap();
+    // }.water().build();
     // let methane = Molecule {
     //     c_ref: Vec3::new(6.0, -5.0, 0.0),
     //     up: Vec3::new(0.1, 0.3, 0.0),
     //     fwd: Vec3::new(-1.0, 0.5, 1.0),
-    // }.methane().build().wrap();
+    // }.methane().build();
     // let ethanol = Molecule {
     //     c_ref: Vec3::new(-10.0, 1.0, -43.0),
     //     up: Vec3::new(0.1, 0.3, 0.0),
     //     fwd: Vec3::new(-1.0, 0.5, 1.0),
-    // }.ethanol().build().wrap();
+    // }.ethanol().build();
     // let obj1 = Rhombus {
     //     a: Vec3::new(0.0, -1.0, 0.0),
     //     u: Vec3::new(0.0, 0.0, 1.0),
     //     v:  Vec3::new(2.0, 0.0, 0.5),
     //     w:  Vec3::new(0.0, 1.0, 0.0),
     //     texture: Texture::Dielectric(RGB::new(0.9, 0.9, 0.9), 1.5),
-    // }.build().wrap();
+    // }.build();
     // let ball2 = Sphere {
     //     center: Vec3::new(1.0, 0.0, -5.0),
     //     radius: 0.5,
     //     texture: Texture::Metal(RGB::new(0.8, 0.6, 0.2), 0.0),
-    // }.build().wrap();
+    // }.build();
     // let ball3 = Sphere {
     //     center: Vec3::new(-1.0, 0.0, 0.0),
     //     radius: 0.5,
     //     texture: Texture::Lambertian(RGB::new(0.9, 0.9, 0.1)),
-    // }.build().wrap();
+    // }.build();
     let n2 = Molecule {
         c_ref: Vec3::new(0.0, 0.3, 0.0),
         up: Vec3::new(0.0, 0.0, 0.1),
         fwd: Vec3::new(0.0, 0.1, 0.0),
-    }.dinitrogen().build().wrap();
+    }.dinitrogen().build();
     w.push(ground);
-    w.push(n2);
+    w.push_vec(n2);
     //w.push(water);
     //w.push(cyc);
     //w.push(methane);

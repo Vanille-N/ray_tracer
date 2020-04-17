@@ -12,12 +12,6 @@ const BLACK: Texture = Texture::Lambertian(RGB { r: 0.01, g: 0.01, b: 0.01 });
 #[derive(Clone, Copy)]
 pub struct Axes(pub f64);
 
-#[derive(Clone)]
-pub struct AxesObject {
-    pub lines: Vec<EmptyCylinder>,
-    pub balls: Vec<Sphere>,
-}
-
 #[allow(unused_variables)]
 impl Axes {
     pub fn build(self) -> Composite {
@@ -73,17 +67,10 @@ impl Axes {
                 texture: GREEN,
             });
         }
-        Composite::Axes(AxesObject { lines: vec![xdir, ydir, zdir], balls: v })
-    }
-}
-
-impl Hit for AxesObject {
-    fn hit(&self, rec: &mut HitRecord, r: &Ray) {
-        for obj in &self.lines {
-            obj.hit(rec, r)
+        let mut res = vec![xdir.build(), ydir.build(), zdir.build()];
+        for x in v {
+            res.push(x.build());
         }
-        for obj in &self.balls {
-            obj.hit(rec, r)
-        }
+        res
     }
 }
