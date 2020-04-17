@@ -111,7 +111,7 @@ impl Molecule {
         let zz = self.up.unit();
         let yy = self.fwd.cross(&self.up).unit();
         let xx = zz.cross(&yy).unit();
-        // Abstract away link directions
+
         let x = zz;
         let v =  xx * 0.00 + yy * 0.87 + zz * 0.50;
         let t =  xx * 0.74 - yy * 0.44 + zz * 0.50;
@@ -132,7 +132,7 @@ impl Molecule {
         let link = link_builder(rad3);
 
         let [t, u, v, w, x, y, z] = self.directions();
-        // ... And build the molecule skeleton
+
         let c1 = self.c_ref;
         let c2 = c1 - t * len1;
         let c3 = c1 - u * len1;
@@ -142,7 +142,7 @@ impl Molecule {
         let n = c6 + v * len1;
         let c7 = n + x * len1;
         let o = c1 - v * len1;
-        // Then add all hydrogens
+
         let h1 = o + t * len2;
         let h2 = c1 + x * len2;
         let h3 = c2 - x * len2;
@@ -191,7 +191,7 @@ impl Molecule {
         let link = link_builder(rad3);
 
         let [t, u, v, w, x, y, z] = self.directions();
-        // ... And build the molecule skeleton
+
         let o = self.c_ref;
         let h1 = o + x * len2;
         let h2 = o - v * len2;
@@ -215,7 +215,7 @@ impl Molecule {
         let link = link_builder(rad3);
 
         let [t, u, v, w, x, y, z] = self.directions();
-        // ... And build the molecule skeleton
+
         let c = self.c_ref;
         let h1 = c + x * len2;
         let h2 = c - u * len2;
@@ -243,7 +243,7 @@ impl Molecule {
         let link = link_builder(rad3);
 
         let [t, u, v, w, x, y, z] = self.directions();
-        // ... And build the molecule skeleton
+
         let c1 = self.c_ref;
         let c2 = c1 - v * len1;
         let o = c1 - t * len1;
@@ -276,7 +276,7 @@ impl Molecule {
         let link = double_builder(rad3);
 
         let [t, u, v, w, x, y, z] = self.directions();
-        // ... And build the molecule skeleton
+
         let c = self.c_ref;
         let o1 = c + x * len1;
         let o2 = c - x * len1;
@@ -301,7 +301,7 @@ impl Molecule {
         let link = triple_builder(rad3);
 
         let [t, u, v, w, x, y, z] = self.directions();
-        // ... And build the molecule skeleton
+
         let n1 = self.c_ref;
         let n2 = n1 + x * len1;
 
