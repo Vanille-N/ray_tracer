@@ -34,18 +34,9 @@ const EPSILON: f64 = 0.000001;
 #[allow(unused_variables)]
 fn main() {
     //let mut rng = rand::thread_rng();
-    let nj = 2000; // width in pixels
-    let ni = 2000; // height in pixels
+    let nj = 200; // width in pixels
+    let ni = 200; // height in pixels
     let ns = 100; // number of samples per pixel
-    let out1 = File::create(".out1.txt").unwrap();
-    let out2 = File::create(".out2.txt").unwrap();
-    let out3 = File::create(".out3.txt").unwrap();
-    let out4 = File::create(".out4.txt").unwrap();
-    let _ = File::create("img.ppm").unwrap();
-    let ni1 = 0..ni/4;
-    let ni2 = ni/4..ni/2;
-    let ni3 = ni/2..3*ni/4;
-    let ni4 = 3*ni/4..ni;
     // let cam = Camera::new_absolute(
     //     Vec3::new(-2.0, 3.0, -6.0), // eye
     //     Vec3::new(0.0, 0.5, 0.0), // target
@@ -130,13 +121,14 @@ fn main() {
     //w.push(ethanol);
     //w.push(cradle);
     w.push(sun);
-    let mut writers = [
-        (3, out4, ni4, cam.clone(), w.clone()),
-        (2, out3, ni3, cam.clone(), w.clone()),
-        (1, out2, ni2, cam.clone(), w.clone()),
-        (0, out1, ni1, cam.clone(), w.clone())
-    ];
 
+    let nb_cores = 4;
+    let mut writers = Vec::new();
+    for idx in (0..nb_cores).rev() {
+        let out = File::create(&format!(".out{}.txt", idx)).unwrap();
+        let ni_rng = (idx*ni/nb_cores)..((idx+1)*ni/nb_cores);
+        writers.push((idx, out, ni_rng, cam.clone(), w.clone()));
+    }
 
     // #############################################################################
     // #############################################################################
@@ -234,20 +226,13 @@ fn main() {
     print!("\n\n\n");
     let mut f = File::create("img.ppm").unwrap();
     writeln!(f, "P3\n{} {}\n255", nj, ni).unwrap();
-    let output = Command::new("cat").arg(".out4.txt").output().unwrap_or_else(|e| {
-        panic!("failed to execute process: {}", e)
-    });
-    write!(f, "{}", String::from_utf8_lossy(&output.stdout)).unwrap();
-    let output = Command::new("cat").arg(".out3.txt").output().unwrap_or_else(|e| {
-        panic!("failed to execute process: {}", e)
-    });
-    write!(f, "{}", String::from_utf8_lossy(&output.stdout)).unwrap();
-    let output = Command::new("cat").arg(".out2.txt").output().unwrap_or_else(|e| {
-        panic!("failed to execute process: {}", e)
-    });
-    write!(f, "{}", String::from_utf8_lossy(&output.stdout)).unwrap();
-    let output = Command::new("cat").arg(".out1.txt").output().unwrap_or_else(|e| {
-        panic!("failed to execute process: {}", e)
-    });
-    write!(f, "{}", String::from_utf8_lossy(&output.stdout)).unwrap();
+    for idx in (0..nb_cores).rev() {
+        let output = Command::new("cat")
+            .arg(&format!(".out{}.txt", idx))
+            .output()
+            .unwrap_or_else(|e| {
+                panic!("failed to execute process: {}", e)
+            });
+        write!(f, "{}", String::from_utf8_lossy(&output.stdout)).unwrap();
+    }
 }
