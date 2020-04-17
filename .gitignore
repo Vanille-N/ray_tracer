@@ -3,3 +3,4 @@
 *.ppm
 exec
 *.jpg
+perf.data
