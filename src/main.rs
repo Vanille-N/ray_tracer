@@ -122,7 +122,7 @@ fn main() {
     //w.push(cradle);
     w.push(sun);
 
-    let nb_cores = 4;
+    let nb_cores = 7;
     let mut writers = Vec::new();
     for idx in (0..nb_cores).rev() {
         let out = File::create(&format!(".out{}.txt", idx)).unwrap();
@@ -135,7 +135,7 @@ fn main() {
     // REMOVE FOR WINDOWS
     // --BEGIN-- vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
     eprint!("\n\nRendering image...\n");
-    eprint!(" |\x1b[48C|\x1b[1A\n");
+    eprint!("|\x1b[50C|\x1b[1A\n");
     //for _ in 0..48 { eprint!("-"); }
     //eprint!("+\n |\x1b[48C|\n");
     //eprint!(" +");
@@ -153,15 +153,7 @@ fn main() {
         // #########################################################################
         // REMOVE FOR WINDOWS
         // --BEGIN-- vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-        let color = {
-            match *id {
-                0 => "\x1b[31m",
-                1 => "\x1b[32m",
-                2 => "\x1b[33m",
-                3 => "\x1b[34m",
-                _ => "\x1b[30m",
-            }
-        };
+        let color = &format!("\x1b[3{}m", *id+1);
         // --END-- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
         // #########################################################################
         // #########################################################################
@@ -174,20 +166,9 @@ fn main() {
             // --BEGIN-- vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
             if i * 100 % ni == 0 {
                 let load = 100 - i * 100 / ni;
-                if *id % 2 == 1 {
-                    if load % 2 == 0 || load % 25 == 0 {
-                        eprint!("\x1b[2B\x1b[{}C{}█\x1b[2A", load/2 + *id/2, color);
-                    } else {
-                        eprint!("\x1b[2B\x1b[{}C{}▀\x1b[2A", (load+1)/2 + *id/2, color);
-                    }
-                } else {
-                    if load % 2 == 0 && load % 25 != 0 {
-                        eprint!("\x1b[2B\x1b[{}C{}▀\x1b[2A", load/2 + *id/2, color);
-                    } else {
-                        eprint!("\x1b[2B\x1b[{}C{}█\x1b[2A", (load-1)/2 + *id/2, color);
-                    }
+                if load % 2 == 0 {
+                    eprint!("\x1b[2B\x1b[{}C{}█\x1b[3A\n", load/2 , color);
                 }
-                eprintln!("\x1b[0m");
             }
             // --END-- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
             // ######################################################################
@@ -223,7 +204,7 @@ fn main() {
             writeln!(f, "").unwrap();
         }
     });
-    print!("\n\n\n");
+    print!("\n\n\n\x1b[0m");
     let mut f = File::create("img.ppm").unwrap();
     writeln!(f, "P3\n{} {}\n255", nj, ni).unwrap();
     for idx in (0..nb_cores).rev() {
