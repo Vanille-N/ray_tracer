@@ -12,25 +12,6 @@ impl RGB {
     pub fn new(r: f64, g: f64, b: f64) -> Self {
         RGB { r, g, b }
     }
-
-    // pub fn squarelen(&self) -> f64 {
-    //     self.r.powi(2) + self.g.powi(2) + self.b.powi(2)
-    // }
-
-    // pub fn len(&self) -> f64 {
-    //     (self.r.powi(2) + self.g.powi(2) + self.b.powi(2)).sqrt()
-    // }
-
-    // pub fn make_unit(&mut self) {
-    //     let len = self.len();
-    //     self.r /= len;
-    //     self.g /= len;
-    //     self.b /= len;
-    // }
-
-    // pub fn dot(&self, other: &Self) -> f64 {
-    //     self.r * other.r + self.g * other.g + self.b * other.b
-    // }
 }
 
 impl ops::Add for RGB {

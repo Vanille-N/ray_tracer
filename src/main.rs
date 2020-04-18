@@ -2,9 +2,6 @@
 
 extern crate rand;
 extern crate rayon;
-//extern crate cmd_lib;
-//use rand::Rng;
-//use cmd_lib::run_cmd;
 use std::fs::File;
 use std::io::prelude::*;
 use std::process::Command;
