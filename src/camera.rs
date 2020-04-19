@@ -35,7 +35,7 @@ impl Camera {
             let x = angle_rad.sin();
             let z = angle_rad.cos();
             let y = rise_rad.sin();
-            Vec3::new(x, y, z).unit() * distance
+            Vec3::new(x, y, z).unit() * distance + target
         };
         let w = (eye - target).unit();
         let vertical = {
