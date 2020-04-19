@@ -97,11 +97,11 @@ fn main() {
 fn build_world() -> (i32, i32, i32, Camera, World) {
     let nj = 200; // width in pixels
     let ni = 200; // height in pixels
-    let ns = 50; // number of samples per pixel
+    let ns = 75; // number of samples per pixel
     let cam = Camera::new_relative(
-        Vec3::new(0.0, 0.3, 1.0), // target
-        120.0, // angle (degrees)
-        45.0, // rise (degrees)
+        Vec3::new(0.0, 1.0, 0.0), // target
+        110.0, // angle (degrees)
+        10.0, // rise (degrees)
         10.0, // distance (meters),
         0.0, // tilt (degrees)
         40.0, // aperture (degrees)
@@ -112,13 +112,13 @@ fn build_world() -> (i32, i32, i32, Camera, World) {
         orig: Vec3::new(0.0, 0.0, 0.0),
         normal: Vec3::new(0.0, 1.0, 0.0),
         texture: Texture::Metal(RGB::new(0.2, 0.2, 0.2), 0.1),
-    }.build();
+    }.build().wrap();
     let axes = Axes(2.0).build();
     let sun = Sphere {
         center: Vec3::new(-100.0, 100.0, -100.0),
         radius: 30.0,
         texture: Texture::Light(RGB::new(3.0, 3.0, 3.0)),
-    }.build();
+    }.build().wrap();
     let cradle = NewtonCradle {
         a: Vec3::new(-0.5, 0.0, -0.5),
         u: Vec3::new(0.0, 0.0, 1.0),
@@ -172,8 +172,28 @@ fn build_world() -> (i32, i32, i32, Camera, World) {
         up: Vec3::new(0.0, 0.1, 0.1),
         fwd: Vec3::new(0.0, 0.0, 0.2),
     }.benzene().build();
+
+    let test = Sphere {
+        center: Vec3::new(0.0, 1.0, 1.0),
+        radius: 2.0,
+        texture: Texture::Lambertian(RGB::new(0.9, 0.9, 0.0)),
+    }.build().carve(Sphere {
+        center: Vec3::new(0.0, 1.0, -1.0),
+        radius: 2.0,
+        texture: Texture::Lambertian(RGB::new(0.0, 0.0, 1.0)),
+    }.build());
+
+    let test2 = EmptyCylinder {
+        center1: Vec3::new(0.0, 0.1, -3.0),
+        center2: Vec3::new(0.0, 1.0, -3.0),
+        radius: 1.0,
+        texture: Texture::Lambertian(RGB::new(0.0, 0.0, 1.0)),
+    }.build().wrap();
+
+    w.push(test);
+    //w.push(test2);
     w.push(ground);
-    w.push_vec(benzene);
+    //w.push_vec(benzene);
     //w.push(water);
     //w.push(methane);
     //w.push(ethanol);

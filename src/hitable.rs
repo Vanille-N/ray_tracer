@@ -270,14 +270,25 @@ fn schlick(cos: f64, idx: f64) -> f64 {
 pub fn scatter(incident: &Ray, record: ActiveHit) -> Option<(RGB, Ray)> {
     match record.texture {
         Texture::Lambertian(albedo) => {
-            let target = record.pos + record.normal + random_in_unit_sphere() * 0.8;
-            let scattered = Ray::new(record.pos, target - record.pos);
+            let reflec = incident.dir.unit().reflect(&record.normal);
+            let scattered = Ray::new(record.pos, reflec + random_in_unit_sphere() * 0.8);
             let attenuation = albedo;
-            Some((attenuation, scattered))
+            let normal = {
+                if scattered.dir.dot(&record.normal) > 0.0 {
+                    record.normal
+                } else {
+                    -record.normal
+                }
+            };
+            if scattered.dir.dot(&normal) > EPSILON {
+                Some((attenuation, scattered))
+            } else {
+                None
+            }
         }
         Texture::Metal(albedo, fuzziness) => {
             let reflec = incident.dir.unit().reflect(&record.normal);
-            let scattered = Ray::new(record.pos, reflec + random_in_unit_sphere() * fuzziness);
+            let scattered = Ray::new(record.pos, reflec + random_in_unit_sphere() * fuzziness * 0.8);
             let attenuation = albedo;
             let normal = {
                 if scattered.dir.dot(&record.normal) > 0.0 {
