@@ -180,7 +180,73 @@ impl World {
     fn hit(&self, r: &Ray) -> HitRecord {
         let mut rec = HitRecord::Blank;
         for obj in &self.0 {
-            rec.compare(obj.hit(r));
+            match obj {
+                Interaction::Alone(obj) => rec.compare(obj.hit(r)),
+                Interaction::Intersect(a, b) => {
+                    let mut record = HitRecord::Blank;
+                    let mut ray = *r;
+                    let mut offset = 0.0;
+                    loop {
+                        match a.hit(&ray) {
+                            HitRecord::Blank => break,
+                            HitRecord::Hit(h) => {
+                                if Interaction::inside(*b, h.pos) {
+                                    record.compare(HitRecord::Hit(h.later(offset)));
+                                }
+                                ray.orig = h.pos + ray.dir * EPSILON;
+                                offset += h.t;
+                            }
+                        }
+                    }
+                    let mut ray = *r;
+                    let mut offset = 0.0;
+                    loop {
+                        match b.hit(&ray) {
+                            HitRecord::Blank => break,
+                            HitRecord::Hit(h) => {
+                                if Interaction::inside(*a, h.pos) {
+                                    record.compare(HitRecord::Hit(h.later(offset)));
+                                }
+                                ray.orig = h.pos + ray.dir * EPSILON;
+                                offset += h.t;
+                            }
+                        }
+                    }
+                    rec.compare(record);
+                }
+                Interaction::Carve(a, b) => {
+                    let mut record = HitRecord::Blank;
+                    let mut ray = *r;
+                    let mut offset = 0.0;
+                    loop {
+                        match a.hit(&ray) {
+                            HitRecord::Blank => break,
+                            HitRecord::Hit(h) => {
+                                if Interaction::outside(*b, h.pos) {
+                                    record.compare(HitRecord::Hit(h.later(offset)));
+                                }
+                                ray.orig = h.pos + ray.dir * EPSILON;
+                                offset += h.t;
+                            }
+                        }
+                    }
+                    let mut ray = *r;
+                    let mut offset = 0.0;
+                    loop {
+                        match b.hit(&ray) {
+                            HitRecord::Blank => break,
+                            HitRecord::Hit(h) => {
+                                if Interaction::inside(*a, h.pos) {
+                                    record.compare(HitRecord::Hit(h.later(offset)));
+                                }
+                                ray.orig = h.pos + ray.dir * EPSILON;
+                                offset += h.t;
+                            }
+                        }
+                    }
+                    rec.compare(record);
+                }
+            }
         }
         rec
     }
