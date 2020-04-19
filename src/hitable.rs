@@ -52,6 +52,20 @@ pub enum Primitive {
     Cylinder(CylinderObject),
 }
 
+impl Primitive {
+    pub fn wrap(self) -> Interaction {
+        Interaction::Alone(self)
+    }
+
+    pub fn intersect(self, other: Primitive) -> Interaction {
+        Interaction::Intersect(self, other)
+    }
+
+    pub fn carve(self, other: Primitive) -> Interaction {
+        Interaction::Carve(self, other)
+    }
+}
+
 impl Hit for Primitive {
     fn hit(&self, r: &Ray) -> HitRecord {
         match self {
@@ -67,7 +81,31 @@ impl Hit for Primitive {
     }
 }
 
-pub type Composite = Vec<Primitive>;
+#[derive(Clone)]
+pub enum Interaction {
+    Alone(Primitive),
+    Intersect(Primitive, Primitive),
+    Carve(Primitive, Primitive),
+}
+
+impl Interaction {
+    pub fn inside(obj: Primitive, pos: Vec3) -> bool {
+        let ray1 = Ray { orig: pos, dir: Vec3::new(0.0, 1.0, 0.0) };
+        let ray2 = Ray { orig: pos, dir: Vec3::new(0.0, -1.0, 0.0) };
+        match (obj.hit(&ray1), obj.hit(&ray2)) {
+            (HitRecord::Blank, _) => false,
+            (_, HitRecord::Blank) => false,
+            (_, _) => true,
+        }
+    }
+
+    pub fn outside(obj: Primitive, pos: Vec3) -> bool {
+        !Interaction::inside(obj, pos)
+    }
+}
+
+
+pub type Composite = Vec<Interaction>;
 
 #[derive(Copy, Clone, Debug)]
 pub struct ActiveHit {
@@ -126,7 +164,7 @@ impl World {
         Self(Vec::new())
     }
 
-    pub fn push(&mut self, x: Primitive) {
+    pub fn push(&mut self, x: Interaction) {
         self.0.push(x);
     }
 
