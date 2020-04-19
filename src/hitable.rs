@@ -53,16 +53,16 @@ pub enum Primitive {
 }
 
 impl Hit for Primitive {
-    fn hit(&self, rec: &mut HitRecord, r: &Ray) {
+    fn hit(&self, r: &Ray) -> HitRecord {
         match self {
-            Primitive::Sphere(s) => s.hit(rec, r),
-            Primitive::InfinitePlane(s) => s.hit(rec, r),
-            Primitive::Triangle(s) => s.hit(rec, r),
-            Primitive::Parallelogram(s) => s.hit(rec, r),
-            Primitive::Rhombus(s) => s.hit(rec, r),
-            Primitive::EmptyCylinder(s) => s.hit(rec, r),
-            Primitive::Disc(s) => s.hit(rec, r),
-            Primitive::Cylinder(s) => s.hit(rec, r),
+            Primitive::Sphere(s) => s.hit(r),
+            Primitive::InfinitePlane(s) => s.hit(r),
+            Primitive::Triangle(s) => s.hit(r),
+            Primitive::Parallelogram(s) => s.hit(r),
+            Primitive::Rhombus(s) => s.hit(r),
+            Primitive::EmptyCylinder(s) => s.hit(r),
+            Primitive::Disc(s) => s.hit(r),
+            Primitive::Cylinder(s) => s.hit(r),
         }
     }
 }
@@ -70,16 +70,42 @@ impl Hit for Primitive {
 pub type Composite = Vec<Primitive>;
 
 #[derive(Copy, Clone, Debug)]
-pub struct HitRecord {
-    pub active: bool,
+pub struct ActiveHit {
     pub t: f64,
     pub pos: Vec3,
     pub normal: Vec3,
     pub texture: Texture,
 }
 
+pub enum HitRecord {
+    Blank,
+    Hit(ActiveHit),
+}
+
+impl HitRecord {
+    pub fn make(t: f64, pos: Vec3, normal: Vec3, texture: Texture) -> Self {
+        HitRecord::Hit(ActiveHit { t, pos, normal: normal.unit(), texture })
+    }
+
+    pub fn compare(&mut self, other: Self) {
+        match other {
+            HitRecord::Blank => (),
+            HitRecord::Hit(b) => {
+                match self {
+                    HitRecord::Blank => *self = other,
+                    HitRecord::Hit(a) => {
+                        if a.t > b.t {
+                            *self = other;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 pub trait Hit {
-    fn hit(&self, rec: &mut HitRecord, r: &Ray);
+    fn hit(&self, r: &Ray) -> HitRecord ;
 }
 
 #[derive(Clone)]
@@ -103,10 +129,12 @@ impl World {
 
 
 impl World {
-    fn hit(&self, rec: &mut HitRecord, r: &Ray) {
+    fn hit(&self, r: &Ray) -> HitRecord {
+        let mut rec = HitRecord::Blank;
         for obj in &self.0 {
-            obj.hit(rec, r)
+            rec.compare(obj.hit(r));
         }
+        rec
     }
 }
 
@@ -125,7 +153,7 @@ fn schlick(cos: f64, idx: f64) -> f64 {
     r + (1.0 - r) * (1.0 - cos).powi(5)
 }
 
-pub fn scatter(incident: &Ray, record: &HitRecord) -> Option<(RGB, Ray)> {
+pub fn scatter(incident: &Ray, record: ActiveHit) -> Option<(RGB, Ray)> {
     match record.texture {
         Texture::Lambertian(albedo) => {
             let target = record.pos + record.normal + random_in_unit_sphere() * 0.8;
@@ -177,18 +205,19 @@ pub fn scatter(incident: &Ray, record: &HitRecord) -> Option<(RGB, Ray)> {
 
 
 pub fn color(r: &Ray, w: &World, depth: i32) -> RGB {
-    let mut record = HitRecord {
-        active: false,
-        t: 1000.,
-        pos: Vec3::new(0.0, 0.0, 0.0),
-        normal: Vec3::new(0.0, 0.0, 0.0),
-        texture: Texture::Lambertian(RGB::new(0.0, 0.0, 0.0)),
-    };
-    w.hit(&mut record, r);
-    if record.active {
-        if depth < 100 {
-            if let Some((attenuation, scattered)) = scatter(r, &record) {
-                attenuation * color(&scattered, &w, depth+1)
+    match w.hit(r) {
+        HitRecord::Hit(record) => {
+            if depth < 100 {
+                if let Some((attenuation, scattered)) = scatter(r, record) {
+                    attenuation * color(&scattered, &w, depth+1)
+                } else {
+                    match record.texture {
+                        Texture::Lambertian(color) => color,
+                        Texture::Metal(color, _) => color,
+                        Texture::Light(color) => color,
+                        Texture::Dielectric(color, _) => color,
+                    }
+                }
             } else {
                 match record.texture {
                     Texture::Lambertian(color) => color,
@@ -197,18 +226,12 @@ pub fn color(r: &Ray, w: &World, depth: i32) -> RGB {
                     Texture::Dielectric(color, _) => color,
                 }
             }
-        } else {
-            match record.texture {
-                Texture::Lambertian(color) => color,
-                Texture::Metal(color, _) => color,
-                Texture::Light(color) => color,
-                Texture::Dielectric(color, _) => color,
-            }
         }
-    } else {
-        let u = r.dir.unit();
-        let t = 0.5 * (u.y + 1.);
-        RGB::new(0.9, 0.9, 0.9) * (1. - t) + RGB::new(0.5, 0.7, 1.) * t
+        HitRecord::Blank => {
+            let u = r.dir.unit();
+            let t = 0.5 * (u.y + 1.);
+            RGB::new(0.9, 0.9, 0.9) * (1. - t) + RGB::new(0.5, 0.7, 1.) * t
+        }
     }
 }
 

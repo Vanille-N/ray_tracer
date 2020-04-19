@@ -95,8 +95,8 @@ fn main() {
 
 
 fn build_world() -> (i32, i32, i32, Camera, World) {
-    let nj = 2000; // width in pixels
-    let ni = 2000; // height in pixels
+    let nj = 200; // width in pixels
+    let ni = 200; // height in pixels
     let ns = 50; // number of samples per pixel
     let cam = Camera::new_relative(
         Vec3::new(0.0, 0.3, 1.0), // target
