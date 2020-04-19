@@ -26,7 +26,7 @@ use composite_cradle::*;
 use composite_molecules::*;
 use composite_axes::*;
 
-const EPSILON: f64 = 0.000001;
+const EPSILON: f64 = 0.0000001;
 
 const CFG: &str = "linux";
 

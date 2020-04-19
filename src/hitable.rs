@@ -77,6 +77,16 @@ pub struct ActiveHit {
     pub texture: Texture,
 }
 
+impl ActiveHit {
+    pub fn later(self, t: f64) -> Self {
+        ActiveHit {
+            t: self.t + t,
+            ..self
+        }
+    }
+}
+
+#[derive(Clone, Copy)]
 pub enum HitRecord {
     Blank,
     Hit(ActiveHit),
