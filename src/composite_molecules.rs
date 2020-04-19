@@ -394,10 +394,10 @@ impl MoleculeObject {
     pub fn build(self) -> Composite {
         let mut res = Vec::new();
         for x in self.atoms {
-            res.push(x.build());
+            res.push(x.build().wrap());
         }
         for x in self.links {
-            res.push(x.build());
+            res.push(x.build().wrap());
         }
         res
     }

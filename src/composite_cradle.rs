@@ -192,6 +192,6 @@ impl NewtonCradle {
             radius: r * 0.03,
             texture: nylon,
         }.build();
-        vec![pedestal, pillar1, pillar2, pillar3, pillar4, bar1, bar2, smoothtop1, smoothtop2, smoothtop3, smoothtop4, sphere1.build(), sphere2.build(), sphere3.build(), sphere4.build(), sphere5.build(), ring1.build(), ring2.build(), ring3.build(), ring4.build(), ring5.build(), thread1a, thread1b, thread2a, thread2b, thread3a, thread3b, thread4a, thread4b, thread5a, thread5b]
+        vec![pedestal.wrap(), pillar1.wrap(), pillar2.wrap(), pillar3.wrap(), pillar4.wrap(), bar1.wrap(), bar2.wrap(), smoothtop1.wrap(), smoothtop2.wrap(), smoothtop3.wrap(), smoothtop4.wrap(), sphere1.build().wrap(), sphere2.build().wrap(), sphere3.build().wrap(), sphere4.build().wrap(), sphere5.build().wrap(), ring1.build().wrap(), ring2.build().wrap(), ring3.build().wrap(), ring4.build().wrap(), ring5.build().wrap(), thread1a.wrap(), thread1b.wrap(), thread2a.wrap(), thread2b.wrap(), thread3a.wrap(), thread3b.wrap(), thread4a.wrap(), thread4b.wrap(), thread5a.wrap(), thread5b.wrap()]
     }
 }

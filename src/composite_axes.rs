@@ -67,9 +67,9 @@ impl Axes {
                 texture: GREEN,
             });
         }
-        let mut res = vec![xdir.build(), ydir.build(), zdir.build()];
+        let mut res = vec![xdir.build().wrap(), ydir.build().wrap(), zdir.build().wrap()];
         for x in v {
-            res.push(x.build());
+            res.push(x.build().wrap());
         }
         res
     }
