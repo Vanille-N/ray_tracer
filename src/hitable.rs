@@ -40,7 +40,7 @@ use crate::EPSILON;
 // Altogether it seems to be a small price to pay for access to multithreading and
 // relief from manually managing lifetimes.
 
-#[derive(Clone)]
+#[derive(Clone, Copy)]
 pub enum Primitive {
     Sphere(Sphere),
     InfinitePlane(InfinitePlane),
