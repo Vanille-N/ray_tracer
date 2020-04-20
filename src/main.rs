@@ -33,7 +33,7 @@ const CFG: &str = "linux";
 #[allow(unused_variables)]
 fn main() {
     let (ni, nj, ns, cam, w) = build_world();
-    let nb_cores = 4;
+    let nb_cores = 6;
     let mut writers = Vec::new();
     for idx in (0..nb_cores).rev() {
         let out = File::create(&format!(".out{}.txt", idx)).unwrap();
@@ -95,14 +95,14 @@ fn main() {
 
 
 fn build_world() -> (i32, i32, i32, Camera, World) {
-    let nj = 200; // width in pixels
-    let ni = 200; // height in pixels
-    let ns = 75; // number of samples per pixel
+    let nj = 2000; // width in pixels
+    let ni = 2000; // height in pixels
+    let ns = 100; // number of samples per pixel
     let cam = Camera::new_relative(
-        Vec3::new(0.0, 1.0, 0.0), // target
-        110.0, // angle (degrees)
-        10.0, // rise (degrees)
-        10.0, // distance (meters),
+        Vec3::new(0.0, 2.0, 0.0), // target
+        30.0, // angle (degrees)
+        30.0, // rise (degrees)
+        7.0, // distance (meters),
         0.0, // tilt (degrees)
         40.0, // aperture (degrees)
         nj as f64 / ni as f64, // aspect ratio
@@ -111,25 +111,25 @@ fn build_world() -> (i32, i32, i32, Camera, World) {
     let ground = InfinitePlane {
         orig: Vec3::new(0.0, 0.0, 0.0),
         normal: Vec3::new(0.0, 1.0, 0.0),
-        texture: Texture::Metal(RGB::new(0.2, 0.2, 0.2), 0.1),
+        texture: Texture::Metal(RGB::new(0.4, 0.4, 0.2), 0.05),
     }.build().wrap();
-    let axes = Axes(2.0).build();
-    let sun = Sphere {
-        center: Vec3::new(-100.0, 100.0, -100.0),
-        radius: 30.0,
-        texture: Texture::Light(RGB::new(3.0, 3.0, 3.0)),
-    }.build().wrap();
-    let cradle = NewtonCradle {
-        a: Vec3::new(-0.5, 0.0, -0.5),
-        u: Vec3::new(0.0, 0.0, 1.0),
-        v: Vec3::new(1.0, 0.0, 0.0),
-        w: Vec3::new(0.0, 1.0, 0.0),
-    }.build();
-    let cyc = Molecule {
-        c_ref: Vec3::new(-5.0, 0.7, 17.0),
-        up: Vec3::new(0.3, 0.3, 0.0),
-        fwd: Vec3::new(-1.0, 0.5, 1.0),
-    }.cyclohexanol().build();
+    // let axes = Axes(2.0).build();
+    // let sun = Sphere {
+    //     center: Vec3::new(-40.0, 100.0, -250.0),
+    //     radius: 50.0,
+    //     texture: Texture::Light(RGB::new(3.0, 3.0, 3.0)),
+    // }.build().wrap();
+    // let cradle = NewtonCradle {
+    //     a: Vec3::new(-0.5, 0.0, -0.5),
+    //     u: Vec3::new(0.0, 0.0, 1.0),
+    //     v: Vec3::new(1.0, 0.0, 0.0),
+    //     w: Vec3::new(0.0, 1.0, 0.0),
+    // }.build();
+    // let cyc = Molecule {
+    //     c_ref: Vec3::new(-5.0, 0.7, 17.0),
+    //     up: Vec3::new(0.3, 0.3, 0.0),
+    //     fwd: Vec3::new(-1.0, 0.5, 1.0),
+    // }.cyclohexanol().build();
     // let water = Molecule {
     //     c_ref: Vec3::new(0.0, 0.0, 0.0),
     //     up: Vec3::new(0.0, 1.0, 0.0),
@@ -167,37 +167,97 @@ fn build_world() -> (i32, i32, i32, Camera, World) {
     //     up: Vec3::new(0.0, 0.0, 0.1),
     //     fwd: Vec3::new(0.0, 0.1, 0.0),
     // }.test().build();
-    let benzene = Molecule {
-        c_ref: Vec3::new(0.0, 0.5, 0.0),
-        up: Vec3::new(0.0, 0.1, 0.1),
-        fwd: Vec3::new(0.0, 0.0, 0.2),
-    }.benzene().build();
+    // let benzene = Molecule {
+    //     c_ref: Vec3::new(0.0, 0.5, 0.0),
+    //     up: Vec3::new(0.0, 0.1, 0.1),
+    //     fwd: Vec3::new(0.0, 0.0, 0.2),
+    // }.benzene().build();
+    //
+    // let test = Sphere {
+    //     center: Vec3::new(0.0, 1.0, 1.0),
+    //     radius: 2.0,
+    //     texture: Texture::Lambertian(RGB::new(0.9, 0.9, 0.0)),
+    // }.build().carve(Sphere {
+    //     center: Vec3::new(0.0, 1.0, -1.0),
+    //     radius: 2.0,
+    //     texture: Texture::Lambertian(RGB::new(0.0, 0.0, 1.0)),
+    // }.build());
 
-    let test = Sphere {
-        center: Vec3::new(0.0, 1.0, 1.0),
-        radius: 2.0,
-        texture: Texture::Lambertian(RGB::new(0.9, 0.9, 0.0)),
-    }.build().carve(Sphere {
-        center: Vec3::new(0.0, 1.0, -1.0),
-        radius: 2.0,
-        texture: Texture::Lambertian(RGB::new(0.0, 0.0, 1.0)),
+    // let test2 = EmptyCylinder {
+    //     center1: Vec3::new(0.0, 0.1, -3.0),
+    //     center2: Vec3::new(0.0, 1.0, -3.0),
+    //     radius: 1.0,
+    //     texture: Texture::Lambertian(RGB::new(0.0, 0.0, 1.0)),
+    // }.build().wrap();
+
+    // let outer = Cylinder {
+    //     center1: Vec3::new(0.0, 2.0, 0.0),
+    //     center2: Vec3::new(0.0, 6.0, 0.0),
+    //     radius: 2.0,
+    //     texture: Texture::Dielectric(RGB::new(0.9, 0.7, 0.9), 1.3),
+    // }.build().wrap();
+    //
+    // let inner = Cylinder {
+    //     center1: Vec3::new(-2.0, 0.5, 0.0),
+    //     center2: Vec3::new(2.0, 7.5, 0.0),
+    //     radius: 0.2,
+    //     texture: Texture::Lambertian(RGB::new(0.2, 0.7, 0.6)),
+    // }.build().wrap();
+
+    // let lense = Sphere {
+    //     center: Vec3::new(0.0, 10.0, 10.0),
+    //     radius: 10.1,
+    //     texture: Texture::Dielectric(RGB::new(0.9, 0.9, 0.9), 1.4),
+    // }.build().intersect(Sphere {
+    //     center: Vec3::new(0.0, 10.0, -10.0),
+    //     radius: 10.1,
+    //     texture: Texture::Dielectric(RGB::new(0.9, 0.9, 0.9), 1.4),
+    // }.build());
+    //
+    // let object = Triangle {
+    //     a: Vec3::new(0.0, 10.0, -125.0),
+    //     u: Vec3::new(0.0, 1.0, 0.0),
+    //     v: Vec3::new(1.0, 0.0, 0.0),
+    //     texture: Texture::Lambertian(RGB::new(1.0, 0.0, 0.0)),
+    // }.build().wrap();
+
+    let mut obj1 = Rhombus {
+        a: Vec3::new(-1.0, 1.0, -1.0),
+        u: Vec3::new(2.0, 0.0, 0.0),
+        v: Vec3::new(0.0, 2.0, 0.0),
+        w: Vec3::new(0.0, 0.0, 2.0),
+        texture: Texture::Lambertian(RGB::new(0.6, 0.6, 0.9)),
+    }.build().remove(Sphere {
+        center: Vec3::new(0.0, 2.0, 0.0),
+        radius: 1.2,
+        texture: Texture::Lambertian(RGB::new(0.6, 0.6, 0.9)),
+    }.build());
+    obj1.intersect(Sphere {
+        center: Vec3::new(0.0, 2.0, 0.0),
+        radius: 1.3,
+        texture: Texture::Lambertian(RGB::new(0.6, 0.6, 0.9)),
+    }.build());
+    obj1.remove(Cylinder {
+        center1: Vec3::new(0.0, 2.0, 0.0),
+        center2: Vec3::new(1.0, 3.0, 1.0),
+        radius: 0.7,
+        texture: Texture::Lambertian(RGB::new(0.6, 0.6, 0.9)),
     }.build());
 
-    let test2 = EmptyCylinder {
-        center1: Vec3::new(0.0, 0.1, -3.0),
-        center2: Vec3::new(0.0, 1.0, -3.0),
-        radius: 1.0,
-        texture: Texture::Lambertian(RGB::new(0.0, 0.0, 1.0)),
-    }.build().wrap();
 
-    w.push(test);
-    //w.push(test2);
+    // w.push(test);
+    // w.push(test2);
+    // w.push(lense);
+    w.push(obj1);
     w.push(ground);
-    //w.push_vec(benzene);
-    //w.push(water);
-    //w.push(methane);
-    //w.push(ethanol);
-    //w.push(cradle);
-    w.push(sun);
+    // w.push(object);
+    // w.push(outer);
+    // w.push(inner);
+    // w.push_vec(benzene);
+    // w.push(water);
+    // w.push(methane);
+    // w.push(ethanol);
+    // w.push(cradle);
+    // w.push(sun);
     (ni, nj, ns, cam, w)
 }
