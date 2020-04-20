@@ -54,15 +54,15 @@ pub enum Primitive {
 
 impl Primitive {
     pub fn wrap(self) -> Interaction {
-        Interaction::Alone(self)
+        Interaction(vec![self], vec![])
     }
 
     pub fn intersect(self, other: Primitive) -> Interaction {
-        Interaction::Intersect(self, other)
+        Interaction(vec![self, other], vec![])
     }
 
-    pub fn carve(self, other: Primitive) -> Interaction {
-        Interaction::Carve(self, other)
+    pub fn remove(self, other: Primitive) -> Interaction {
+        Interaction(vec![self], vec![other])
     }
 }
 
@@ -82,14 +82,10 @@ impl Hit for Primitive {
 }
 
 #[derive(Clone)]
-pub enum Interaction {
-    Alone(Primitive),
-    Intersect(Primitive, Primitive),
-    Carve(Primitive, Primitive),
-}
+pub struct Interaction(Vec<Primitive>, Vec<Primitive>);
 
 impl Interaction {
-    pub fn inside(obj: Primitive, pos: Vec3) -> bool {
+    pub fn inside(obj: &Primitive, pos: Vec3) -> bool {
         let ray1 = Ray { orig: pos, dir: Vec3::new(0.0, 1.0, 0.0) };
         let ray2 = Ray { orig: pos, dir: Vec3::new(0.0, -1.0, 0.0) };
         match (obj.hit(&ray1), obj.hit(&ray2)) {
