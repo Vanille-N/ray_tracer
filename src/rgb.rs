@@ -161,3 +161,25 @@ impl fmt::Display for RGB {
         write!(f, "{} {} {} ", r, g, b)
     }
 }
+
+
+const RED: RGB = RGB { r: 1.0, g: 0.0, b: 0.0 };
+const DKRED: RGB = RGB { r: 0.5, g: 0.0, b: 0.0 };
+const LTRED: RGB = RGB { r: 1.0, g: 0.5, b: 0.5 };
+const BLUE: RGB = RGB { r: 0.0, g: 0.0, b: 1.0 };
+const DKBLUE: RGB = RGB { r: 0.0, g: 0.0, b: 0.5 };
+const LTBLUE: RGB = RGB { r: 0.3, g: 0.6, b: 1.0 };
+const GREEN: RGB = RGB { r: 0.0, g: 1.0, b: 0.0 };
+const DKGREEN: RGB = RGB { r: 0.0, g: 0.5, b: 0.0 };
+const LTGREEN: RGB = RGB { r: 0.7, g: 1.0, b: 0.0 };
+const PURPLE: RGB = RGB { r: 0.7, g: 0.0, b: 0.0 };
+const MAGENTA: RGB = RGB { r: 1.0, g: 0.0, b: 1.0 };
+const YELLOW: RGB = RGB { r: 1.0, g: 1.0, b: 0.0 };
+const BROWN: RGB = RGB { r: 0.3, g: 0.2, b: 0.0 };
+const ORANGE: RGB = RGB { r: 1.0, g: 0.4, b: 0.0 };
+const TURQUOISE: RGB = RGB { r: 0.0, g: 0.9, b: 0.6 };
+const BLACK: RGB = RGB { r: 0.0, g: 0.0, b: 0.0 };
+const WHITE: RGB = RGB { r: 1.0, g: 1.0, b: 1.0 };
+const GREY: RGB = RGB { r: 0.5, g: 0.5, b: 0.5 };
+const DKGREY: RGB = RGB { r: 0.2, g: 0.2, b: 0.2 };
+const LTGREY: RGB = RGB { r: 0.8, g: 0.8, b: 0.8 };
