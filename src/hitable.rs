@@ -95,8 +95,38 @@ impl Interaction {
         }
     }
 
-    pub fn outside(obj: Primitive, pos: Vec3) -> bool {
+    pub fn outside(obj: &Primitive, pos: Vec3) -> bool {
         !Interaction::inside(obj, pos)
+    }
+
+    pub fn intersect(&mut self, other: Primitive) {
+        self.0.push(other);
+    }
+
+    pub fn remove(&mut self, other: Primitive) {
+        self.1.push(other);
+    }
+
+    pub fn all_inside_except(p: Vec3, v: &Vec<Primitive>, i: usize) -> bool {
+        for j in 0..v.len() {
+            if j != i {
+                if Interaction::outside(&v[j], p) {
+                    return false;
+                }
+            }
+        }
+        true
+    }
+
+    pub fn all_outside_except(p: Vec3, v: &Vec<Primitive>, i: usize) -> bool {
+        for j in 0..v.len() {
+            if j != i {
+                if Interaction::inside(&v[j], p) {
+                    return false;
+                }
+            }
+        }
+        true
     }
 }
 
