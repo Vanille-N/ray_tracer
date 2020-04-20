@@ -12,6 +12,14 @@ impl RGB {
     pub fn new(r: f64, g: f64, b: f64) -> Self {
         RGB { r, g, b }
     }
+
+    pub fn shade(self, p: u8) -> Self {
+        self * p as f64 / 100.0
+    }
+
+    pub fn mix(self, other: Self) -> Self {
+        (self + other) / 2.0
+    }
 }
 
 impl ops::Add for RGB {
