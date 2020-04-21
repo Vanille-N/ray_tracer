@@ -1,7 +1,7 @@
 use crate::hitable::*;
-use crate::vec3::Vec3;
-use crate::rgb::RGB;
 use crate::primitives::*;
+use crate::rgb::RGB;
+use crate::vec3::Vec3;
 
 #[derive(Clone, Copy)]
 pub struct NewtonCradle {
@@ -21,65 +21,79 @@ impl NewtonCradle {
         let u = self.v.cross(&w).unit() * len;
         let v = w.cross(&u).unit() * len;
         let pedestal = Rhombus {
-            a: self.a, u, v, w: w * 0.1,
+            a: self.a,
+            u,
+            v,
+            w: w * 0.1,
             texture: plastic,
-        }.build();
+        }
+        .build();
         let pillar1 = EmptyCylinder {
             center1: self.a + v * 0.1 + u * 0.1,
             center2: self.a + v * 0.1 + u * 0.1 + w,
             radius: v.len() * 0.03,
             texture: plastic,
-        }.build();
+        }
+        .build();
         let pillar2 = EmptyCylinder {
             center1: self.a + v * 0.9 + u * 0.1,
             center2: self.a + v * 0.9 + u * 0.1 + w,
             radius: v.len() * 0.03,
             texture: plastic,
-        }.build();
+        }
+        .build();
         let pillar3 = EmptyCylinder {
             center1: self.a + v * 0.9 + u * 0.9,
             center2: self.a + v * 0.9 + u * 0.9 + w,
             radius: v.len() * 0.03,
             texture: plastic,
-        }.build();
+        }
+        .build();
         let pillar4 = EmptyCylinder {
             center1: self.a + v * 0.1 + u * 0.9,
             center2: self.a + v * 0.1 + u * 0.9 + w,
             radius: v.len() * 0.03,
             texture: plastic,
-        }.build();
+        }
+        .build();
         let bar1 = EmptyCylinder {
             center1: self.a + v * 0.1 + u * 0.1 + w,
             center2: self.a + v * 0.9 + u * 0.1 + w,
             radius: v.len() * 0.03,
             texture: plastic,
-        }.build();
+        }
+        .build();
         let bar2 = EmptyCylinder {
             center1: self.a + v * 0.1 + u * 0.9 + w,
             center2: self.a + v * 0.9 + u * 0.9 + w,
             radius: v.len() * 0.03,
             texture: plastic,
-        }.build();
+        }
+        .build();
         let smoothtop1 = Sphere {
             center: self.a + v * 0.1 + u * 0.1 + w,
             radius: v.len() * 0.03,
             texture: plastic,
-        }.build();
+        }
+        .build();
         let smoothtop2 = Sphere {
             center: self.a + v * 0.1 + u * 0.9 + w,
             radius: v.len() * 0.03,
             texture: plastic,
-        }.build();
+        }
+        .build();
         let smoothtop3 = Sphere {
             center: self.a + v * 0.9 + u * 0.9 + w,
             radius: v.len() * 0.03,
             texture: plastic,
-        }.build();
+        }
+        .build();
         let smoothtop4 = Sphere {
             center: self.a + v * 0.9 + u * 0.1 + w,
             radius: v.len() * 0.03,
             texture: plastic,
-        }.build();
+        }
+        .build();
         let r = u.len() * 0.7 / 10.0;
         let sphere1 = Sphere {
             center: self.a + u * 0.5 + v * 0.15 + v.unit() * r + w * 0.3,
@@ -96,13 +110,15 @@ impl NewtonCradle {
             center2: ring1.center + u * 0.40 + w * 0.64,
             radius: r * 0.03,
             texture: nylon,
-        }.build();
+        }
+        .build();
         let thread1b = EmptyCylinder {
             center1: ring1.center,
             center2: ring1.center - u * 0.40 + w * 0.64,
             radius: r * 0.03,
             texture: nylon,
-        }.build();
+        }
+        .build();
         let sphere2 = Sphere {
             center: self.a + u * 0.5 + v * 0.15 + v.unit() * 3. * r + w * 0.3,
             radius: r,
@@ -118,13 +134,15 @@ impl NewtonCradle {
             center2: ring2.center + u * 0.40 + w * 0.64,
             radius: r * 0.03,
             texture: nylon,
-        }.build();
+        }
+        .build();
         let thread2b = EmptyCylinder {
             center1: ring2.center,
             center2: ring2.center - u * 0.40 + w * 0.64,
             radius: r * 0.03,
             texture: nylon,
-        }.build();
+        }
+        .build();
         let sphere3 = Sphere {
             center: self.a + u * 0.5 + v * 0.15 + v.unit() * 5. * r + w * 0.3,
             radius: r,
@@ -140,13 +158,15 @@ impl NewtonCradle {
             center2: ring3.center + u * 0.40 + w * 0.64,
             radius: r * 0.03,
             texture: nylon,
-        }.build();
+        }
+        .build();
         let thread3b = EmptyCylinder {
             center1: ring3.center,
             center2: ring3.center - u * 0.40 + w * 0.64,
             radius: r * 0.03,
             texture: nylon,
-        }.build();
+        }
+        .build();
         let sphere4 = Sphere {
             center: self.a + u * 0.5 + v * 0.15 + v.unit() * 7. * r + w * 0.3,
             radius: r,
@@ -162,13 +182,15 @@ impl NewtonCradle {
             center2: ring4.center + u * 0.40 + w * 0.64,
             radius: r * 0.03,
             texture: nylon,
-        }.build();
+        }
+        .build();
         let thread4b = EmptyCylinder {
             center1: ring4.center,
             center2: ring4.center - u * 0.40 + w * 0.64,
             radius: r * 0.03,
             texture: nylon,
-        }.build();
+        }
+        .build();
         let sphere5 = Sphere {
             center: self.a + u * 0.5 + v * 0.15 + v.unit() * 9. * r + w * 0.3,
             radius: r,
@@ -184,13 +206,47 @@ impl NewtonCradle {
             center2: ring5.center + u * 0.40 + w * 0.64,
             radius: r * 0.03,
             texture: nylon,
-        }.build();
+        }
+        .build();
         let thread5b = EmptyCylinder {
             center1: ring5.center,
             center2: ring5.center - u * 0.40 + w * 0.64,
             radius: r * 0.03,
             texture: nylon,
-        }.build();
-        vec![pedestal.wrap(), pillar1.wrap(), pillar2.wrap(), pillar3.wrap(), pillar4.wrap(), bar1.wrap(), bar2.wrap(), smoothtop1.wrap(), smoothtop2.wrap(), smoothtop3.wrap(), smoothtop4.wrap(), sphere1.build().wrap(), sphere2.build().wrap(), sphere3.build().wrap(), sphere4.build().wrap(), sphere5.build().wrap(), ring1.build().wrap(), ring2.build().wrap(), ring3.build().wrap(), ring4.build().wrap(), ring5.build().wrap(), thread1a.wrap(), thread1b.wrap(), thread2a.wrap(), thread2b.wrap(), thread3a.wrap(), thread3b.wrap(), thread4a.wrap(), thread4b.wrap(), thread5a.wrap(), thread5b.wrap()]
+        }
+        .build();
+        vec![
+            pedestal.wrap(),
+            pillar1.wrap(),
+            pillar2.wrap(),
+            pillar3.wrap(),
+            pillar4.wrap(),
+            bar1.wrap(),
+            bar2.wrap(),
+            smoothtop1.wrap(),
+            smoothtop2.wrap(),
+            smoothtop3.wrap(),
+            smoothtop4.wrap(),
+            sphere1.build().wrap(),
+            sphere2.build().wrap(),
+            sphere3.build().wrap(),
+            sphere4.build().wrap(),
+            sphere5.build().wrap(),
+            ring1.build().wrap(),
+            ring2.build().wrap(),
+            ring3.build().wrap(),
+            ring4.build().wrap(),
+            ring5.build().wrap(),
+            thread1a.wrap(),
+            thread1b.wrap(),
+            thread2a.wrap(),
+            thread2b.wrap(),
+            thread3a.wrap(),
+            thread3b.wrap(),
+            thread4a.wrap(),
+            thread4b.wrap(),
+            thread5a.wrap(),
+            thread5b.wrap(),
+        ]
     }
 }

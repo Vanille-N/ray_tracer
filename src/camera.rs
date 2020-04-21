@@ -1,5 +1,5 @@
-use crate::vec3::Vec3;
 use crate::ray::Ray;
+use crate::vec3::Vec3;
 
 #[derive(Clone)]
 pub struct Camera {
@@ -25,7 +25,15 @@ impl Camera {
         }
     }
 
-    pub fn new_relative(target: Vec3, angle: f64, rise: f64, distance: f64, tilt: f64, aperture: f64, ratio: f64) -> Self {
+    pub fn new_relative(
+        target: Vec3,
+        angle: f64,
+        rise: f64,
+        distance: f64,
+        tilt: f64,
+        aperture: f64,
+        ratio: f64,
+    ) -> Self {
         let theta = aperture * std::f64::consts::PI / 180.;
         let half_hgt = (theta / 2.).tan();
         let half_wth = ratio * half_hgt;

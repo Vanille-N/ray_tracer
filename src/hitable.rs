@@ -1,7 +1,7 @@
-use crate::vec3::Vec3;
+use crate::primitives::*;
 use crate::ray::Ray;
 use crate::rgb::RGB;
-use crate::primitives::*;
+use crate::vec3::Vec3;
 use crate::EPSILON;
 
 // Warning:
@@ -83,8 +83,14 @@ pub struct Interaction(Vec<Primitive>, Vec<Primitive>);
 
 impl Interaction {
     pub fn inside(obj: &Primitive, pos: Vec3) -> bool {
-        let ray1 = Ray { orig: pos, dir: Vec3::new(0.0, 1.0, 0.0) };
-        let ray2 = Ray { orig: pos, dir: Vec3::new(0.0, -1.0, 0.0) };
+        let ray1 = Ray {
+            orig: pos,
+            dir: Vec3::new(0.0, 1.0, 0.0),
+        };
+        let ray2 = Ray {
+            orig: pos,
+            dir: Vec3::new(0.0, -1.0, 0.0),
+        };
         match (obj.hit(&ray1), obj.hit(&ray2)) {
             (HitRecord::Blank, _) => false,
             (_, HitRecord::Blank) => false,
@@ -123,7 +129,6 @@ impl Interaction {
     }
 }
 
-
 pub type Composite = Vec<Interaction>;
 
 #[derive(Copy, Clone, Debug)]
@@ -151,28 +156,31 @@ pub enum HitRecord {
 
 impl HitRecord {
     pub fn make(t: f64, pos: Vec3, normal: Vec3, texture: Texture) -> Self {
-        HitRecord::Hit(ActiveHit { t, pos, normal: normal.unit(), texture })
+        HitRecord::Hit(ActiveHit {
+            t,
+            pos,
+            normal: normal.unit(),
+            texture,
+        })
     }
 
     pub fn compare(&mut self, other: Self) {
         match other {
             HitRecord::Blank => (),
-            HitRecord::Hit(b) => {
-                match self {
-                    HitRecord::Blank => *self = other,
-                    HitRecord::Hit(a) => {
-                        if a.t > b.t {
-                            *self = other;
-                        }
+            HitRecord::Hit(b) => match self {
+                HitRecord::Blank => *self = other,
+                HitRecord::Hit(a) => {
+                    if a.t > b.t {
+                        *self = other;
                     }
                 }
-            }
+            },
         }
     }
 }
 
 pub trait Hit {
-    fn hit(&self, r: &Ray) -> HitRecord ;
+    fn hit(&self, r: &Ray) -> HitRecord;
 }
 
 #[derive(Clone)]
@@ -194,7 +202,6 @@ impl World {
     }
 }
 
-
 impl World {
     fn hit(&self, r: &Ray) -> HitRecord {
         let mut rec = HitRecord::Blank;
@@ -209,7 +216,8 @@ impl World {
                         HitRecord::Blank => break,
                         HitRecord::Hit(h) => {
                             if Interaction::all_inside_except(h.pos, &group.0, i)
-                            && Interaction::all_outside_except(h.pos, &group.1, group.1.len()) {
+                                && Interaction::all_outside_except(h.pos, &group.1, group.1.len())
+                            {
                                 record.compare(HitRecord::Hit(h.later(offset)));
                             }
                             ray.orig = h.pos + ray.dir * EPSILON;
@@ -227,7 +235,8 @@ impl World {
                         HitRecord::Blank => break,
                         HitRecord::Hit(h) => {
                             if Interaction::all_inside_except(h.pos, &group.0, group.0.len())
-                            && Interaction::all_outside_except(h.pos, &group.1, i) {
+                                && Interaction::all_outside_except(h.pos, &group.1, i)
+                            {
                                 record.compare(HitRecord::Hit(h.later(offset)));
                             }
                             ray.orig = h.pos + ray.dir * EPSILON;
@@ -241,7 +250,6 @@ impl World {
         rec
     }
 }
-
 
 #[derive(Copy, Clone, Debug)]
 pub enum Texture {
@@ -278,7 +286,10 @@ pub fn scatter(incident: &Ray, record: ActiveHit) -> Option<(RGB, Ray)> {
         }
         Texture::Metal(albedo, fuzziness) => {
             let reflec = incident.dir.unit().reflect(&record.normal);
-            let scattered = Ray::new(record.pos, reflec + random_in_unit_sphere() * fuzziness * 0.8);
+            let scattered = Ray::new(
+                record.pos,
+                reflec + random_in_unit_sphere() * fuzziness * 0.8,
+            );
             let attenuation = albedo;
             let normal = {
                 if scattered.dir.dot(&record.normal) > 0.0 {
@@ -298,19 +309,45 @@ pub fn scatter(incident: &Ray, record: ActiveHit) -> Option<(RGB, Ray)> {
             let reflected = incident.dir.reflect(&record.normal);
             let (ext_normal, rel_idx, cos) = {
                 if incident.dir.dot(&record.normal) > 0.0 {
-                    (-record.normal, idx, idx * incident.dir.dot(&record.normal) / incident.dir.len())
+                    (
+                        -record.normal,
+                        idx,
+                        idx * incident.dir.dot(&record.normal) / incident.dir.len(),
+                    )
                 } else {
-                    (record.normal, 1.0 / idx, -incident.dir.dot(&record.normal) / incident.dir.len())
+                    (
+                        record.normal,
+                        1.0 / idx,
+                        -incident.dir.dot(&record.normal) / incident.dir.len(),
+                    )
                 }
             };
             match incident.dir.refract(&ext_normal, rel_idx) {
-                None => Some((shade, Ray { orig: record.pos, dir: reflected })),
+                None => Some((
+                    shade,
+                    Ray {
+                        orig: record.pos,
+                        dir: reflected,
+                    },
+                )),
                 Some(refracted) => {
                     let prob_reflect = schlick(cos, idx);
                     if rand::random::<f64>() < prob_reflect {
-                        Some((shade, Ray { orig: record.pos, dir: reflected }))
+                        Some((
+                            shade,
+                            Ray {
+                                orig: record.pos,
+                                dir: reflected,
+                            },
+                        ))
                     } else {
-                        Some((shade, Ray { orig: record.pos, dir: refracted }))
+                        Some((
+                            shade,
+                            Ray {
+                                orig: record.pos,
+                                dir: refracted,
+                            },
+                        ))
                     }
                 }
             }
@@ -318,13 +355,12 @@ pub fn scatter(incident: &Ray, record: ActiveHit) -> Option<(RGB, Ray)> {
     }
 }
 
-
 pub fn color(r: &Ray, w: &World, depth: i32) -> RGB {
     match w.hit(r) {
         HitRecord::Hit(record) => {
             if depth < 100 {
                 if let Some((attenuation, scattered)) = scatter(r, record) {
-                    attenuation * color(&scattered, &w, depth+1)
+                    attenuation * color(&scattered, &w, depth + 1)
                 } else {
                     match record.texture {
                         Texture::Lambertian(color) => color,
@@ -349,8 +385,6 @@ pub fn color(r: &Ray, w: &World, depth: i32) -> RGB {
         }
     }
 }
-
-
 
 fn random_in_unit_sphere() -> Vec3 {
     let mut p = Vec3::new(1.0, 1.0, 1.0);

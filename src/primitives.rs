@@ -25,12 +25,12 @@ impl Hit for Sphere {
         let discriminant = b.powi(2) - a * c;
         let mut rec = HitRecord::Blank;
         if discriminant > EPSILON {
-            let temp = (- b - (b.powi(2) - a * c).sqrt()) / a;
+            let temp = (-b - (b.powi(2) - a * c).sqrt()) / a;
             if EPSILON < temp {
                 let pos = r.project(temp);
                 rec.compare(HitRecord::make(temp, pos, pos - self.center, self.texture))
             }
-            let temp = (- b + (b.powi(2) - a * c).sqrt()) / a;
+            let temp = (-b + (b.powi(2) - a * c).sqrt()) / a;
             if EPSILON < temp {
                 let pos = r.project(temp);
                 rec.compare(HitRecord::make(temp, pos, pos - self.center, self.texture))
@@ -39,7 +39,6 @@ impl Hit for Sphere {
         rec
     }
 }
-
 
 #[derive(Clone, Copy)]
 pub struct InfinitePlane {
@@ -60,7 +59,7 @@ impl Hit for InfinitePlane {
         let b = r.dir;
         let bn = b.dot(&self.normal);
         if bn.abs() > EPSILON {
-            let temp = - (a - self.orig).dot(&self.normal) / bn;
+            let temp = -(a - self.orig).dot(&self.normal) / bn;
             if EPSILON < temp {
                 HitRecord::make(temp, r.project(temp), self.normal, self.texture)
             } else {
@@ -73,7 +72,7 @@ impl Hit for InfinitePlane {
 }
 
 #[derive(Clone, Copy)]
-pub struct Triangle{
+pub struct Triangle {
     pub a: Vec3,
     pub u: Vec3,
     pub v: Vec3,
@@ -85,7 +84,6 @@ impl Triangle {
         Primitive::Triangle(self)
     }
 }
-
 
 impl Hit for Triangle {
     fn hit(&self, r: &Ray) -> HitRecord {
@@ -153,7 +151,9 @@ impl Rhombus {
         let v = w.cross(&u).unit() * vlen;
         Rhombus {
             a: self.a,
-            u, v, w,
+            u,
+            v,
+            w,
             texture: self.texture,
         }
     }
@@ -165,7 +165,9 @@ impl Rhombus {
         let v = w.cross(&u).unit() * len;
         Rhombus {
             a: self.a,
-            u, v, w,
+            u,
+            v,
+            w,
             texture: self.texture,
         }
     }
@@ -182,7 +184,7 @@ impl Rhombus {
             u: self.v,
             v: self.w,
             texture: self.texture,
-        };//
+        }; //
         let s3 = Parallelogram {
             a: self.a,
             u: self.w,
@@ -194,7 +196,7 @@ impl Rhombus {
             u: self.w,
             v: self.u,
             texture: self.texture,
-        };//
+        }; //
         let s5 = Parallelogram {
             a: self.a + self.w,
             u: self.u,
@@ -206,7 +208,7 @@ impl Rhombus {
             u: self.v,
             v: self.w,
             texture: self.texture,
-        };//
+        }; //
         Primitive::Rhombus(RhombusObject([s1, s2, s3, s4, s5, s6]))
     }
 }
@@ -221,7 +223,6 @@ impl Hit for RhombusObject {
     }
 }
 
-
 #[derive(Clone, Copy)]
 pub struct EmptyCylinder {
     pub center1: Vec3,
@@ -235,7 +236,6 @@ impl EmptyCylinder {
         Primitive::EmptyCylinder(self)
     }
 }
-
 
 impl Hit for EmptyCylinder {
     fn hit(&self, r: &Ray) -> HitRecord {
@@ -281,7 +281,6 @@ impl Hit for EmptyCylinder {
     }
 }
 
-
 #[derive(Clone, Copy)]
 pub struct Disc {
     pub center: Vec3,
@@ -302,7 +301,7 @@ impl Hit for Disc {
         let b = r.dir;
         let bn = b.dot(&self.normal);
         if bn.abs() > EPSILON {
-            let temp = - (a - self.center).dot(&self.normal) / bn;
+            let temp = -(a - self.center).dot(&self.normal) / bn;
             if EPSILON < temp {
                 let pos = r.project(temp);
                 let dist = (pos - self.center).len();
@@ -315,7 +314,6 @@ impl Hit for Disc {
     }
 }
 
-
 #[derive(Clone, Copy)]
 pub struct Cylinder {
     pub center1: Vec3,
@@ -323,7 +321,6 @@ pub struct Cylinder {
     pub radius: f64,
     pub texture: Texture,
 }
-
 
 #[derive(Clone, Copy)]
 pub struct CylinderObject {
