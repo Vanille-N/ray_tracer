@@ -162,6 +162,14 @@ impl fmt::Display for RGB {
     }
 }
 
+impl ops::Rem<usize> for RGB {
+    type Output = Self;
+    fn rem(self, part: usize) -> Self::Output {
+        self * part as f64 / 100.
+    }
+}
+
+
 
 pub const RED: RGB = RGB { r: 1.0, g: 0.0, b: 0.0 };
 pub const DKRED: RGB = RGB { r: 0.5, g: 0.0, b: 0.0 };
@@ -169,6 +177,7 @@ pub const LTRED: RGB = RGB { r: 1.0, g: 0.5, b: 0.5 };
 pub const BLUE: RGB = RGB { r: 0.0, g: 0.0, b: 1.0 };
 pub const DKBLUE: RGB = RGB { r: 0.0, g: 0.0, b: 0.5 };
 pub const LTBLUE: RGB = RGB { r: 0.3, g: 0.6, b: 1.0 };
+pub const CYAN: RGB = RGB { r: 0.0, g: 1.0, b: 1.0 };
 pub const GREEN: RGB = RGB { r: 0.0, g: 1.0, b: 0.0 };
 pub const DKGREEN: RGB = RGB { r: 0.0, g: 0.5, b: 0.0 };
 pub const LTGREEN: RGB = RGB { r: 0.7, g: 1.0, b: 0.0 };
