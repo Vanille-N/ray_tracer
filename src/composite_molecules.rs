@@ -1,5 +1,4 @@
 use crate::hitable::*;
-use crate::ray::Ray;
 use crate::vec3::Vec3;
 use crate::rgb::RGB;
 use crate::primitives::*;
