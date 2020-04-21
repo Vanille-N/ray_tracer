@@ -144,6 +144,32 @@ pub struct Rhombus {
 pub struct RhombusObject([Parallelogram; 6]);
 
 impl Rhombus {
+    pub fn orthogonal(self) -> Rhombus {
+        let wlen = self.w.len();
+        let ulen = self.u.len();
+        let vlen = self.v.len();
+        let w = self.w.unit() * wlen; // Upwards
+        let u = self.v.cross(&w).unit() * ulen;
+        let v = w.cross(&u).unit() * vlen;
+        Rhombus {
+            a: self.a,
+            u, v, w,
+            texture: self.texture,
+        }
+    }
+
+    pub fn orthonormal(self) -> Rhombus {
+        let len = self.w.len();
+        let w = self.w.unit() * len; // Upwards
+        let u = self.v.cross(&w).unit() * len;
+        let v = w.cross(&u).unit() * len;
+        Rhombus {
+            a: self.a,
+            u, v, w,
+            texture: self.texture,
+        }
+    }
+
     pub fn build(self) -> Primitive {
         let s1 = Parallelogram {
             a: self.a,
