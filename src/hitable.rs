@@ -2,9 +2,6 @@ use crate::vec3::Vec3;
 use crate::ray::Ray;
 use crate::rgb::RGB;
 use crate::primitives::*;
-use crate::composite_molecules::*;
-use crate::composite_cradle::*;
-use crate::composite_axes::*;
 use crate::EPSILON;
 
 // Warning:
