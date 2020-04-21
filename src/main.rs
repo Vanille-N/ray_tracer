@@ -28,7 +28,7 @@ use composite_molecules::*;
 use composite_axes::*;
 use composite_die::*;
 
-const EPSILON: f64 = 0.0000001;
+const EPSILON: f64 = 0.000_000_1;
 
 const CFG: &str = "linux";
 
@@ -57,11 +57,9 @@ fn main() {
                         eprint!("\x1b[2B\x1b[{}C{}█\x1b[3A\n", load/2 , color);
                     }
                 }
-            } else {
-                if i * 100 % ni == 0 {
-                    let load = 100 - i * 100 / ni;
-                    eprintln!("{}%", load);
-                }
+            } else if i * 100 % ni == 0 {
+                let load = 100 - i * 100 / ni;
+                eprintln!("{}%", load);
             }
 
             for j in 0..nj {
@@ -78,7 +76,7 @@ fn main() {
                 }
                 write!(f, "{}", c / ns as f64).unwrap();
             }
-            writeln!(f, "").unwrap();
+            writeln!(f).unwrap();
         }
     });
     print!("\n\n\n\x1b[0m");

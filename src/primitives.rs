@@ -311,7 +311,7 @@ impl Hit for Disc {
                 }
             }
         }
-        return HitRecord::Blank;
+        HitRecord::Blank
     }
 }
 

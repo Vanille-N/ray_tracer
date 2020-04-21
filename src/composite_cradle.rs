@@ -21,7 +21,7 @@ impl NewtonCradle {
         let u = self.v.cross(&w).unit() * len;
         let v = w.cross(&u).unit() * len;
         let pedestal = Rhombus {
-            a: self.a, u: u, v: v, w: w * 0.1,
+            a: self.a, u, v, w: w * 0.1,
             texture: plastic,
         }.build();
         let pillar1 = EmptyCylinder {

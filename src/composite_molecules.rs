@@ -31,7 +31,7 @@ fn atom_builder(r: f64, texture: Texture) -> Box<dyn Fn(Vec3) -> Sphere> {
     Box::new(move |u| Sphere {
         center: u,
         radius: r,
-        texture: texture,
+        texture,
     })
 }
 

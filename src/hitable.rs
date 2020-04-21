@@ -104,23 +104,19 @@ impl Interaction {
         self.1.push(other);
     }
 
-    pub fn all_inside_except(p: Vec3, v: &Vec<Primitive>, i: usize) -> bool {
-        for j in 0..v.len() {
-            if j != i {
-                if Interaction::outside(&v[j], p) {
-                    return false;
-                }
+    pub fn all_inside_except(p: Vec3, v: &[Primitive], i: usize) -> bool {
+        for (j, item) in v.iter().enumerate() {
+            if j != i && Interaction::outside(item, p) {
+                return false;
             }
         }
         true
     }
 
-    pub fn all_outside_except(p: Vec3, v: &Vec<Primitive>, i: usize) -> bool {
-        for j in 0..v.len() {
-            if j != i {
-                if Interaction::inside(&v[j], p) {
-                    return false;
-                }
+    pub fn all_outside_except(p: Vec3, v: &[Primitive], i: usize) -> bool {
+        for (j, item) in v.iter().enumerate() {
+            if j != i && Interaction::inside(item, p) {
+                return false;
             }
         }
         true
