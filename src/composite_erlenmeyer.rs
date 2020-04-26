@@ -12,10 +12,10 @@ impl Erlenmeyer {
     pub fn build(self) -> Composite {
         let up = Vec3::new(0.0, self.size, 0.0);
         let len = self.size;
-        let e = 0.03;
+        let e = 0.05;
         let theta = 0.4;
         let hgt = 2.0;
-        let epsilon = 0.05 * hgt;
+        let epsilon = 0.1 * hgt;
         let tot_hgt = hgt * 1.3;
         let liq_hgt = hgt * 0.2;
         let neck_start = 0.75 * hgt;
@@ -33,7 +33,7 @@ impl Erlenmeyer {
             dir: -up,
             angle: theta,
             begin: len * 0.0,
-            end: len * (hgt - e/theta.sin() - e),
+            end: len * (hgt - e/theta.sin() - e - liq_hgt),
             texture: Texture::Dielectric(RGB::new(0.9, 0.9, 0.9), 1./1.1),
         }
         .build());
