@@ -370,6 +370,8 @@ pub struct EmptyCone {
     pub orig: Vec3,
     pub dir: Vec3,
     pub angle: f64,
+    pub begin: f64,
+    pub end: f64,
     pub texture: Texture,
 }
 
@@ -404,17 +406,23 @@ impl Hit for EmptyCone {
         if EPSILON < temp {
             let pos = r.project(temp);
             let u = pos - self.orig;
-            let tangent = u.cross(&self.dir);
-            let normal = u.cross(&tangent);
-            rec.compare(HitRecord::make(temp, pos, normal, self.texture));
+            let proj = u.dot(&self.dir.unit());
+            if self.begin < proj && proj < self.end {
+                let tangent = u.cross(&self.dir);
+                let normal = u.cross(&tangent);
+                rec.compare(HitRecord::make(temp, pos, normal, self.texture));
+            }
         }
         let temp = -(b - det.sqrt()) / (2.0 * a);
         if EPSILON < temp {
             let pos = r.project(temp);
             let u = pos - self.orig;
-            let tangent = u.cross(&self.dir);
-            let normal = u.cross(&tangent);
-            rec.compare(HitRecord::make(temp, pos, normal, self.texture));
+            let proj = u.dot(&self.dir.unit());
+            if self.begin < proj && proj < self.end {
+                let tangent = u.cross(&self.dir);
+                let normal = u.cross(&tangent);
+                rec.compare(HitRecord::make(temp, pos, normal, self.texture));
+            }
         }
         rec
     }
