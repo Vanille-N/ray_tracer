@@ -86,10 +86,12 @@ impl Interaction {
         let ray1 = Ray {
             orig: pos,
             dir: Vec3::new(0.0, 1.0, 0.0),
+            idx: 1.0,
         };
         let ray2 = Ray {
             orig: pos,
             dir: Vec3::new(0.0, -1.0, 0.0),
+            idx: 1.0,
         };
         match (obj.hit(&ray1), obj.hit(&ray2)) {
             (HitRecord::Blank, _) => false,
@@ -311,13 +313,13 @@ pub fn scatter(incident: &Ray, record: ActiveHit) -> Option<(RGB, Ray)> {
                 if incident.dir.dot(&record.normal) > 0.0 {
                     (
                         -record.normal,
-                        idx,
+                        idx / incident.idx,
                         idx * incident.dir.dot(&record.normal) / incident.dir.len(),
                     )
                 } else {
                     (
                         record.normal,
-                        1.0 / idx,
+                        incident.idx / idx,
                         -incident.dir.dot(&record.normal) / incident.dir.len(),
                     )
                 }
@@ -328,6 +330,7 @@ pub fn scatter(incident: &Ray, record: ActiveHit) -> Option<(RGB, Ray)> {
                     Ray {
                         orig: record.pos,
                         dir: reflected,
+                        idx: incident.idx,
                     },
                 )),
                 Some(refracted) => {
@@ -338,6 +341,7 @@ pub fn scatter(incident: &Ray, record: ActiveHit) -> Option<(RGB, Ray)> {
                             Ray {
                                 orig: record.pos,
                                 dir: reflected,
+                                idx: incident.idx,
                             },
                         ))
                     } else {
@@ -346,6 +350,7 @@ pub fn scatter(incident: &Ray, record: ActiveHit) -> Option<(RGB, Ray)> {
                             Ray {
                                 orig: record.pos,
                                 dir: refracted,
+                                idx,
                             },
                         ))
                     }

@@ -66,6 +66,7 @@ impl Camera {
         Ray {
             orig: self.orig,
             dir: self.low_left + self.horizontal * u + self.vertical * v - self.orig,
+            idx: 1.0,
         }
     }
 }
