@@ -364,3 +364,58 @@ impl Hit for CylinderObject {
         rec
     }
 }
+
+#[derive(Copy, Clone)]
+pub struct EmptyCone {
+    pub orig: Vec3,
+    pub dir: Vec3,
+    pub angle: f64,
+    pub texture: Texture,
+}
+
+impl EmptyCone {
+    pub fn build(self) -> Primitive {
+        Primitive::EmptyCone(self)
+    }
+}
+
+impl Hit for EmptyCone {
+    fn hit(&self, r: &Ray) -> HitRecord {
+        // let a = (r.dir.dot(&self.dir)).powi(2) - self.angle.cos().powi(2);
+        // let b = 2. * (r.dir.dot(&self.dir) * (r.orig - self.orig).dot(&self.dir) - r.dir.dot(&(r.orig - self.orig)) * self.angle.cos().powi(2));
+        // let c = (r.orig - self.orig).dot(&self.dir).powi(2) - (r.orig - self.orig).dot_self() * self.angle.cos().powi(2);
+
+        let axis = self.dir;
+        let theta = axis.unit();
+        let m = self.angle.tan().powi(2);
+        let ap = r.orig;
+        let ad = r.dir;
+        let w = ap - self.orig;
+        let a = ad.dot_self() - (m + 1.) * ad.dot(&theta).powi(2);
+        let b = 2. * (ad.dot(&w) - (m + 1.) * ad.dot(&theta) * w.dot(&theta));
+        let c = w.dot_self() - (m + 1.) * w.dot(&theta).powi(2);
+
+        let det = b.powi(2) - 4.0 * a * c;
+        if det < EPSILON {
+            return HitRecord::Blank;
+        }
+        let mut rec = HitRecord::Blank;
+        let temp = -(b + det.sqrt()) / (2.0 * a);
+        if EPSILON < temp {
+            let pos = r.project(temp);
+            let u = pos - self.orig;
+            let tangent = u.cross(&self.dir);
+            let normal = u.cross(&tangent);
+            rec.compare(HitRecord::make(temp, pos, normal, self.texture));
+        }
+        let temp = -(b - det.sqrt()) / (2.0 * a);
+        if EPSILON < temp {
+            let pos = r.project(temp);
+            let u = pos - self.orig;
+            let tangent = u.cross(&self.dir);
+            let normal = u.cross(&tangent);
+            rec.compare(HitRecord::make(temp, pos, normal, self.texture));
+        }
+        rec
+    }
+}

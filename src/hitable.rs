@@ -47,6 +47,7 @@ pub enum Primitive {
     EmptyCylinder(EmptyCylinder),
     Disc(Disc),
     Cylinder(CylinderObject),
+    EmptyCone(EmptyCone),
 }
 
 impl Primitive {
@@ -74,6 +75,7 @@ impl Hit for Primitive {
             Primitive::EmptyCylinder(s) => s.hit(r),
             Primitive::Disc(s) => s.hit(r),
             Primitive::Cylinder(s) => s.hit(r),
+            Primitive::EmptyCone(s) => s.hit(r),
         }
     }
 }
