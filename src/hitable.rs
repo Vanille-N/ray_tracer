@@ -48,6 +48,7 @@ pub enum Primitive {
     Disc(Disc),
     Cylinder(CylinderObject),
     EmptyCone(EmptyCone),
+    Cone(ConeObject),
 }
 
 impl Primitive {
@@ -76,6 +77,7 @@ impl Hit for Primitive {
             Primitive::Disc(s) => s.hit(r),
             Primitive::Cylinder(s) => s.hit(r),
             Primitive::EmptyCone(s) => s.hit(r),
+            Primitive::Cone(s) => s.hit(r),
         }
     }
 }
@@ -118,10 +120,11 @@ impl Interaction {
             Primitive::Cylinder(s) => {
                 Interaction::bidir_hit(obj, pos, s.cap1.normal)
             }
-            Primitive::EmptyCone(s) => {
-                let u = (pos - s.orig).unit();
-                let v = u - s.dir * u.dot(&s.dir);
-                Interaction::bidir_hit(obj, pos, v.cross(&s.dir))
+            Primitive::EmptyCone(_) => false,
+            Primitive::Cone(s) => {
+                let u = (pos - s.side.orig).unit();
+                let v = u - s.side.dir * u.dot(&s.side.dir);
+                Interaction::bidir_hit(obj, pos, v.cross(&s.side.dir))
             }
         }
     }

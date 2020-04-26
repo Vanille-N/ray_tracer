@@ -427,3 +427,57 @@ impl Hit for EmptyCone {
         rec
     }
 }
+
+#[derive(Copy, Clone)]
+pub struct Cone {
+    pub orig: Vec3,
+    pub dir: Vec3,
+    pub angle: f64,
+    pub begin: f64,
+    pub end: f64,
+    pub texture: Texture,
+}
+
+#[derive(Copy, Clone)]
+pub struct ConeObject {
+    pub side: EmptyCone,
+    pub cap1: Disc,
+    pub cap2: Disc,
+}
+
+impl Cone {
+    pub fn build(self) -> Primitive {
+        Primitive::Cone(ConeObject {
+            side: EmptyCone {
+                orig: self.orig,
+                dir: self.dir,
+                angle: self.angle,
+                begin: self.begin,
+                end: self.end,
+                texture: self.texture,
+            },
+            cap1: Disc {
+                center: self.orig + self.dir.unit() * self.begin,
+                radius: self.begin * self.angle.tan(),
+                normal: -self.dir.unit(),
+                texture: self.texture,
+            },
+            cap2: Disc {
+                center: self.orig + self.dir.unit() * self.end,
+                radius: self.end * self.angle.tan(),
+                normal: self.dir.unit(),
+                texture: self.texture,
+            },
+        })
+    }
+}
+
+impl Hit for ConeObject {
+    fn hit(&self, r: &Ray) -> HitRecord {
+        let mut rec = HitRecord::Blank;
+        rec.compare(self.side.hit(r));
+        rec.compare(self.cap1.hit(r));
+        rec.compare(self.cap2.hit(r));
+        rec
+    }
+}
