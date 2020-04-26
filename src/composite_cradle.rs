@@ -6,9 +6,8 @@ use crate::vec3::Vec3;
 #[derive(Clone, Copy)]
 pub struct NewtonCradle {
     pub a: Vec3,
-    pub u: Vec3,
-    pub v: Vec3,
-    pub w: Vec3,
+    pub angle: f64,
+    pub size: f64,
 }
 
 impl NewtonCradle {
@@ -16,10 +15,11 @@ impl NewtonCradle {
         let plastic = Texture::Lambertian(RGB::new(0.1, 0.1, 0.1));
         let steel = Texture::Metal(RGB::new(0.8, 0.6, 0.2), 0.0);
         let nylon = Texture::Lambertian(RGB::new(0.9, 0.9, 0.9));
-        let len = self.w.len();
-        let w = self.w.unit() * len; // Upwards
-        let u = self.v.cross(&w).unit() * len;
-        let v = w.cross(&u).unit() * len;
+        let len = self.size;
+        let angle = self.angle  * std::f64::consts::PI / 180.;
+        let w = Vec3::new(0.0, len, 0.0); // Upwards
+        let u = Vec3::new(len * angle.cos(), 0.0, len * angle.sin());
+        let v = Vec3::new(len * angle.sin(), 0.0, len * angle.cos());
         let pedestal = Rhombus {
             a: self.a,
             u,
