@@ -296,6 +296,14 @@ fn schlick(cos: f64, idx: f64) -> f64 {
     r + (1.0 - r) * (1.0 - cos).powi(5)
 }
 
+fn max(a: f64, b: f64) -> f64 {
+    if a > b {
+        a
+    } else {
+        b
+    }
+}
+
 pub fn scatter(incident: &Ray, record: ActiveHit) -> Option<(RGB, Ray)> {
     match record.texture {
         Texture::Lambertian(albedo) => {
@@ -363,7 +371,7 @@ pub fn scatter(incident: &Ray, record: ActiveHit) -> Option<(RGB, Ray)> {
                     },
                 )),
                 Some(refracted) => {
-                    let prob_reflect = schlick(cos, idx);
+                    let prob_reflect = schlick(cos, rel_idx);
                     if rand::random::<f64>() < prob_reflect {
                         Some((
                             shade,
@@ -374,6 +382,10 @@ pub fn scatter(incident: &Ray, record: ActiveHit) -> Option<(RGB, Ray)> {
                             },
                         ))
                     } else {
+                        let pathlen = (incident.orig - record.pos).len();
+                        // FIXME
+                        let shade = shade / max(pathlen * 0., 1.);
+                        //
                         Some((
                             shade,
                             Ray {
