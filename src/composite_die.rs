@@ -6,9 +6,8 @@ use crate::vec3::Vec3;
 
 pub struct Die {
     pub a: Vec3,
-    pub u: Vec3,
-    pub v: Vec3,
-    pub w: Vec3,
+    pub up: Vec3,
+    pub rot: f64,
     pub side_texture: Texture,
     pub edge_texture: Texture,
     pub dot_texture: Texture,
@@ -16,10 +15,20 @@ pub struct Die {
 
 impl Die {
     pub fn build(self) -> Composite {
-        let len = self.w.len();
-        let w = self.w.unit() * len; // Upwards
-        let u = self.v.cross(&w).unit() * len;
-        let v = w.cross(&u).unit() * len;
+        let len = self.up.len();
+        let w = self.up; // Upwards
+        let u1 = {
+            let u = w.cross(&Vec3::new(0.0, 0.0, 1.0));
+            if u.len() < crate::EPSILON {
+                w.cross(&Vec3::new(1.0, 0.0, 0.0))
+            } else {
+                u
+            }
+            .unit() * len
+        };
+        let v1 = w.cross(&u1).unit() * len;
+        let v = u1 * self.rot.cos() + v1 * self.rot.sin();
+        let u = -u1 * self.rot.sin() + v1 * self.rot.cos();
 
         let mut die: Interaction = Rhombus {
             a: self.a,
