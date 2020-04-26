@@ -84,21 +84,45 @@ impl Hit for Primitive {
 pub struct Interaction(Vec<Primitive>, Vec<Primitive>);
 
 impl Interaction {
-    pub fn inside(obj: &Primitive, pos: Vec3) -> bool {
+    pub fn bidir_hit(obj: &Primitive, pos: Vec3, v: Vec3) -> bool {
         let ray1 = Ray {
             orig: pos,
-            dir: Vec3::new(0.0, 1.0, 0.0),
+            dir: v,
             idx: 1.0,
         };
         let ray2 = Ray {
             orig: pos,
-            dir: Vec3::new(0.0, -1.0, 0.0),
+            dir: -v,
             idx: 1.0,
         };
         match (obj.hit(&ray1), obj.hit(&ray2)) {
             (HitRecord::Blank, _) => false,
             (_, HitRecord::Blank) => false,
             (_, _) => true,
+        }
+    }
+
+    pub fn inside(obj: &Primitive, pos: Vec3) -> bool {
+        match *obj {
+            Primitive::Sphere(s) => {
+                (pos - s.center).len() < s.radius
+            }
+            Primitive::InfinitePlane(_) => false,
+            Primitive::Triangle(_) => false,
+            Primitive::Parallelogram(_) => false,
+            Primitive::Rhombus(s) => {
+                Interaction::bidir_hit(obj, pos, Vec3::new(0.0, 1.0, 0.0))
+            }
+            Primitive::EmptyCylinder(_) => false,
+            Primitive::Disc(_) => false,
+            Primitive::Cylinder(s) => {
+                Interaction::bidir_hit(obj, pos, s.cap1.normal)
+            }
+            Primitive::EmptyCone(s) => {
+                let u = (pos - s.orig).unit();
+                let v = u - s.dir * u.dot(&s.dir);
+                Interaction::bidir_hit(obj, pos, v.cross(&s.dir))
+            }
         }
     }
 
