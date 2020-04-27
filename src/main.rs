@@ -4,7 +4,7 @@ extern crate rand;
 extern crate rayon;
 use rayon::prelude::*;
 use std::fs::File;
-use std::io::prelude::*;
+use std::io::{BufWriter, Write};
 use std::process::Command;
 
 mod camera;
@@ -40,7 +40,8 @@ fn main() {
     let nb_cores = 5;
     let mut writers = Vec::new();
     for idx in (0..nb_cores).rev() {
-        let out = File::create(&format!(".out{}.txt", idx)).unwrap();
+        //let out = File::create(&format!(".out{}.txt", idx)).unwrap();
+        let out = BufWriter::new(File::create(&format!(".out{}.txt", idx)).unwrap());
         let ni_rng = (idx * ni / nb_cores)..((idx + 1) * ni / nb_cores);
         writers.push((idx, out, ni_rng, cam.clone(), w.clone()));
     }
@@ -77,9 +78,12 @@ fn main() {
                     c += hitable::color(&r, &w, 0);
                 }
                 write!(f, "{}", c / ns as f64).unwrap();
+                //f.write(format!("{}", c / ns as f64).as_bytes()).unwrap();
             }
             writeln!(f).unwrap();
+            //f.write(b"\n").unwrap();
         }
+        f.flush().unwrap();
     });
     print!("\n\n\n\x1b[0m");
     let mut f = File::create("img.ppm").unwrap();
