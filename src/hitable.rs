@@ -333,7 +333,7 @@ fn max(a: f64, b: f64) -> f64 {
     }
 }
 
-pub fn scatter(incident: &Ray, record: ActiveHit) -> Option<(RGB, Ray)> {
+pub fn scatter(incident: &Ray, record: ActiveHit, w: &World) -> Option<(RGB, Ray)> {
     match record.texture {
         Texture::Lambertian(albedo) => {
             let reflec = incident.dir.unit().reflect(&record.normal);
@@ -374,22 +374,33 @@ pub fn scatter(incident: &Ray, record: ActiveHit) -> Option<(RGB, Ray)> {
         }
         Texture::Light(_) => None,
         Texture::Dielectric(shade, idx) => {
-            let reflected = incident.dir.reflect(&record.normal);
-            let (ext_normal, rel_idx, cos) = {
+            let reflected = incident.dir.reflect(&record.normal).unit();
+            let ext_normal = {
                 if incident.dir.dot(&record.normal) > 0.0 {
-                    (
-                        -record.normal,
-                        idx,
-                        idx * incident.dir.dot(&record.normal) / incident.dir.len(),
-                    )
+                    -record.normal
                 } else {
-                    (
-                        record.normal,
-                        1. / idx,
-                        -incident.dir.dot(&record.normal) / incident.dir.len(),
-                    )
+                    record.normal
                 }
             };
+            let tmp_ray_succ = Ray { orig: record.pos, dir: ext_normal };
+            let tmp_ray_prev = Ray { orig: record.pos, dir: -ext_normal };
+            let mid_caract = |r| {
+                match w.hit(&r) {
+                    HitRecord::Blank => (1., RGB::new(1., 1., 1.), 1.),
+                    HitRecord::Hit(h) => {
+                        let mid = (h.pos + record.pos) / 2.;
+                        let (idx, shade) = w.caracteristics(mid);
+                        let len = (h.pos - record.pos).len();
+                        (idx, shade, len)
+                    }
+                }
+            };
+            let (i_idx, i_shade, i_len) = mid_caract(tmp_ray_prev);
+            let (r_idx, _, _) = mid_caract(tmp_ray_succ);
+            let rel_idx = r_idx / i_idx;
+            let cos = -incident.dir.unit().dot(&ext_normal);
+
+
             match incident.dir.refract(&ext_normal, rel_idx) {
                 None => Some((
                     shade,
@@ -409,16 +420,9 @@ pub fn scatter(incident: &Ray, record: ActiveHit) -> Option<(RGB, Ray)> {
                             },
                         ))
                     } else {
-                        // let pathlen = (incident.orig - record.pos).len();
-                        // FIXME
-                        // let shade = {
-                        //     if incident.dir.dot(&record.normal) > 0.0 {
-                        //         shade
-                        //     } else {
-                        //         shade / max(pathlen * 0., 1.)
-                        //     }
-                        // };
-                        //
+                        let pathlen = (incident.orig - record.pos).len();
+                        let shade = shade * (RGB::new(1., 1., 1.) - (RGB::new(1., 1., 1.) - i_shade) * i_len / 1.);
+
                         Some((
                             shade,
                             Ray {
@@ -437,7 +441,7 @@ pub fn color(r: &Ray, w: &World, depth: i32) -> RGB {
     match w.hit(r) {
         HitRecord::Hit(record) => {
             if depth < 100 {
-                if let Some((attenuation, scattered)) = scatter(r, record) {
+                if let Some((attenuation, scattered)) = scatter(r, record, w) {
                     attenuation * color(&scattered, &w, depth + 1)
                 } else {
                     match record.texture {
