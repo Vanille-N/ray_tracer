@@ -388,7 +388,7 @@ pub fn scatter(incident: &Ray, record: ActiveHit, w: &World) -> Option<(RGB, Ray
                         ))
                     } else {
                         let pathlen = (incident.orig - record.pos).len();
-                        let shade = shade * (RGB::new(1., 1., 1.) - (RGB::new(1., 1., 1.) - i_shade) * i_len / 1.);
+                        let shade = (RGB::new(1., 1., 1.) - (RGB::new(1., 1., 1.) - i_shade) * i_len * 1.5);
 
                         Some((
                             shade,
