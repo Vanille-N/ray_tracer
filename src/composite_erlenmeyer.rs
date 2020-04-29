@@ -33,7 +33,7 @@ impl Erlenmeyer {
             dir: -up,
             angle: theta,
             begin: len * 0.0,
-            end: len * (hgt - e/theta.sin() - e - liq_hgt),
+            end: len * (hgt - e/theta.sin() - e),
             texture: Texture::Dielectric(RGB::new(0.9, 0.9, 0.9), 1./1.1),
         }
         .build());
