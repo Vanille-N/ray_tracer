@@ -25,7 +25,7 @@ impl Erlenmeyer {
             angle: theta,
             begin: len * (hgt - neck_start),
             end: len * hgt,
-            texture: Texture::Dielectric(RGB::new(0.9, 0.9, 0.9), 1.1),
+            texture: Texture::Dielectric(RGB::new(0.8, 0.8, 0.8), 1.1),
         }
         .build()
         .remove(Cone {
@@ -34,7 +34,7 @@ impl Erlenmeyer {
             angle: theta,
             begin: len * 0.0,
             end: len * (hgt - e/theta.sin() - e),
-            texture: Texture::Dielectric(RGB::new(0.9, 0.9, 0.9), 1./1.1),
+            texture: Texture::Dielectric(RGB::new(0.8, 0.8, 0.8), 1./1.1),
         }
         .build());
 
@@ -53,14 +53,14 @@ impl Erlenmeyer {
             center1: up * neck_start,
             center2: up * tot_hgt,
             radius: (hgt - neck_start) * theta.tan(),
-            texture: Texture::Dielectric(RGB::new(0.9, 0.9, 0.9), 1.1),
+            texture: Texture::Dielectric(RGB::new(0.8, 0.8, 0.8), 1.1),
         }
         .build()
         .remove(Cylinder {
             center1: up * (neck_start - epsilon),
             center2: up * (tot_hgt + epsilon),
             radius: (hgt - neck_start - e/theta.sin()) * theta.tan(),
-            texture: Texture::Dielectric(RGB::new(0.9, 0.9, 0.9), 1./1.1),
+            texture: Texture::Dielectric(RGB::new(0.8, 0.8, 0.8), 1./1.1),
         }
         .build());
 
