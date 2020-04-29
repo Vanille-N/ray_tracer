@@ -63,6 +63,21 @@ impl Primitive {
     pub fn remove(self, other: Primitive) -> Interaction {
         Interaction(vec![self], vec![other])
     }
+
+    pub fn texture(&self) -> Texture {
+        match self {
+            Primitive::Sphere(s) => s.texture,
+            Primitive::InfinitePlane(s) => s.texture,
+            Primitive::Triangle(s) => s.texture,
+            Primitive::Parallelogram(s) => s.texture,
+            Primitive::Rhombus(s) => s.0[0].texture,
+            Primitive::EmptyCylinder(s) => s.texture,
+            Primitive::Disc(s) => s.texture,
+            Primitive::Cylinder(s) => s.side.texture,
+            Primitive::EmptyCone(s) => s.texture,
+            Primitive::Cone(s) => s.side.texture,
+        }
+    }
 }
 
 impl Hit for Primitive {
@@ -277,6 +292,22 @@ impl World {
             rec.compare(record);
         }
         rec
+    }
+
+    pub fn caracteristics(&self, pos: Vec3) -> (f64, RGB) {
+        for group in &self.0 {
+            if Interaction::all_inside_except(pos, &group.0, group.0.len())
+            && Interaction::all_outside_except(pos, &group.1, group.1.len())
+                {
+                for item in &group.0 {
+                    match item.texture() {
+                        Texture::Dielectric(shade, idx) => return (idx, shade),
+                        _ => (),
+                    }
+                }
+            }
+        }
+        return (1., RGB::new(1., 1., 1.));
     }
 }
 
