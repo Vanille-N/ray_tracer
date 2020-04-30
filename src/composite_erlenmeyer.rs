@@ -11,6 +11,10 @@ pub struct Erlenmeyer {
 impl Erlenmeyer {
     pub fn build(self) -> Composite {
         let up = Vec3::new(0.0, self.size, 0.0);
+        let side = Vec3::new(self.size, 0.0, 0.0);
+        let glass = Texture::Dielectric(RGB::new(0.8, 0.8, 0.8), 1.3);
+        let anti_glass = Texture::Dielectric(RGB::new(0.8, 0.8, 0.8), 1./1.3);
+        let water = Texture::Dielectric(RGB::new(0.5, 0.8, 1.0), 1.4);
         let len = self.size;
         let e = 0.05;
         let theta = 0.4;
@@ -25,7 +29,7 @@ impl Erlenmeyer {
             angle: theta,
             begin: len * (hgt - neck_start),
             end: len * hgt,
-            texture: Texture::Dielectric(RGB::new(0.8, 0.8, 0.8), 1.1),
+            texture: glass,
         }
         .build()
         .remove(Cone {
@@ -34,7 +38,7 @@ impl Erlenmeyer {
             angle: theta,
             begin: len * 0.0,
             end: len * (hgt - e/theta.sin() - e),
-            texture: Texture::Dielectric(RGB::new(0.8, 0.8, 0.8), 1./1.1),
+            texture: anti_glass,
         }
         .build());
 
@@ -44,7 +48,7 @@ impl Erlenmeyer {
             angle: theta,
             begin: len * (hgt - e/theta.sin() - e - liq_hgt),
             end: len * (hgt - e/theta.sin() - e),
-            texture: Texture::Dielectric(RGB::new(0.5, 0.8, 1.0), 1.3),
+            texture: water,
         }
         .build()
         .wrap();
@@ -53,17 +57,26 @@ impl Erlenmeyer {
             center1: up * neck_start,
             center2: up * tot_hgt,
             radius: (hgt - neck_start) * theta.tan(),
-            texture: Texture::Dielectric(RGB::new(0.8, 0.8, 0.8), 1.1),
+            texture: glass,
         }
         .build()
         .remove(Cylinder {
             center1: up * (neck_start - epsilon),
             center2: up * (tot_hgt + epsilon),
             radius: (hgt - neck_start - e/theta.sin()) * theta.tan(),
-            texture: Texture::Dielectric(RGB::new(0.8, 0.8, 0.8), 1./1.1),
+            texture: anti_glass,
         }
         .build());
 
-        vec![base, solute, neck]
+        let shaker = EmptyCylinder {
+            center1: up * (tot_hgt + 4.*e) - side * e * 3.5,
+            center2: up * e * 1.5 + side * e * 10.,
+            radius: e / 2.,
+            texture: Texture::Lambertian(RGB::new(0.5, 0.5, 0.5)),
+        }
+        .build()
+        .wrap();
+
+        vec![base, solute, neck, shaker]
     }
 }
