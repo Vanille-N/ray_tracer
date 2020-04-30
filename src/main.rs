@@ -98,12 +98,12 @@ fn main() {
 }
 
 fn build_world() -> (i32, i32, i32, Camera, World) {
-    let nj = 2000; // width in pixels
-    let ni = 2000; // height in pixels
-    let ns = 100; // number of samples per pixel
+    let nj = 200; // width in pixels
+    let ni = 200; // height in pixels
+    let ns = 50; // number of samples per pixel
     let cam = Camera::new_relative(
         Vec3::new(0.0, 1.0, 0.0), // target
-        80.0,                     // angle (degrees)
+        10.0,                     // angle (degrees)
         30.0,                     // rise (degrees)
         7.0,                      // distance (meters),
         0.0,                      // tilt (degrees)
@@ -118,51 +118,7 @@ fn build_world() -> (i32, i32, i32, Camera, World) {
     }
     .build()
     .wrap();
-    //
-    // let red1 = Texture::Metal(RED % 90 + BLUE % 10 + GREEN % 10, 0.05);
-    // let red2 = Texture::Metal(RED % 70 + BLUE % 5 + GREEN % 5, 0.05);
-    // let blk = Texture::Metal(RED % 5 + BLUE % 5 + GREEN % 5, 0.05);
-    // let grn1 = Texture::Metal(RED % 5 + BLUE % 5 + GREEN % 50, 0.05);
-    // let grn2 = Texture::Metal(RED % 2 + BLUE % 2 + GREEN % 30, 0.05);
-    // let ylw = Texture::Metal(YELLOW % 40, 0.05);
-    // let blu1 = Texture::Metal(RED % 10 + BLUE % 90 + GREEN % 10, 0.05);
-    // let blu2 = Texture::Metal(RED % 5 + BLUE % 70 + GREEN % 5, 0.05);
-    // let wht = Texture::Metal(WHITE % 80, 0.05);
-    //
-    // let die1 = Die {
-    //     a: Vec3::new(-1.0, 0.0, -1.0),
-    //     u: Vec3::new(0.0, 0.0, 2.0),
-    //     v: Vec3::new(2.0, 0.0, 0.0),
-    //     w: Vec3::new(0.0, 2.0, 0.0),
-    //     dot_texture: blk,
-    //     side_texture: red1,
-    //     edge_texture: red2,
-    // }
-    // .build();
-    // let die2 = Die {
-    //     a: Vec3::new(2.5, 0.0, -1.2),
-    //     u: Vec3::new(3.0, 0.0, 1.0),
-    //     v: Vec3::new(-2.0, 0.0, 0.0),
-    //     w: Vec3::new(0.0, 2.0, 0.0),
-    //     dot_texture: ylw,
-    //     side_texture: grn1,
-    //     edge_texture: grn2,
-    // }
-    // .build();
-    // let die3 = Die {
-    //     a: Vec3::new(-4.0, 2.0, -3.0),
-    //     u: Vec3::new(-1.0, -3.0, 0.0),
-    //     v: Vec3::new(-2.0, -2.0, 0.0),
-    //     w: Vec3::new(2.0, 0.0, 0.0),
-    //     dot_texture: wht,
-    //     side_texture: blu1,
-    //     edge_texture: blu2,
-    // }
-    // .build();
-    //
-    // w.push_vec(die1);
-    // w.push_vec(die2);
-    // w.push_vec(die3);
+
 
     let erlen = Erlenmeyer {
         a: Vec3::new(0.0, 0.0, 0.0),
