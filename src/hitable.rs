@@ -489,10 +489,10 @@ impl Sky {
             let v = v.unit();
             (v.x, v.z)
         };
-        let rise = v.unit().y;
+        let rise = v.unit().y.abs();
         let mid_i = self.hgt as f64 / 2.;
         let mid_j = self.wth as f64 / 2.;
-        let rad = mid_i.min(mid_j) / 2.2;
+        let rad = mid_i.min(mid_j) / 1.1;
         let i = mid_i + y * rad * (1. - rise);
         let j = mid_j + x * rad * (1. - rise);
         //println!("{} {}", i, j);
