@@ -444,3 +444,61 @@ fn random_in_unit_sphere() -> Vec3 {
     }
     p
 }
+
+#[derive(Clone)]
+pub struct Sky {
+    map: Vec<Vec<RGB>>,
+    hgt: usize,
+    wth: usize,
+}
+
+impl Sky {
+    pub fn new(file: &str) -> Self {
+        let mut s = std::fs::read_to_string(file)
+            .unwrap()
+            .replace("\n", " ")
+            .split(" ")
+            .map(|x| x.to_string())
+            .collect::<Vec<_>>();
+        let mut it = s.iter();
+        let _ = it.next();
+        let mut get = || { it.next().unwrap().parse::<usize>().unwrap() };
+        let wth = get();
+        let hgt = get();
+        let max = get() as f64;
+        let mut map = Vec::new();
+        for _ in 0..hgt {
+            let mut v = Vec::new();
+            for _ in 0..wth {
+                let r = get() as f64;
+                let g = get() as f64;
+                let b = get() as f64;
+                v.push(RGB::new(r / max, g / max, b / max));
+            }
+            map.push(v);
+        }
+        Self {
+            map,
+            hgt,
+            wth,
+        }
+    }
+
+    pub fn color(&self, v: Vec3) -> RGB {
+        let (x, y) = {
+            let mut v = v;
+            v.y = 0.;
+            let v = v.unit();
+            (v.x, v.z)
+        };
+        let rise = v.unit().y;
+        let mid_i = self.hgt as f64 / 2.;
+        let mid_j = self.wth as f64 / 2.;
+        let rad = mid_i.min(mid_j) / 2.2;
+        let i = mid_i + y * rad * (1. - rise);
+        let j = mid_j + x * rad * (1. - rise);
+        //println!("{} {}", i, j);
+        self.map[i as usize][j as usize]
+        //RGB::new((x+1.)/2., (y+1.)/2., (rise+1.)/2.)
+    }
+}
