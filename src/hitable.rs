@@ -388,7 +388,7 @@ pub fn scatter(incident: &Ray, record: ActiveHit, w: &World) -> Option<(RGB, Ray
                         ))
                     } else {
                         let pathlen = (incident.orig - record.pos).len();
-                        let shade = (RGB::new(1., 1., 1.) - (RGB::new(1., 1., 1.) - i_shade) * i_len * 1.5);
+                        let shade = RGB::new(1., 1., 1.) - (RGB::new(1., 1., 1.) - i_shade) * i_len * 1.5;
 
                         Some((
                             shade,
@@ -404,12 +404,12 @@ pub fn scatter(incident: &Ray, record: ActiveHit, w: &World) -> Option<(RGB, Ray
     }
 }
 
-pub fn color(r: &Ray, w: &World, depth: i32) -> RGB {
+pub fn color(r: &Ray, w: &World, depth: i32, sky: &Sky) -> RGB {
     match w.hit(r) {
         HitRecord::Hit(record) => {
             if depth < 100 {
                 if let Some((attenuation, scattered)) = scatter(r, record, w) {
-                    attenuation * color(&scattered, &w, depth + 1)
+                    attenuation * color(&scattered, &w, depth + 1, sky)
                 } else {
                     match record.texture {
                         Texture::Lambertian(color) => color,
@@ -428,9 +428,7 @@ pub fn color(r: &Ray, w: &World, depth: i32) -> RGB {
             }
         }
         HitRecord::Blank => {
-            let u = r.dir.unit();
-            let t = 0.5 * (u.y + 1.);
-            RGB::new(0.9, 0.9, 0.9) * (1. - t) + RGB::new(0.5, 0.7, 1.) * t
+            sky.color(r.dir)
         }
     }
 }
