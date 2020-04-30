@@ -92,7 +92,7 @@ impl Interaction {
             Primitive::InfinitePlane(_) => false,
             Primitive::Triangle(_) => false,
             Primitive::Parallelogram(_) => false,
-            Primitive::Rhombus(s) => {
+            Primitive::Rhombus(_) => {
                 Interaction::bidir_hit(obj, pos, Vec3::new(0.0, 1.0, 0.0))
             }
             Primitive::EmptyCylinder(_) => false,
@@ -340,7 +340,7 @@ pub fn scatter(incident: &Ray, record: ActiveHit, w: &World) -> Option<(RGB, Ray
             }
         }
         Texture::Light(_) => None,
-        Texture::Dielectric(shade, idx) => {
+        Texture::Dielectric(shade, _idx) => {
             let reflected = incident.dir.reflect(&record.normal).unit();
             let ext_normal = {
                 if incident.dir.dot(&record.normal) > 0.0 {
@@ -387,7 +387,6 @@ pub fn scatter(incident: &Ray, record: ActiveHit, w: &World) -> Option<(RGB, Ray
                             },
                         ))
                     } else {
-                        let pathlen = (incident.orig - record.pos).len();
                         let shade = RGB::new(1., 1., 1.) - (RGB::new(1., 1., 1.) - i_shade) * i_len * 1.5;
 
                         Some((
@@ -452,7 +451,7 @@ pub struct Sky {
 
 impl Sky {
     pub fn new(file: &str) -> Self {
-        let mut s = std::fs::read_to_string(file)
+        let s = std::fs::read_to_string(file)
             .unwrap()
             .replace("\n", " ")
             .split(" ")

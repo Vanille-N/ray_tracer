@@ -1,4 +1,5 @@
 #![allow(dead_code)]
+#![allow(unused_imports)]
 
 extern crate rand;
 extern crate rayon;
@@ -98,12 +99,12 @@ fn main() {
 }
 
 fn build_world() -> (i32, i32, i32, Camera, World, Sky) {
-    let nj = 200; // width in pixels
-    let ni = 200; // height in pixels
+    let nj = 1000; // width in pixels
+    let ni = 1000; // height in pixels
     let ns = 50; // number of samples per pixel
     let cam = Camera::new_relative(
         Vec3::new(0.0, 1.0, 0.0), // target
-        10.0,                     // angle (degrees)
+        180.0,                     // angle (degrees)
         30.0,                     // rise (degrees)
         7.0,                      // distance (meters),
         0.0,                      // tilt (degrees)
@@ -122,7 +123,7 @@ fn build_world() -> (i32, i32, i32, Camera, World, Sky) {
 
 
     let ball = Sphere {
-        center: Vec3::new(0., 0., 0.),
+        center: Vec3::new(0., 1., 0.),
         radius: 1.,
         texture: Texture::Metal(RGB::new(0.6, 0.6, 1.), 0.),
     }
