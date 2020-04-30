@@ -36,21 +36,21 @@ const CFG: &str = "linux";
 
 #[allow(unused_variables)]
 fn main() {
-    let (ni, nj, ns, cam, w) = build_world();
+    let (ni, nj, ns, cam, w, sky) = build_world();
     let nb_cores = 5;
     let mut writers = Vec::new();
     for idx in (0..nb_cores).rev() {
         //let out = File::create(&format!(".out{}.txt", idx)).unwrap();
         let out = BufWriter::new(File::create(&format!(".out{}.txt", idx)).unwrap());
         let ni_rng = (idx * ni / nb_cores)..((idx + 1) * ni / nb_cores);
-        writers.push((idx, out, ni_rng, cam.clone(), w.clone()));
+        writers.push((idx, out, ni_rng, cam.clone(), w.clone(), sky.clone()));
     }
 
     if CFG == "linux" {
         eprint!("\n\nRendering image...\n");
         eprint!("|\x1b[50C|\x1b[1A\n");
     }
-    writers.par_iter_mut().for_each(|(id, f, range, cam, w)| {
+    writers.par_iter_mut().for_each(|(id, f, range, cam, w, sky)| {
         let color = &format!("\x1b[3{}m", *id + 1);
         for i in range.rev() {
             if CFG == "linux" {
@@ -75,7 +75,7 @@ fn main() {
                     let v = (i + rand::random::<f64>()) / ni;
                     let u = (j + rand::random::<f64>()) / nj;
                     let r = cam.get_ray(u, v);
-                    c += hitable::color(&r, &w, 0);
+                    c += hitable::color(&r, &w, 0, sky);
                 }
                 write!(f, "{}", c / ns as f64).unwrap();
                 //f.write(format!("{}", c / ns as f64).as_bytes()).unwrap();
@@ -97,7 +97,7 @@ fn main() {
     }
 }
 
-fn build_world() -> (i32, i32, i32, Camera, World) {
+fn build_world() -> (i32, i32, i32, Camera, World, Sky) {
     let nj = 200; // width in pixels
     let ni = 200; // height in pixels
     let ns = 50; // number of samples per pixel
@@ -110,25 +110,28 @@ fn build_world() -> (i32, i32, i32, Camera, World) {
         40.0,                     // aperture (degrees)
         nj as f64 / ni as f64,    // aspect ratio
     );
+    let sky = Sky::new("data/sky.ppm");
     let mut w = World::new();
     let ground = InfinitePlane {
         orig: Vec3::new(0.0, 0.0, 0.0),
         normal: Vec3::new(0.0, 1.0, 0.0),
-        texture: Texture::Lambertian(RGB::new(1.0, 1.0, 1.0)),
+        texture: Texture::Lambertian(RGB::new(0.4, 0.4, 0.4)),
     }
     .build()
     .wrap();
 
 
-    let erlen = Erlenmeyer {
-        a: Vec3::new(0.0, 0.0, 0.0),
-        size: 1.0,
+    let ball = Sphere {
+        center: Vec3::new(0., 0., 0.),
+        radius: 1.,
+        texture: Texture::Metal(RGB::new(0.6, 0.6, 1.), 0.),
     }
-    .build();
+    .build()
+    .wrap();
 
-    w.push_vec(erlen);
+    w.push(ball);
 
     w.push(ground);
 
-    (ni, nj, ns, cam, w)
+    (ni, nj, ns, cam, w, sky)
 }
