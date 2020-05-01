@@ -12,7 +12,7 @@ Originally inspired by _Ray Tracing in One Weekend_ (Peter Shirley)
   - compile in release mode (debug mode is useless since rendering an image takes longer than compiling), make sure that `cargo` is in your `$PATH`
   - copy the executable to the root directory of the project as `exec`
   If `rsmake` fails, one common reason is the presence of multiple executables in `./release/deps/`. The problem can be fixed by deleting `./release/` before running `rsmake` again.
-- Run `./exec`
+- Run `$ ./exec`
 - Open the newly generated `img.ppm`
 
 ### Creating a new scene
@@ -185,3 +185,107 @@ impl Camera {
     pub fn get_ray(&self, f64, f64) -> Ray;   // map [0.; 1.] x [0.; 1.] to rays going out of the camera
 }
 ```
+
+### primitives.rs
+_Some types and traits are defined only later in `hitable.rs`_
+
+```rust
+pub struct Sphere {               // derives Copy, implements build as a method and Hit as a trait
+    pub center: Vec3,
+    pub radius: f64,
+    pub texture: Texture,
+}
+
+pub struct InfinitePlane {        // derives Copy, implements build as a method and Hit as a trait
+    pub orig: Vec3,
+    pub normal: Vec3,
+    pub texture: Texture,
+}
+
+pub struct Triangle {             // derives Copy, implements build as a method and Hit as a trait
+    pub a: Vec3,                  // One angle
+    pub u: Vec3,                  // <──┬── Two sides of the triangle
+    pub v: Vec3,                  // <──┘
+    pub texture: Texture,
+}
+
+pub struct Parallelogram {        // derives Copy, implements build as a method and Hit as a trait
+    pub a: Vec3,                  // One angle
+    pub u: Vec3,                  // <──┬── Two sides of the parallelogram
+    pub v: Vec3,                  // <──┘
+    pub texture: Texture,
+}
+
+pub struct Rhombus {              // derives Copy, implements build as a method
+    pub a: Vec3,                  // One angle
+    pub u: Vec3,                  // <──┬── Three wedges of the Rhombus (actually a Parallelepiped)
+    pub v: Vec3,                  // <──┤
+    pub w: Vec3,                  // <──┘
+    pub texture: Texture,
+}
+
+pub struct RhombusObject(         // derives Copy, implements Hit as a trait
+    pub [Parallelogram; 6]        // Six sides
+);
+
+impl Rhombus {
+    pub fn orthogonal(self) -> Rhombus;    // Transform into a rectangular cuboid
+    pub fn orthonormal(self) -> Rhombus;   // Transform into a cube
+}
+
+pub struct EmptyCylinder {       // derives Copy, implements build as a method and Hit as a trait
+    pub center1: Vec3,
+    pub center2: Vec3,
+    pub radius: f64,
+    pub texture: Texture,
+}
+
+pub struct Disc {                // derives Copy, implements build as a method and Hit as a trait
+    pub center: Vec3,
+    pub normal: Vec3,
+    pub radius: f64,
+    pub texture: Texture,
+}
+
+pub struct Cylinder {            // derives Copy, implements build as a method
+    pub center1: Vec3,
+    pub center2: Vec3,
+    pub radius: f64,
+    pub texture: Texture,
+}
+
+pub struct CylinderObject {      // derives Copy, implements Hit as a trait
+    pub side: EmptyCylinder,
+    pub cap1: Disc,
+    pub cap2: Disc,
+}
+
+pub struct EmptyCone {           // derives Copy, implements build as a method and Hit as a trait
+    pub orig: Vec3,
+    pub dir: Vec3,
+    pub angle: f64,              // Angle in degrees
+    pub begin: f64,              // Position of first cap
+    pub end: f64,                // Position of second cap
+    pub texture: Texture,
+}
+// begin and can take any value in ]-∞; +∞[, but should satisfy (begin < end)
+
+pub struct Cone {               // derives Copy, implements build as a method
+    pub orig: Vec3,
+    pub dir: Vec3,
+    pub angle: f64,
+    pub begin: f64,
+    pub end: f64,
+    pub texture: Texture,
+}
+
+pub struct ConeObject {        // derives Copy, implements Hit as a trait
+    pub side: EmptyCone,
+    pub cap1: Disc,
+    pub cap2: Disc,
+}
+```
+The convention is that :
+- if `XObject` exists, then `X` builds to an `XObject` wrapped in a `Primitive`. Various methods may be called on an instance of `X` before building. `X` does not implement `Hit`, only `XObject` does.
+- in all other cases, the `build` method of `X` is just a wrapper to a `Primitive`.
+
