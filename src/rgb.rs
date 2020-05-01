@@ -12,14 +12,6 @@ impl RGB {
     pub fn new(r: f64, g: f64, b: f64) -> Self {
         RGB { r, g, b }
     }
-
-    pub fn shade(self, p: u8) -> Self {
-        self * p as f64 / 100.0
-    }
-
-    pub fn mix(self, other: Self) -> Self {
-        (self + other) / 2.0
-    }
 }
 
 impl ops::Add for RGB {
@@ -142,14 +134,6 @@ impl ops::DivAssign<f64> for RGB {
     }
 }
 
-fn min(a: f64, b: f64) -> f64 {
-    if a < b {
-        a
-    } else {
-        b
-    }
-}
-
 impl fmt::Display for RGB {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         if self.r < 0. || self.g < 0. || self.b < 0. {
@@ -158,9 +142,9 @@ impl fmt::Display for RGB {
                 self.r, self.g, self.b
             );
         }
-        let r = (min(self.r.sqrt(), 1.0) * 255.99) as u8;
-        let g = (min(self.g.sqrt(), 1.0) * 255.99) as u8;
-        let b = (min(self.b.sqrt(), 1.0) * 255.99) as u8;
+        let r = (self.r.sqrt().min(1.0) * 255.99) as u8;
+        let g = (self.g.sqrt().min(1.0) * 255.99) as u8;
+        let b = (self.b.sqrt().min(1.0) * 255.99) as u8;
         write!(f, "{} {} {} ", r, g, b)
     }
 }

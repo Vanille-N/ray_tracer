@@ -11,11 +11,7 @@ pub struct Vec3 {
 
 impl Vec3 {
     pub fn new(x: f64, y: f64, z: f64) -> Self {
-        Vec3 { x, y, z }
-    }
-
-    pub fn square_len(&self) -> f64 {
-        self.x.powi(2) + self.y.powi(2) + self.z.powi(2)
+        Self { x, y, z }
     }
 
     pub fn len(&self) -> f64 {
@@ -36,18 +32,18 @@ impl Vec3 {
     }
 
     pub fn cross(&self, other: &Self) -> Self {
-        Vec3 {
+        Self {
             x: self.y * other.z - self.z * other.y,
             y: -(self.x * other.z - self.z * other.x),
             z: self.x * other.y - self.y * other.x,
         }
     }
 
-    pub fn reflect(&self, normal: &Vec3) -> Vec3 {
+    pub fn reflect(&self, normal: &Self) -> Self {
         *self - *normal * self.dot(&normal) * 2.
     }
 
-    pub fn refract(&self, normal: &Vec3, rel_idx: f64) -> Option<Vec3> {
+    pub fn refract(&self, normal: &Self, rel_idx: f64) -> Option<Self> {
         let u = self.unit();
         let dt = u.dot(normal);
         let discriminant = 1.0 - rel_idx.powi(2) * (1.0 - dt.powi(2));
@@ -82,7 +78,7 @@ impl ops::AddAssign for Vec3 {
 impl ops::Mul<Vec3> for Vec3 {
     type Output = Self;
 
-    fn mul(self, other: Vec3) -> Self {
+    fn mul(self, other: Self) -> Self {
         Self {
             x: self.x * other.x,
             y: self.y * other.y,
@@ -92,7 +88,7 @@ impl ops::Mul<Vec3> for Vec3 {
 }
 
 impl ops::MulAssign<Vec3> for Vec3 {
-    fn mul_assign(&mut self, other: Vec3) {
+    fn mul_assign(&mut self, other: Self) {
         self.x *= other.x;
         self.y *= other.y;
         self.z *= other.z;
@@ -142,7 +138,7 @@ impl ops::SubAssign for Vec3 {
 impl ops::Div<Vec3> for Vec3 {
     type Output = Self;
 
-    fn div(self, other: Vec3) -> Self {
+    fn div(self, other: Self) -> Self {
         Self {
             x: self.x / other.x,
             y: self.y / other.y,
@@ -152,7 +148,7 @@ impl ops::Div<Vec3> for Vec3 {
 }
 
 impl ops::DivAssign<Vec3> for Vec3 {
-    fn div_assign(&mut self, other: Vec3) {
+    fn div_assign(&mut self, other: Self) {
         self.x /= other.x;
         self.y /= other.y;
         self.z /= other.z;

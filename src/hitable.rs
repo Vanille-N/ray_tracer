@@ -23,11 +23,11 @@ impl Primitive {
         Interaction(vec![self], vec![])
     }
 
-    pub fn intersect(self, other: Primitive) -> Interaction {
+    pub fn intersect(self, other: Self) -> Interaction {
         Interaction(vec![self, other], vec![])
     }
 
-    pub fn remove(self, other: Primitive) -> Interaction {
+    pub fn remove(self, other: Self) -> Interaction {
         Interaction(vec![self], vec![other])
     }
 
@@ -65,7 +65,10 @@ impl Hit for Primitive {
 }
 
 #[derive(Clone)]
-pub struct Interaction(Vec<Primitive>, Vec<Primitive>);
+pub struct Interaction(
+    Vec<Primitive>,
+    Vec<Primitive>,
+);
 
 impl Interaction {
     pub fn bidir_hit(obj: &Primitive, pos: Vec3, v: Vec3) -> bool {
@@ -195,7 +198,9 @@ pub trait Hit {
 }
 
 #[derive(Clone)]
-pub struct World(Composite);
+pub struct World(
+    Composite
+);
 
 impl World {
     pub fn new() -> Self {
@@ -290,14 +295,6 @@ pub enum Texture {
 fn schlick(cos: f64, n1: f64, n2: f64) -> f64 {
     let r = ((n1 - n2) / (n1 + n2)).powi(2);
     r + (1.0 - r) * (1.0 - cos).powi(5)
-}
-
-fn max(a: f64, b: f64) -> f64 {
-    if a > b {
-        a
-    } else {
-        b
-    }
 }
 
 pub fn scatter(incident: &Ray, record: ActiveHit, w: &World) -> Option<(RGB, Ray)> {
@@ -434,7 +431,7 @@ pub fn color(r: &Ray, w: &World, depth: i32, sky: &Sky) -> RGB {
 
 fn random_in_unit_sphere() -> Vec3 {
     let mut p = Vec3::new(1.0, 1.0, 1.0);
-    while p.square_len() >= 1. {
+    while p.dot_self() >= 1. {
         p.x = rand::random::<f64>() * 2. - 1.;
         p.y = rand::random::<f64>() * 2. - 1.;
         p.z = rand::random::<f64>() * 2. - 1.;
