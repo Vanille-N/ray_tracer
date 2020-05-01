@@ -218,7 +218,7 @@ pub struct Parallelogram {        // derives Copy, implements build as a method 
 
 pub struct Rhombus {              // derives Copy, implements build as a method
     pub a: Vec3,                  // One angle
-    pub u: Vec3,                  // <──┬── Three wedges of the Rhombus (actually a Parallelepiped)
+    pub u: Vec3,                  // <──┬── Three wedges of the Rhombus (actually a Parallelepiped, a.k.a. Rhomboid)
     pub v: Vec3,                  // <──┤
     pub w: Vec3,                  // <──┘
     pub texture: Texture,
@@ -288,4 +288,109 @@ pub struct ConeObject {        // derives Copy, implements Hit as a trait
 The convention is that :
 - if `XObject` exists, then `X` builds to an `XObject` wrapped in a `Primitive`. Various methods may be called on an instance of `X` before building. `X` does not implement `Hit`, only `XObject` does.
 - in all other cases, the `build` method of `X` is just a wrapper to a `Primitive`.
+
+### hitable.rs
+```rust
+
+pub enum Primitive {    // derives copy, implements Hit as a trait (wrapper)
+    Sphere(Sphere),
+    InfinitePlane(InfinitePlane),
+    Triangle(Triangle),
+    Parallelogram(Parallelogram),
+    Rhombus(RhombusObject),
+    EmptyCylinder(EmptyCylinder),
+    Disc(Disc),
+    Cylinder(CylinderObject),
+    EmptyCone(EmptyCone),
+    Cone(ConeObject),
+}
+
+impl Primitive {
+    pub fn wrap(self) -> Interaction;
+    pub fn intersect(self, Self) -> Interaction;
+    pub fn remove(self, Self) -> Interaction; 
+    pub fn texture(&self) -> Texture;                // Wrapper
+}
+
+pub struct Interaction(      // derives Clone
+    Vec<Primitive>,          // Must be inside all of these...
+    Vec<Primitive>,          // ...and outside all of these.
+);
+
+impl Interaction {
+    pub fn bidir_hit(&Primitive, Vec3, Vec3) -> bool;   // A simple test for inside/outside: does a ray hit the object in both directions ?
+    pub fn inside(obj: &Primitive, Vec3) -> bool;
+    pub fn outside(obj: &Primitive, pos: Vec3) -> bool;
+    pub fn intersect(&mut self, Primitive);            // Add other to the list of all inside
+    pub fn remove(&mut self, Primitive);               // Add other to the list of all outside
+    pub fn all_inside_except(Vec3, &[Primitive], usize) -> bool;      // Test that all objects in the interaction satisfy
+    pub fn all_outside_except(Vec3, &[Primitive], usize) -> bool;     // the requirements
+}
+
+pub type Composite = Vec<Interaction>;       // A Composite is a collection of interactions between Primitives
+
+pub struct ActiveHit {           // derives Copy
+    pub t: f64,                  // Time of hit
+    pub pos: Vec3,               // Position of hit
+    pub normal: Vec3,            // Surface normal
+    pub texture: Texture,        // Surface texture
+}
+
+impl ActiveHit {
+    pub fn later(self, f64) -> Self;       // Apply translation to time
+}
+
+pub enum HitRecord {         // derives Copy
+    Blank,
+    Hit(ActiveHit),
+}
+
+impl HitRecord {
+    pub fn make(f64, Vec3, Vec3, Texture) -> Self;       // Normalize the normal vector + wrap the rest
+    pub fn compare(&mut self, Self);                     // The one with smallest t overwrites the other
+}
+
+pub trait Hit {
+    fn hit(&self, &Ray) -> HitRecord;
+}
+
+pub struct World(             // derives Clone
+    Composite,                // The World is just a particular extendable Composite
+);
+
+impl World {
+    pub fn new() -> Self;
+    pub fn push(&mut self, Interaction);       // Add to the world
+    pub fn push_vec(&mut self, Composite);     // Unpack and add components individually
+}
+
+impl World {
+    fn hit(&self, &Ray) -> HitRecord;                   // Wrapper around everything else
+    pub fn caracteristics(&self, Vec3) -> (f64, RGB);   // Get optical index and color of a point in space. Only useful for refraction.
+}
+
+pub enum Texture {            // derives Copy
+    Lambertian(RGB),          // Equivalent to Metal(*, 1.)
+    Metal(RGB, f64),          // Reflective material with a color and a fuzziness
+    Light(RGB),               // Does not reflect. Can be used with rgb components greater than 1. to emulate a light source
+    Dielectric(RGB, f64),     // Reflects and refracts according to optical index
+}
+
+fn schlick(f64, f64, f64) -> f64;      // Schlick's approximation
+
+pub fn scatter(&Ray, ActiveHit, &World) -> Option<(RGB, Ray)>;   // Calculate (with randomness) a refracted / reflected ray
+pub fn color(&Ray, &World, i32, &Sky) -> RGB;                    // Recursively calculate color
+fn random_in_unit_sphere() -> Vec3;                              // self-explanatory
+
+pub struct Sky {                // derives Clone
+    map: Vec<Vec<RGB>>,
+    hgt: usize,
+    wth: usize,
+}
+
+impl Sky {
+    pub fn new(&str) -> Self;              // Provide a ppm file
+    pub fn color(&self, Vec3) -> RGB;      // Project a direction on a background image
+}
+```
 
