@@ -153,3 +153,35 @@ impl Ray {
     pub fn project(&self, f64) -> Vec3;        // r.project(t) == r.orig + r.dir * t
 }
 ```
+
+### camera.rs
+```rust
+pub struct Camera {     // derives Clone
+    orig: Vec3,
+    low_left: Vec3,
+    horizontal: Vec3,
+    vertical: Vec3,
+}
+
+impl Camera {
+    pub fn new_absolute(
+        Vec3,                // Look from
+        Vec3,                // Look at
+        Vec3,                // Vertical
+        f64,                 // Field of view (degrees)
+        f64,                 // Aspect ratio
+    ) -> Self;
+
+    pub fn new_relative(
+        Vec3,                // Look at
+        f64,                 // Angle around target (degrees)
+        f64,                 // Angle above target (degrees)
+        f64,                 // Distance from target
+        f64,                 // Lateral tilt (degrees)
+        f64,                 // Field of view (degrees)
+        f64,                 // Aspect ratio
+    ) -> Self;
+
+    pub fn get_ray(&self, f64, f64) -> Ray;   // map [0.; 1.] x [0.; 1.] to rays going out of the camera
+}
+```
