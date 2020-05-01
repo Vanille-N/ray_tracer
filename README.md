@@ -89,6 +89,67 @@ impl ops::DivAssign<Vec3> for Vec3;                        // Each coordinate se
 impl ops::Div<f64> for Vec3;
 impl ops::DivAssign<f64> for Vec3;
 impl ops::Neg for Vec3;
+```
 
+### rgb.rs
+```rust
+pub struct RGB {    // derives Copy
+    pub r: f64,
+    pub g: f64,
+    pub b: f64,
+}
 
+impl RGB {
+    pub fn new(f64, f64, f64) -> Self;                    // New color from r/g/b values in [0.; 1.]
+}
 
+impl ops::Add for RGB;
+impl ops::AddAssign for RGB;
+impl ops::Mul<RGB> for RGB ;                              // Each value separately
+impl ops::MulAssign<RGB> for RGB;                         // Each value separately
+impl ops::Mul<f64> for RGB;
+impl ops::MulAssign<f64> for RGB;
+impl ops::Sub for RGB;
+impl ops::SubAssign for RGB;
+impl ops::Div<RGB> for RGB;                               // Each value separately
+impl ops::DivAssign<RGB> for RGB;                         // Each value separately
+impl ops::Div<f64> for RGB;
+impl ops::DivAssign<f64> for RGB;
+impl fmt::Display for RGB;                                // For ppm output : "{r} {g} {b}"
+impl ops::Rem<usize> for RGB;                             // COLOR%n == COLOR * n as f64 / 100.
+
+pub const RED: RGB;
+pub const DKRED: RGB;
+pub const LTRED: RGB;
+pub const BLUE: RGB;
+pub const DKBLUE: RGB;
+pub const LTBLUE: RGB;
+pub const CYAN: RGB;
+pub const GREEN: RGB;
+pub const DKGREEN: RGB;
+pub const LTGREEN: RGB;
+pub const PURPLE: RGB;
+pub const MAGENTA: RGB;
+pub const YELLOW: RGB;
+pub const BROWN: RGB;
+pub const ORANGE: RGB;
+pub const TURQUOISE: RGB;
+pub const BLACK: RGB;
+pub const WHITE: RGB;
+pub const GREY: RGB;
+pub const DKGREY: RGB;
+pub const LTGREY: RGB;
+```
+
+### ray.rs
+```rust
+pub struct Ray {       // derives Copy
+    pub orig: Vec3,
+    pub dir: Vec3,
+}
+
+impl Ray {
+    pub fn new(Vec3, Vec3) -> Self;            // Create ray from origin and direction
+    pub fn project(&self, f64) -> Vec3;        // r.project(t) == r.orig + r.dir * t
+}
+```
