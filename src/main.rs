@@ -126,38 +126,86 @@ struct Writer<W: Write> {
 }
 
 fn build_world() -> Cfg {
-    let wth = 200; // width in pixels
-    let hgt = 100; // height in pixels
-    let iter = 50; // number of samples per pixel
+    let wth = 2000; // width in pixels
+    let hgt = 1000; // height in pixels
+    let iter = 100; // number of samples per pixel
     let cam = Camera::new_relative(
         Vec3::new(0.0, 1.0, 0.0), // target
         180.0,                     // angle (degrees)
         30.0,                     // rise (degrees)
-        7.0,                      // distance (meters),
-        0.0,                      // tilt (degrees)
-        40.0,                     // aperture (degrees)
+        0.5,                      // distance (meters),
+        30.0,                      // tilt (degrees)
+        90.0,                     // aperture (degrees)
         wth as f64 / hgt as f64,    // aspect ratio
     );
     let sky = Sky::new("data/sky.ppm");
     let mut world = World::new();
     let ground = InfinitePlane {
-        orig: Vec3::new(0.0, 0.0, 0.0),
+        orig: Vec3::new(0.0, -0.5, 0.0),
         normal: Vec3::new(0.0, 1.0, 0.0),
-        texture: Texture::Lambertian(RGB::new(0.4, 0.4, 0.4)),
+        texture: Texture::Lambertian(RGB::new(0.8, 0.8, 0.1)),
+    }
+    .build()
+    .wrap();
+
+    let mirror1 = Parallelogram {
+        a: Vec3::new(-1., 0., 1.),
+        u: Vec3::new(2., 0., 0.),
+        v: Vec3::new(0., 2., 0.),
+        texture: Texture::Metal(RGB::new(0.95, 0.95, 0.95), 0.0),
+    }
+    .build()
+    .wrap();
+    let mirror2 = Parallelogram {
+        a: Vec3::new(-1., 0., -1.),
+        u: Vec3::new(2., 0., -0.05),
+        v: Vec3::new(0., 2., 0.1),
+        texture: Texture::Metal(RGB::new(0.95, 0.95, 0.95), 0.0),
     }
     .build()
     .wrap();
 
 
-    let ball = Sphere {
-        center: Vec3::new(0., 1., 0.),
-        radius: 1.,
+    let ball1 = Sphere {
+        center: Vec3::new(0., 0.9, 0.),
+        radius: 0.2,
         texture: Texture::Metal(RGB::new(0.6, 0.6, 1.), 0.),
     }
     .build()
     .wrap();
 
-    world.push(ball);
+    let ball2 = Sphere {
+        center: Vec3::new(0.3, 1.3, 0.5),
+        radius: 0.15,
+        texture: Texture::Lambertian(RGB::new(0., 0.2, 0.)),
+    }
+    .build()
+    .wrap();
+
+    let ball3 = Sphere {
+        center: Vec3::new(-0.4, 1., -0.3),
+        radius: 0.1,
+        texture: Texture::Lambertian(RGB::new(0.7, 0., 0.)),
+    }
+    .build()
+    .wrap();
+
+    let ball4 = Sphere {
+        center: Vec3::new(0.6, 0.5, -0.5),
+        radius: 0.2,
+        texture: Texture::Metal(RGB::new(0.3, 0., 0.7), 0.),
+    }
+    .build()
+    .wrap();
+
+    world.push(ball1);
+    world.push(ball2);
+    world.push(ball3);
+    world.push(ball4);
+
+    world.push(mirror1);
+    world.push(mirror2);
+
 
     world.push(ground);
 
