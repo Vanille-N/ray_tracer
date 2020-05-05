@@ -3,26 +3,10 @@ use crate::primitives::*;
 use crate::rgb::RGB;
 use crate::vec3::Vec3;
 
-const RED: Texture = Texture::Lambertian(RGB {
-    r: 0.9,
-    g: 0.1,
-    b: 0.1,
-});
-const BLUE: Texture = Texture::Lambertian(RGB {
-    r: 0.0,
-    g: 0.2,
-    b: 0.7,
-});
-const GREEN: Texture = Texture::Lambertian(RGB {
-    r: 0.0,
-    g: 0.9,
-    b: 0.0,
-});
-const BLACK: Texture = Texture::Lambertian(RGB {
-    r: 0.01,
-    g: 0.01,
-    b: 0.01,
-});
+const RED: Texture = Texture::Lambertian(RGB(0.9, 0.1, 0.1));
+const BLUE: Texture = Texture::Lambertian(RGB(0.0, 0.2, 0.7));
+const GREEN: Texture = Texture::Lambertian(RGB(0.0, 0.9, 0.0));
+const BLACK: Texture = Texture::Lambertian(RGB(0.01, 0.01, 0.01));
 
 #[derive(Clone, Copy)]
 pub struct Axes(pub f64);

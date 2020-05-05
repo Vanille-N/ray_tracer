@@ -2,35 +2,25 @@ use std::fmt;
 use std::ops;
 
 #[derive(Debug, Copy, Clone)]
-pub struct RGB {
-    pub r: f64,
-    pub g: f64,
-    pub b: f64,
-}
-
-impl RGB {
-    pub fn new(r: f64, g: f64, b: f64) -> Self {
-        RGB { r, g, b }
-    }
-}
+pub struct RGB(
+    pub f64,
+    pub f64,
+    pub f64,
+);
 
 impl ops::Add for RGB {
     type Output = Self;
 
     fn add(self, other: Self) -> Self {
-        Self {
-            r: self.r + other.r,
-            g: self.g + other.g,
-            b: self.b + other.b,
-        }
+        Self(self.0 + other.0, self.1 + other.1, self.2 + other.2)
     }
 }
 
 impl ops::AddAssign for RGB {
     fn add_assign(&mut self, other: Self) {
-        self.r += other.r;
-        self.g += other.g;
-        self.b += other.b;
+        self.0 += other.0;
+        self.1 += other.1;
+        self.2 += other.2;
     }
 }
 
@@ -38,19 +28,15 @@ impl ops::Mul<RGB> for RGB {
     type Output = Self;
 
     fn mul(self, other: RGB) -> Self {
-        Self {
-            r: self.r * other.r,
-            g: self.g * other.g,
-            b: self.b * other.b,
-        }
+        Self(self.0 * other.0, self.1 * other.1, self.2 * other.2)
     }
 }
 
 impl ops::MulAssign<RGB> for RGB {
     fn mul_assign(&mut self, other: RGB) {
-        self.r *= other.r;
-        self.g *= other.g;
-        self.b *= other.b;
+        self.0 *= other.0;
+        self.1 *= other.1;
+        self.2 *= other.2;
     }
 }
 
@@ -58,19 +44,15 @@ impl ops::Mul<f64> for RGB {
     type Output = Self;
 
     fn mul(self, other: f64) -> Self {
-        Self {
-            r: self.r * other,
-            g: self.g * other,
-            b: self.b * other,
-        }
+        Self(self.0 * other, self.1 * other, self.2 * other)
     }
 }
 
 impl ops::MulAssign<f64> for RGB {
     fn mul_assign(&mut self, other: f64) {
-        self.r *= other;
-        self.g *= other;
-        self.b *= other;
+        self.0 *= other;
+        self.1 *= other;
+        self.2 *= other;
     }
 }
 
@@ -78,19 +60,15 @@ impl ops::Sub for RGB {
     type Output = Self;
 
     fn sub(self, other: Self) -> Self {
-        Self {
-            r: self.r - other.r,
-            g: self.g - other.g,
-            b: self.b - other.b,
-        }
+        Self(self.0 - other.0, self.1 - other.1, self.2 - other.2)
     }
 }
 
 impl ops::SubAssign for RGB {
     fn sub_assign(&mut self, other: Self) {
-        self.r -= other.r;
-        self.g -= other.g;
-        self.b -= other.b;
+        self.0 -= other.0;
+        self.1 -= other.1;
+        self.2 -= other.2;
     }
 }
 
@@ -98,19 +76,15 @@ impl ops::Div<RGB> for RGB {
     type Output = Self;
 
     fn div(self, other: RGB) -> Self {
-        Self {
-            r: self.r / other.r,
-            g: self.g / other.g,
-            b: self.b / other.b,
-        }
+        Self(self.0 / other.0, self.1 / other.1, self.2 / other.2)
     }
 }
 
 impl ops::DivAssign<RGB> for RGB {
     fn div_assign(&mut self, other: RGB) {
-        self.r /= other.r;
-        self.g /= other.g;
-        self.b /= other.b;
+        self.0 /= other.0;
+        self.1 /= other.1;
+        self.2 /= other.2;
     }
 }
 
@@ -118,33 +92,29 @@ impl ops::Div<f64> for RGB {
     type Output = Self;
 
     fn div(self, other: f64) -> Self {
-        Self {
-            r: self.r / other,
-            g: self.g / other,
-            b: self.b / other,
-        }
+        Self(self.0 / other, self.1 / other, self.2 / other)
     }
 }
 
 impl ops::DivAssign<f64> for RGB {
     fn div_assign(&mut self, other: f64) {
-        self.r /= other;
-        self.g /= other;
-        self.b /= other;
+        self.0 /= other;
+        self.1 /= other;
+        self.2 /= other;
     }
 }
 
 impl fmt::Display for RGB {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        if self.r < 0. || self.g < 0. || self.b < 0. {
+        if self.0 < 0. || self.1 < 0. || self.2 < 0. {
             panic!(
                 "Trying to output invalid color: {} {} {}",
-                self.r, self.g, self.b
+                self.0, self.1, self.2
             );
         }
-        let r = (self.r.sqrt().min(1.0) * 255.99) as u8;
-        let g = (self.g.sqrt().min(1.0) * 255.99) as u8;
-        let b = (self.b.sqrt().min(1.0) * 255.99) as u8;
+        let r = (self.0.sqrt().min(1.0) * 255.99) as u8;
+        let g = (self.1.sqrt().min(1.0) * 255.99) as u8;
+        let b = (self.2.sqrt().min(1.0) * 255.99) as u8;
         write!(f, "{} {} {} ", r, g, b)
     }
 }
@@ -156,108 +126,24 @@ impl ops::Rem<usize> for RGB {
     }
 }
 
-pub const RED: RGB = RGB {
-    r: 1.0,
-    g: 0.0,
-    b: 0.0,
-};
-pub const DKRED: RGB = RGB {
-    r: 0.5,
-    g: 0.0,
-    b: 0.0,
-};
-pub const LTRED: RGB = RGB {
-    r: 1.0,
-    g: 0.5,
-    b: 0.5,
-};
-pub const BLUE: RGB = RGB {
-    r: 0.0,
-    g: 0.0,
-    b: 1.0,
-};
-pub const DKBLUE: RGB = RGB {
-    r: 0.0,
-    g: 0.0,
-    b: 0.5,
-};
-pub const LTBLUE: RGB = RGB {
-    r: 0.3,
-    g: 0.6,
-    b: 1.0,
-};
-pub const CYAN: RGB = RGB {
-    r: 0.0,
-    g: 1.0,
-    b: 1.0,
-};
-pub const GREEN: RGB = RGB {
-    r: 0.0,
-    g: 1.0,
-    b: 0.0,
-};
-pub const DKGREEN: RGB = RGB {
-    r: 0.0,
-    g: 0.5,
-    b: 0.0,
-};
-pub const LTGREEN: RGB = RGB {
-    r: 0.7,
-    g: 1.0,
-    b: 0.0,
-};
-pub const PURPLE: RGB = RGB {
-    r: 0.7,
-    g: 0.0,
-    b: 0.0,
-};
-pub const MAGENTA: RGB = RGB {
-    r: 1.0,
-    g: 0.0,
-    b: 1.0,
-};
-pub const YELLOW: RGB = RGB {
-    r: 1.0,
-    g: 1.0,
-    b: 0.0,
-};
-pub const BROWN: RGB = RGB {
-    r: 0.3,
-    g: 0.2,
-    b: 0.0,
-};
-pub const ORANGE: RGB = RGB {
-    r: 1.0,
-    g: 0.4,
-    b: 0.0,
-};
-pub const TURQUOISE: RGB = RGB {
-    r: 0.0,
-    g: 0.9,
-    b: 0.6,
-};
-pub const BLACK: RGB = RGB {
-    r: 0.0,
-    g: 0.0,
-    b: 0.0,
-};
-pub const WHITE: RGB = RGB {
-    r: 1.0,
-    g: 1.0,
-    b: 1.0,
-};
-pub const GREY: RGB = RGB {
-    r: 0.5,
-    g: 0.5,
-    b: 0.5,
-};
-pub const DKGREY: RGB = RGB {
-    r: 0.2,
-    g: 0.2,
-    b: 0.2,
-};
-pub const LTGREY: RGB = RGB {
-    r: 0.8,
-    g: 0.8,
-    b: 0.8,
-};
+pub const RED: RGB = RGB(1.0, 0.0, 0.0);
+pub const DKRED: RGB = RGB(0.5, 0.0, 0.0);
+pub const LTRED: RGB = RGB(1.0, 0.5, 0.5);
+pub const BLUE: RGB = RGB(0.0, 0.0, 1.0);
+pub const DKBLUE: RGB = RGB(0.0, 0.0, 0.5);
+pub const LTBLUE: RGB = RGB(0.3, 0.6, 1.0);
+pub const CYAN: RGB = RGB(0.0, 1.0, 1.0);
+pub const GREEN: RGB = RGB(0.0, 1.0, 0.0);
+pub const DKGREEN: RGB = RGB(0.0, 0.5, 0.0);
+pub const LTGREEN: RGB = RGB(0.7, 1.0, 0.0);
+pub const PURPLE: RGB = RGB(0.7, 0.0, 0.0);
+pub const MAGENTA: RGB = RGB(1.0, 0.0, 1.0);
+pub const YELLOW: RGB = RGB(1.0, 1.0, 0.0);
+pub const BROWN: RGB = RGB(0.3, 0.2, 0.0);
+pub const ORANGE: RGB = RGB(1.0, 0.4, 0.0);
+pub const TURQUOISE: RGB = RGB(0.0, 0.9, 0.6);
+pub const BLACK: RGB = RGB(0.0, 0.0, 0.0);
+pub const WHITE: RGB = RGB(1.0, 1.0, 1.0);
+pub const GREY: RGB = RGB(0.5, 0.5, 0.5);
+pub const DKGREY: RGB = RGB(0.2, 0.2, 0.2);
+pub const LTGREY: RGB = RGB(0.8, 0.8, 0.8);

@@ -3,31 +3,11 @@ use crate::primitives::*;
 use crate::rgb::RGB;
 use crate::vec3::Vec3;
 
-const BLACK: RGB = RGB {
-    r: 0.05,
-    g: 0.05,
-    b: 0.05,
-};
-const RED: RGB = RGB {
-    r: 0.9,
-    g: 0.1,
-    b: 0.1,
-};
-const BLUE: RGB = RGB {
-    r: 0.0,
-    g: 0.2,
-    b: 0.7,
-};
-const WHITE: RGB = RGB {
-    r: 0.9,
-    g: 0.9,
-    b: 0.9,
-};
-const LGREY: RGB = RGB {
-    r: 0.7,
-    g: 0.7,
-    b: 0.7,
-};
+const BLACK: RGB = RGB(0.05, 0.05, 0.05);
+const RED: RGB = RGB(0.9, 0.1, 0.1);
+const BLUE: RGB = RGB(0.0, 0.2, 0.7);
+const WHITE: RGB = RGB(0.9, 0.9, 0.9);
+const LGREY: RGB = RGB(0.7, 0.7, 0.7);
 
 const CARBON: Texture = Texture::Metal(BLACK, 0.0);
 const OXYGEN: Texture = Texture::Metal(RED, 0.0);
@@ -451,14 +431,14 @@ impl Molecule {
 
         MoleculeObject {
             atoms: vec![
-                atom_builder(rad1, Texture::Lambertian(RGB::new(0., 0., 0.)))(o),
-                atom_builder(rad1, Texture::Lambertian(RGB::new(1., 0., 0.)))(ot),
-                atom_builder(rad1, Texture::Lambertian(RGB::new(0., 1., 0.)))(ou),
-                atom_builder(rad1, Texture::Lambertian(RGB::new(0., 0., 1.)))(ov),
-                atom_builder(rad1, Texture::Lambertian(RGB::new(1., 1., 0.)))(ow),
-                atom_builder(rad1, Texture::Lambertian(RGB::new(1., 0., 1.)))(ox),
-                atom_builder(rad1, Texture::Lambertian(RGB::new(0., 1., 1.)))(oy),
-                atom_builder(rad1, Texture::Lambertian(RGB::new(1., 1., 1.)))(oz),
+                atom_builder(rad1, Texture::Lambertian(RGB(0., 0., 0.)))(o),
+                atom_builder(rad1, Texture::Lambertian(RGB(1., 0., 0.)))(ot),
+                atom_builder(rad1, Texture::Lambertian(RGB(0., 1., 0.)))(ou),
+                atom_builder(rad1, Texture::Lambertian(RGB(0., 0., 1.)))(ov),
+                atom_builder(rad1, Texture::Lambertian(RGB(1., 1., 0.)))(ow),
+                atom_builder(rad1, Texture::Lambertian(RGB(1., 0., 1.)))(ox),
+                atom_builder(rad1, Texture::Lambertian(RGB(0., 1., 1.)))(oy),
+                atom_builder(rad1, Texture::Lambertian(RGB(1., 1., 1.)))(oz),
             ],
             links: vec![
                 link(o, ot),

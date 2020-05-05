@@ -12,9 +12,9 @@ pub struct NewtonCradle {
 
 impl NewtonCradle {
     pub fn build(self) -> Composite {
-        let plastic = Texture::Lambertian(RGB::new(0.1, 0.1, 0.1));
-        let steel = Texture::Metal(RGB::new(0.8, 0.6, 0.2), 0.0);
-        let nylon = Texture::Lambertian(RGB::new(0.9, 0.9, 0.9));
+        let plastic = Texture::Lambertian(RGB(0.1, 0.1, 0.1));
+        let steel = Texture::Metal(RGB(0.8, 0.6, 0.2), 0.0);
+        let nylon = Texture::Lambertian(RGB(0.9, 0.9, 0.9));
         let len = self.size;
         let angle = self.angle  * std::f64::consts::PI / 180.;
         let w = Vec3::new(0.0, len, 0.0); // Upwards

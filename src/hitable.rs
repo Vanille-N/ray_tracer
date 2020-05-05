@@ -279,7 +279,7 @@ impl World {
                 }
             }
         }
-        return (1., RGB::new(1., 1., 1.));
+        return (1., RGB(1., 1., 1.));
     }
 }
 
@@ -350,7 +350,7 @@ pub fn scatter(incident: &Ray, record: ActiveHit, w: &World) -> Option<(RGB, Ray
             let tmp_ray_prev = Ray { orig: record.pos, dir: -ext_normal };
             let mid_caract = |r| {
                 match w.hit(&r) {
-                    HitRecord::Blank => (1., RGB::new(1., 1., 1.), 1.),
+                    HitRecord::Blank => (1., RGB(1., 1., 1.), 1.),
                     HitRecord::Hit(h) => {
                         let mid = (h.pos + record.pos) / 2.;
                         let (idx, shade) = w.caracteristics(mid);
@@ -384,7 +384,7 @@ pub fn scatter(incident: &Ray, record: ActiveHit, w: &World) -> Option<(RGB, Ray
                             },
                         ))
                     } else {
-                        let shade = RGB::new(1., 1., 1.) - (RGB::new(1., 1., 1.) - i_shade) * i_len * 1.5;
+                        let shade = RGB(1., 1., 1.) - (RGB(1., 1., 1.) - i_shade) * i_len * 1.5;
 
                         Some((
                             shade,
@@ -467,7 +467,7 @@ impl Sky {
                 let r = get() as f64;
                 let g = get() as f64;
                 let b = get() as f64;
-                v.push(RGB::new(r / max, g / max, b / max));
+                v.push(RGB(r / max, g / max, b / max));
             }
             map.push(v);
         }
