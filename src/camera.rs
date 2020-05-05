@@ -15,8 +15,8 @@ impl Camera {
         let half_hgt = (theta / 2.).tan();
         let half_wth = ratio * half_hgt;
         let w = (eye - target).unit();
-        let u = vert.cross(&w);
-        let v = w.cross(&u);
+        let u = vert.cross(w);
+        let v = w.cross(u);
         Camera {
             orig: eye,
             low_left: eye - u * half_wth - v * half_hgt - w,
@@ -49,11 +49,11 @@ impl Camera {
         let vert = {
             let tilt_rad = tilt * std::f64::consts::PI / 180.;
             let up = Vec3::new(0.0, 1.0, 0.0);
-            let horiz = up.cross(&w);
+            let horiz = up.cross(w);
             up * tilt_rad.cos() + horiz * tilt_rad.sin()
         };
-        let u = vert.cross(&w);
-        let v = w.cross(&u);
+        let u = vert.cross(w);
+        let v = w.cross(u);
         Camera {
             orig: eye,
             low_left: eye - u * half_wth - v * half_hgt - w,

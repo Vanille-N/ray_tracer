@@ -46,7 +46,7 @@ fn link_builder(r: f64) -> Box<dyn Fn(Vec3, Vec3) -> EmptyCylinder> {
 
 fn double_builder(r: f64) -> Box<dyn Fn(Vec3, Vec3, Vec3) -> [EmptyCylinder; 2]> {
     Box::new(move |c1, c2, c3| {
-        let orth = (c2 - c1).cross(&c3).unit() * (c2 - c1).len();
+        let orth = (c2 - c1).cross(c3).unit() * (c2 - c1).len();
         [
             EmptyCylinder {
                 center1: c1 + orth * r * 3.0,
@@ -78,8 +78,8 @@ fn triple_builder(r: f64) -> Box<dyn Fn(Vec3, Vec3, Vec3) -> [EmptyCylinder; 3]>
     Box::new(move |c1, c2, c3| {
         let axis = c2 - c1;
         let len = axis.len();
-        let orth1 = axis.cross(&c3).unit() * len;
-        let orth2 = axis.cross(&orth1).unit() * len;
+        let orth1 = axis.cross(c3).unit() * len;
+        let orth2 = axis.cross(orth1).unit() * len;
         [
             EmptyCylinder {
                 center1: c1 + orth1 * r * 4.5,
@@ -107,8 +107,8 @@ fn triple_builder(r: f64) -> Box<dyn Fn(Vec3, Vec3, Vec3) -> [EmptyCylinder; 3]>
 impl Molecule {
     fn directions(self) -> [Vec3; 7] {
         let zz = self.up.unit();
-        let yy = self.fwd.cross(&self.up).unit();
-        let xx = zz.cross(&yy).unit();
+        let yy = self.fwd.cross(self.up).unit();
+        let xx = zz.cross(yy).unit();
 
         let x = zz;
         let v = xx * 0.00 + yy * 0.87 + zz * 0.50;

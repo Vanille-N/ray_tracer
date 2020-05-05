@@ -106,8 +106,8 @@ impl Interaction {
             Primitive::EmptyCone(_) => false,
             Primitive::Cone(s) => {
                 let u = (pos - s.side.orig).unit();
-                let v = u - s.side.dir * u.dot(&s.side.dir);
-                Interaction::bidir_hit(obj, pos, v.cross(&s.side.dir))
+                let v = u - s.side.dir * u.dot(s.side.dir);
+                Interaction::bidir_hit(obj, pos, v.cross(s.side.dir))
             }
         }
     }
@@ -300,37 +300,37 @@ fn schlick(cos: f64, n1: f64, n2: f64) -> f64 {
 pub fn scatter(incident: &Ray, record: ActiveHit, w: &World) -> Option<(RGB, Ray)> {
     match record.texture {
         Texture::Lambertian(albedo) => {
-            let reflec = incident.dir.unit().reflect(&record.normal);
+            let reflec = incident.dir.unit().reflect(record.normal);
             let scattered = Ray::new(record.pos, reflec + random_in_unit_sphere() * 0.8);
             let attenuation = albedo;
             let normal = {
-                if scattered.dir.dot(&record.normal) > 0.0 {
+                if scattered.dir.dot(record.normal) > 0.0 {
                     record.normal
                 } else {
                     -record.normal
                 }
             };
-            if scattered.dir.dot(&normal) > EPSILON {
+            if scattered.dir.dot(normal) > EPSILON {
                 Some((attenuation, scattered))
             } else {
                 None
             }
         }
         Texture::Metal(albedo, fuzziness) => {
-            let reflec = incident.dir.unit().reflect(&record.normal);
+            let reflec = incident.dir.unit().reflect(record.normal);
             let scattered = Ray::new(
                 record.pos,
                 reflec + random_in_unit_sphere() * fuzziness * 0.8,
             );
             let attenuation = albedo;
             let normal = {
-                if scattered.dir.dot(&record.normal) > 0.0 {
+                if scattered.dir.dot(record.normal) > 0.0 {
                     record.normal
                 } else {
                     -record.normal
                 }
             };
-            if scattered.dir.dot(&normal) > EPSILON {
+            if scattered.dir.dot(normal) > EPSILON {
                 Some((attenuation, scattered))
             } else {
                 None
@@ -338,9 +338,9 @@ pub fn scatter(incident: &Ray, record: ActiveHit, w: &World) -> Option<(RGB, Ray
         }
         Texture::Light(_) => None,
         Texture::Dielectric(shade, _idx) => {
-            let reflected = incident.dir.reflect(&record.normal).unit();
+            let reflected = incident.dir.reflect(record.normal).unit();
             let ext_normal = {
-                if incident.dir.dot(&record.normal) > 0.0 {
+                if incident.dir.dot(record.normal) > 0.0 {
                     -record.normal
                 } else {
                     record.normal
@@ -362,10 +362,10 @@ pub fn scatter(incident: &Ray, record: ActiveHit, w: &World) -> Option<(RGB, Ray
             let (i_idx, i_shade, i_len) = mid_caract(tmp_ray_prev);
             let (r_idx, _, _) = mid_caract(tmp_ray_succ);
             let rel_idx = r_idx / i_idx;
-            let cos = -incident.dir.unit().dot(&ext_normal);
+            let cos = -incident.dir.unit().dot(ext_normal);
 
 
-            match incident.dir.refract(&ext_normal, rel_idx) {
+            match incident.dir.refract(ext_normal, rel_idx) {
                 None => Some((
                     shade,
                     Ray {

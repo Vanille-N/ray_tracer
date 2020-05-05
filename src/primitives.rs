@@ -20,7 +20,7 @@ impl Hit for Sphere {
     fn hit(&self, r: &Ray) -> HitRecord {
         let oc = r.orig - self.center;
         let a = r.dir.dot_self();
-        let b = oc.dot(&r.dir);
+        let b = oc.dot(r.dir);
         let c = oc.dot_self() - self.radius.powi(2);
         let discriminant = b.powi(2) - a * c;
         let mut rec = HitRecord::Blank;
@@ -57,9 +57,9 @@ impl Hit for InfinitePlane {
     fn hit(&self, r: &Ray) -> HitRecord {
         let a = r.orig;
         let b = r.dir;
-        let bn = b.dot(&self.normal);
+        let bn = b.dot(self.normal);
         if bn.abs() > EPSILON {
-            let temp = -(a - self.orig).dot(&self.normal) / bn;
+            let temp = -(a - self.orig).dot(self.normal) / bn;
             if EPSILON < temp {
                 HitRecord::make(temp, r.project(temp), self.normal, self.texture)
             } else {
@@ -87,13 +87,13 @@ impl Triangle {
 
 impl Hit for Triangle {
     fn hit(&self, r: &Ray) -> HitRecord {
-        let det = -self.u.cross(&self.v).dot(&r.dir);
+        let det = -self.u.cross(self.v).dot(r.dir);
         let w = r.orig - self.a;
-        let a = -w.cross(&self.v).dot(&r.dir) / det;
-        let b = -self.u.cross(&w).dot(&r.dir) / det;
-        let temp = self.u.cross(&self.v).dot(&w) / det;
+        let a = -w.cross(self.v).dot(r.dir) / det;
+        let b = -self.u.cross(w).dot(r.dir) / det;
+        let temp = self.u.cross(self.v).dot(w) / det;
         if a > 0. && b > 0. && a + b < 1. && EPSILON < temp {
-            HitRecord::make(temp, r.project(temp), self.u.cross(&self.v), self.texture)
+            HitRecord::make(temp, r.project(temp), self.u.cross(self.v), self.texture)
         } else {
             HitRecord::Blank
         }
@@ -116,13 +116,13 @@ impl Parallelogram {
 
 impl Hit for Parallelogram {
     fn hit(&self, r: &Ray) -> HitRecord {
-        let det = -self.u.cross(&self.v).dot(&r.dir);
+        let det = -self.u.cross(self.v).dot(r.dir);
         let w = r.orig - self.a;
-        let a = -w.cross(&self.v).dot(&r.dir) / det;
-        let b = -self.u.cross(&w).dot(&r.dir) / det;
-        let temp = self.u.cross(&self.v).dot(&w) / det;
+        let a = -w.cross(self.v).dot(r.dir) / det;
+        let b = -self.u.cross(w).dot(r.dir) / det;
+        let temp = self.u.cross(self.v).dot(w) / det;
         if a > 0. && b > 0. && a < 1. && b < 1. && EPSILON < temp {
-            HitRecord::make(temp, r.project(temp), self.u.cross(&self.v), self.texture)
+            HitRecord::make(temp, r.project(temp), self.u.cross(self.v), self.texture)
         } else {
             HitRecord::Blank
         }
@@ -149,8 +149,8 @@ impl Rhombus {
         let ulen = self.u.len();
         let vlen = self.v.len();
         let w = self.w.unit() * wlen; // Upwards
-        let u = self.v.cross(&w).unit() * ulen;
-        let v = w.cross(&u).unit() * vlen;
+        let u = self.v.cross(w).unit() * ulen;
+        let v = w.cross(u).unit() * vlen;
         Rhombus {
             a: self.a,
             u,
@@ -163,8 +163,8 @@ impl Rhombus {
     pub fn orthonormal(self) -> Rhombus {
         let len = self.w.len();
         let w = self.w.unit() * len; // Upwards
-        let u = self.v.cross(&w).unit() * len;
-        let v = w.cross(&u).unit() * len;
+        let u = self.v.cross(w).unit() * len;
+        let v = w.cross(u).unit() * len;
         Rhombus {
             a: self.a,
             u,
@@ -243,11 +243,11 @@ impl Hit for EmptyCylinder {
     fn hit(&self, r: &Ray) -> HitRecord {
         let ab = self.center2 - self.center1;
         let ao = r.orig - self.center1;
-        let aoxab = ao.cross(&ab);
-        let vxab = r.dir.cross(&ab);
+        let aoxab = ao.cross(ab);
+        let vxab = r.dir.cross(ab);
         let ab2 = ab.dot_self();
         let a = vxab.dot_self();
-        let b = 2.0 * vxab.dot(&aoxab);
+        let b = 2.0 * vxab.dot(aoxab);
         let c = aoxab.dot_self() - self.radius.powi(2) * ab2;
 
         let det = b.powi(2) - 4.0 * a * c;
@@ -261,9 +261,9 @@ impl Hit for EmptyCylinder {
             let u = pos - self.center1;
             let udir = ab.unit();
             let maxlen = ab.len();
-            let p = u.dot(&udir);
+            let p = u.dot(udir);
             if 0.0 < p && p < maxlen {
-                let v = (u - udir * u.dot(&udir)).unit();
+                let v = (u - udir * u.dot(udir)).unit();
                 rec.compare(HitRecord::make(temp, pos, v, self.texture));
             }
         }
@@ -273,9 +273,9 @@ impl Hit for EmptyCylinder {
             let u = pos - self.center1;
             let udir = ab.unit();
             let maxlen = ab.len();
-            let p = u.dot(&udir);
+            let p = u.dot(udir);
             if 0.0 < p && p < maxlen {
-                let v = (u - udir * u.dot(&udir)).unit();
+                let v = (u - udir * u.dot(udir)).unit();
                 rec.compare(HitRecord::make(temp, pos, v, self.texture));
             }
         }
@@ -301,9 +301,9 @@ impl Hit for Disc {
     fn hit(&self, r: &Ray) -> HitRecord {
         let a = r.orig;
         let b = r.dir;
-        let bn = b.dot(&self.normal);
+        let bn = b.dot(self.normal);
         if bn.abs() > EPSILON {
-            let temp = -(a - self.center).dot(&self.normal) / bn;
+            let temp = -(a - self.center).dot(self.normal) / bn;
             if EPSILON < temp {
                 let pos = r.project(temp);
                 let dist = (pos - self.center).len();
@@ -395,9 +395,9 @@ impl Hit for EmptyCone {
         let ap = r.orig;
         let ad = r.dir;
         let w = ap - self.orig;
-        let a = ad.dot_self() - (m + 1.) * ad.dot(&theta).powi(2);
-        let b = 2. * (ad.dot(&w) - (m + 1.) * ad.dot(&theta) * w.dot(&theta));
-        let c = w.dot_self() - (m + 1.) * w.dot(&theta).powi(2);
+        let a = ad.dot_self() - (m + 1.) * ad.dot(theta).powi(2);
+        let b = 2. * (ad.dot(w) - (m + 1.) * ad.dot(theta) * w.dot(theta));
+        let c = w.dot_self() - (m + 1.) * w.dot(theta).powi(2);
 
         let det = b.powi(2) - 4.0 * a * c;
         if det < EPSILON {
@@ -408,10 +408,10 @@ impl Hit for EmptyCone {
         if EPSILON < temp {
             let pos = r.project(temp);
             let u = pos - self.orig;
-            let proj = u.dot(&self.dir.unit());
+            let proj = u.dot(self.dir.unit());
             if self.begin < proj && proj < self.end {
-                let tangent = u.cross(&self.dir);
-                let normal = u.cross(&tangent);
+                let tangent = u.cross(self.dir);
+                let normal = u.cross(tangent);
                 rec.compare(HitRecord::make(temp, pos, normal, self.texture));
             }
         }
@@ -419,10 +419,10 @@ impl Hit for EmptyCone {
         if EPSILON < temp {
             let pos = r.project(temp);
             let u = pos - self.orig;
-            let proj = u.dot(&self.dir.unit());
+            let proj = u.dot(self.dir.unit());
             if self.begin < proj && proj < self.end {
-                let tangent = u.cross(&self.dir);
-                let normal = u.cross(&tangent);
+                let tangent = u.cross(self.dir);
+                let normal = u.cross(tangent);
                 rec.compare(HitRecord::make(temp, pos, normal, self.texture));
             }
         }

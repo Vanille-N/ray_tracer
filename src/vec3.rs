@@ -23,7 +23,7 @@ impl Vec3 {
         Self::new(self.x / len, self.y / len, self.z / len)
     }
 
-    pub fn dot(&self, other: &Self) -> f64 {
+    pub fn dot(&self, other: Self) -> f64 {
         self.x * other.x + self.y * other.y + self.z * other.z
     }
 
@@ -31,7 +31,7 @@ impl Vec3 {
         self.x * self.x + self.y * self.y + self.z * self.z
     }
 
-    pub fn cross(&self, other: &Self) -> Self {
+    pub fn cross(&self, other: Self) -> Self {
         Self {
             x: self.y * other.z - self.z * other.y,
             y: -(self.x * other.z - self.z * other.x),
@@ -39,16 +39,16 @@ impl Vec3 {
         }
     }
 
-    pub fn reflect(&self, normal: &Self) -> Self {
-        *self - *normal * self.dot(&normal) * 2.
+    pub fn reflect(&self, normal: Self) -> Self {
+        *self - normal * self.dot(normal) * 2.
     }
 
-    pub fn refract(&self, normal: &Self, rel_idx: f64) -> Option<Self> {
+    pub fn refract(&self, normal: Self, rel_idx: f64) -> Option<Self> {
         let u = self.unit();
         let dt = u.dot(normal);
         let discriminant = 1.0 - rel_idx.powi(2) * (1.0 - dt.powi(2));
         if discriminant > EPSILON {
-            Some((u - *normal * dt) * rel_idx - *normal * discriminant.sqrt())
+            Some((u - normal * dt) * rel_idx - normal * discriminant.sqrt())
         } else {
             None
         }

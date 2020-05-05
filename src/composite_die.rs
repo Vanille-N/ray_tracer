@@ -18,15 +18,15 @@ impl Die {
         let len = self.up.len();
         let w = self.up; // Upwards
         let u1 = {
-            let u = w.cross(&Vec3::new(0.0, 0.0, 1.0));
+            let u = w.cross(Vec3::new(0.0, 0.0, 1.0));
             if u.len() < crate::EPSILON {
-                w.cross(&Vec3::new(1.0, 0.0, 0.0))
+                w.cross(Vec3::new(1.0, 0.0, 0.0))
             } else {
                 u
             }
             .unit() * len
         };
-        let v1 = w.cross(&u1).unit() * len;
+        let v1 = w.cross(u1).unit() * len;
         let v = u1 * self.rot.cos() + v1 * self.rot.sin();
         let u = -u1 * self.rot.sin() + v1 * self.rot.cos();
 
