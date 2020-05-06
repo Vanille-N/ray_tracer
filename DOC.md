@@ -354,3 +354,28 @@ impl Sky {
     pub fn color(&self, Vec3) -> RGB;      // Project a direction on a background image
 }
 ```
+
+
+## Composite objects
+
+The following are spread over the files:
+- `composite_die.rs`
+- `composite_axes.rs`
+- `composite_cradle.rs`
+- `composite_molecules.rs`
+- `composite_erlenmeyer.rs`
+
+All objects implement a `build` method to create a `Composite` by consuming themselves.
+
+Additionally, they all derive `Copy`, but it should be noted that since `Composite` does not, they can only be copied before being built.
+
+Generally speaking, it is recomended not to modify a `Composite` once it has been built: a single object may be split in several parts, and mutating a `Composite` will almost certainly wreck all composite objects (though dice will be fine).
+
+### `composite_axes.rs`
+```rust
+pub struct Axes(pub f64);
+```
+
+`Axes` (for debugging purposes mostly) take a single float and interprete it as a length. They serve as both a scale and a help for orienting the view. Although adding `Axes` to a scene may slow the rendering, it can help positioning objects faster.
+
+### `composite_die.rs`
