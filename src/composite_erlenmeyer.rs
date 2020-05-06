@@ -44,7 +44,7 @@ impl Erlenmeyer {
             .build(),
         );
 
-        let solute = Cone {
+        let solution = Cone {
             orig: up * (hgt - e / theta.sin()),
             dir: -up,
             angle: theta,
@@ -81,6 +81,6 @@ impl Erlenmeyer {
         .build()
         .wrap();
 
-        vec![base, solute, neck, shaker]
+        vec![base, solution, neck, shaker]
     }
 }
