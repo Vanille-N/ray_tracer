@@ -379,3 +379,27 @@ pub struct Axes(pub f64);
 `Axes` (for debugging purposes mostly) take a single float and interprete it as a length. They serve as both a scale and a help for orienting the view. Although adding `Axes` to a scene may slow the rendering, it can help positioning objects faster.
 
 ### `composite_die.rs`
+```rust
+pub struct Die {
+    pub a: Vec3,
+    pub up: Vec3,
+    pub rot: f64,
+    pub side_texture: Texture,
+    pub edge_texture: Texture,
+    pub dot_texture: Texture,
+}
+```
+
+A standard cubic die, the textures of sides, dots, and edges can be controlled separately.
+This object is composed of a single `Interaction`, it `build`s to a `Composite` merely because all other composite objects do so.
+
+### `composite_cradle.rs`
+```rust
+pub struct NewtonCradle {
+    pub a: Vec3,
+    pub angle: f64,
+    pub size: f64,
+}
+```
+
+The cradle can only be facing upwards, it is composed of 5 balls, a stand, and 10 threads.
