@@ -16,7 +16,7 @@ impl NewtonCradle {
         let steel = Texture::Metal(RGB(0.8, 0.6, 0.2), 0.0);
         let nylon = Texture::Lambertian(RGB(0.9, 0.9, 0.9));
         let len = self.size;
-        let angle = self.angle  * std::f64::consts::PI / 180.;
+        let angle = self.angle * std::f64::consts::PI / 180.;
         let w = Vec3(0.0, len, 0.0); // Upwards
         let u = Vec3(len * angle.cos(), 0.0, len * angle.sin());
         let v = Vec3(len * angle.sin(), 0.0, len * angle.cos());

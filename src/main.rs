@@ -13,8 +13,8 @@ mod camera;
 mod composite_axes;
 mod composite_cradle;
 mod composite_die;
-mod composite_molecules;
 mod composite_erlenmeyer;
+mod composite_molecules;
 mod hitable;
 mod primitives;
 mod ray;
@@ -25,8 +25,8 @@ use camera::Camera;
 use composite_axes::*;
 use composite_cradle::*;
 use composite_die::*;
-use composite_molecules::*;
 use composite_erlenmeyer::*;
+use composite_molecules::*;
 use hitable::*;
 use primitives::*;
 use rgb::*;
@@ -129,13 +129,13 @@ fn build_world() -> Cfg {
     let hgt = 100; // height in pixels
     let iter = 50; // number of samples per pixel
     let cam = Camera::new_relative(
-        Vec3(0.0, 1.0, 0.0), // target
-        180.0,                     // angle (degrees)
-        30.0,                     // rise (degrees)
-        0.5,                      // distance (meters),
-        30.0,                      // tilt (degrees)
-        90.0,                     // aperture (degrees)
-        wth as f64 / hgt as f64,    // aspect ratio
+        Vec3(0.0, 1.0, 0.0),     // target
+        180.0,                   // angle (degrees)
+        30.0,                    // rise (degrees)
+        0.5,                     // distance (meters),
+        30.0,                    // tilt (degrees)
+        90.0,                    // aperture (degrees)
+        wth as f64 / hgt as f64, // aspect ratio
     );
     let sky = Sky::new("data/sky.ppm");
     let mut world = World::new();
@@ -163,7 +163,6 @@ fn build_world() -> Cfg {
     }
     .build()
     .wrap();
-
 
     let ball1 = Sphere {
         center: Vec3(0., 0.9, 0.),
@@ -205,8 +204,14 @@ fn build_world() -> Cfg {
     world.push(mirror1);
     world.push(mirror2);
 
-
     world.push(ground);
 
-    Cfg { hgt, wth, iter, cam, world, sky }
+    Cfg {
+        hgt,
+        wth,
+        iter,
+        cam,
+        world,
+        sky,
+    }
 }

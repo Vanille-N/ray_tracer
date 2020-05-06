@@ -2,11 +2,7 @@ use std::fmt;
 use std::ops;
 
 #[derive(Copy, Clone)]
-pub struct RGB(
-    pub f64,
-    pub f64,
-    pub f64,
-);
+pub struct RGB(pub f64, pub f64, pub f64);
 
 impl ops::Add for RGB {
     type Output = Self;

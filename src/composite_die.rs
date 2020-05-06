@@ -24,7 +24,8 @@ impl Die {
             } else {
                 u
             }
-            .unit() * len
+            .unit()
+                * len
         };
         let v1 = w.cross(u1).unit() * len;
         let v = u1 * self.rot.cos() + v1 * self.rot.sin();

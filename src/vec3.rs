@@ -3,11 +3,7 @@ use std::ops;
 use crate::EPSILON;
 
 #[derive(Copy, Clone)]
-pub struct Vec3(
-    pub f64,
-    pub f64,
-    pub f64,
-);
+pub struct Vec3(pub f64, pub f64, pub f64);
 
 impl Vec3 {
     pub fn len(&self) -> f64 {
@@ -65,11 +61,7 @@ impl ops::Add for Vec3 {
     type Output = Self;
 
     fn add(self, other: Self) -> Self {
-        Self(
-            self.0 + other.0,
-            self.1 + other.1,
-            self.2 + other.2,
-        )
+        Self(self.0 + other.0, self.1 + other.1, self.2 + other.2)
     }
 }
 
@@ -85,11 +77,7 @@ impl ops::Mul<Vec3> for Vec3 {
     type Output = Self;
 
     fn mul(self, other: Self) -> Self {
-        Self(
-            self.0 * other.0,
-            self.1 * other.1,
-            self.2 * other.2,
-        )
+        Self(self.0 * other.0, self.1 * other.1, self.2 * other.2)
     }
 }
 
@@ -105,11 +93,7 @@ impl ops::Mul<f64> for Vec3 {
     type Output = Self;
 
     fn mul(self, other: f64) -> Self {
-        Self(
-            self.0 * other,
-            self.1 * other,
-            self.2 * other,
-        )
+        Self(self.0 * other, self.1 * other, self.2 * other)
     }
 }
 
@@ -125,11 +109,7 @@ impl ops::Sub for Vec3 {
     type Output = Self;
 
     fn sub(self, other: Self) -> Self {
-        Self(
-            self.0 - other.0,
-            self.1 - other.1,
-            self.2 - other.2,
-        )
+        Self(self.0 - other.0, self.1 - other.1, self.2 - other.2)
     }
 }
 
@@ -145,11 +125,7 @@ impl ops::Div<Vec3> for Vec3 {
     type Output = Self;
 
     fn div(self, other: Self) -> Self {
-        Self(
-            self.0 / other.0,
-            self.1 / other.1,
-            self.2 / other.2,
-        )
+        Self(self.0 / other.0, self.1 / other.1, self.2 / other.2)
     }
 }
 
@@ -165,11 +141,7 @@ impl ops::Div<f64> for Vec3 {
     type Output = Self;
 
     fn div(self, other: f64) -> Self {
-        Self(
-            self.0 / other,
-            self.1 / other,
-            self.2 / other,
-        )
+        Self(self.0 / other, self.1 / other, self.2 / other)
     }
 }
 
@@ -185,10 +157,6 @@ impl ops::Neg for Vec3 {
     type Output = Self;
 
     fn neg(self) -> Self::Output {
-        Self(
-            -self.0,
-            -self.1,
-            -self.2,
-        )
+        Self(-self.0, -self.1, -self.2)
     }
 }

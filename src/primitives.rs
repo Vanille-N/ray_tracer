@@ -139,9 +139,7 @@ pub struct Rhombus {
 }
 
 #[derive(Clone, Copy)]
-pub struct RhombusObject(
-    pub [Parallelogram; 6],
-);
+pub struct RhombusObject(pub [Parallelogram; 6]);
 
 impl Rhombus {
     pub fn orthogonal(self) -> Rhombus {

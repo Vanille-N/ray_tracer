@@ -56,7 +56,6 @@ impl HitRecord {
     }
 }
 
-
 #[derive(Clone, Copy)]
 #[allow(clippy::large_enum_variant)]
 pub enum Primitive {
@@ -119,21 +118,12 @@ impl Hit for Primitive {
 }
 
 #[derive(Clone)]
-pub struct Interaction(
-    Vec<Primitive>,
-    Vec<Primitive>,
-);
+pub struct Interaction(Vec<Primitive>, Vec<Primitive>);
 
 impl Interaction {
     pub fn bidir_hit(obj: &Primitive, pos: Vec3, v: Vec3) -> bool {
-        let ray1 = Ray {
-            orig: pos,
-            dir: v,
-        };
-        let ray2 = Ray {
-            orig: pos,
-            dir: -v,
-        };
+        let ray1 = Ray { orig: pos, dir: v };
+        let ray2 = Ray { orig: pos, dir: -v };
         match (obj.hit(&ray1), obj.hit(&ray2)) {
             (HitRecord::Blank, _) => false,
             (_, HitRecord::Blank) => false,
@@ -143,20 +133,14 @@ impl Interaction {
 
     pub fn inside(obj: &Primitive, pos: Vec3) -> bool {
         match *obj {
-            Primitive::Sphere(s) => {
-                (pos - s.center).len() < s.radius
-            }
+            Primitive::Sphere(s) => (pos - s.center).len() < s.radius,
             Primitive::InfinitePlane(_) => false,
             Primitive::Triangle(_) => false,
             Primitive::Parallelogram(_) => false,
-            Primitive::Rhombus(_) => {
-                Interaction::bidir_hit(obj, pos, Vec3(0.0, 1.0, 0.0))
-            }
+            Primitive::Rhombus(_) => Interaction::bidir_hit(obj, pos, Vec3(0.0, 1.0, 0.0)),
             Primitive::EmptyCylinder(_) => false,
             Primitive::Disc(_) => false,
-            Primitive::Cylinder(s) => {
-                Interaction::bidir_hit(obj, pos, s.cap1.normal)
-            }
+            Primitive::Cylinder(s) => Interaction::bidir_hit(obj, pos, s.cap1.normal),
             Primitive::EmptyCone(_) => false,
             Primitive::Cone(s) => {
                 let u = (pos - s.side.orig).unit();
@@ -200,9 +184,7 @@ impl Interaction {
 pub type Composite = Vec<Interaction>;
 
 #[derive(Clone)]
-pub struct World(
-    Composite
-);
+pub struct World(Composite);
 
 impl World {
     pub fn new() -> Self {
@@ -271,8 +253,8 @@ impl World {
     pub fn caracteristics(&self, pos: Vec3) -> (f64, RGB) {
         for group in &self.0 {
             if Interaction::all_inside_except(pos, &group.0, group.0.len())
-            && Interaction::all_outside_except(pos, &group.1, group.1.len())
-                {
+                && Interaction::all_outside_except(pos, &group.1, group.1.len())
+            {
                 for item in &group.0 {
                     if let Texture::Dielectric(shade, idx) = item.texture() {
                         return (idx, shade);
@@ -319,10 +301,7 @@ pub fn scatter(incident: &Ray, record: ActiveHit, w: &World) -> Option<(RGB, Ray
         }
         Texture::Metal(albedo, fuzziness) => {
             let reflec = incident.dir.unit().reflect(record.normal);
-            let scattered = Ray::new(
-                record.pos,
-                reflec + Vec3::random_unit() * fuzziness * 0.8,
-            );
+            let scattered = Ray::new(record.pos, reflec + Vec3::random_unit() * fuzziness * 0.8);
             let attenuation = albedo;
             let normal = {
                 if scattered.dir.dot(record.normal) > 0.0 {
@@ -347,24 +326,27 @@ pub fn scatter(incident: &Ray, record: ActiveHit, w: &World) -> Option<(RGB, Ray
                     record.normal
                 }
             };
-            let tmp_ray_succ = Ray { orig: record.pos, dir: ext_normal };
-            let tmp_ray_prev = Ray { orig: record.pos, dir: -ext_normal };
-            let mid_caract = |r| {
-                match w.hit(&r) {
-                    HitRecord::Blank => (1., RGB(1., 1., 1.), 1.),
-                    HitRecord::Hit(h) => {
-                        let mid = (h.pos + record.pos) / 2.;
-                        let (idx, shade) = w.caracteristics(mid);
-                        let len = (h.pos - record.pos).len();
-                        (idx, shade, len)
-                    }
+            let tmp_ray_succ = Ray {
+                orig: record.pos,
+                dir: ext_normal,
+            };
+            let tmp_ray_prev = Ray {
+                orig: record.pos,
+                dir: -ext_normal,
+            };
+            let mid_caract = |r| match w.hit(&r) {
+                HitRecord::Blank => (1., RGB(1., 1., 1.), 1.),
+                HitRecord::Hit(h) => {
+                    let mid = (h.pos + record.pos) / 2.;
+                    let (idx, shade) = w.caracteristics(mid);
+                    let len = (h.pos - record.pos).len();
+                    (idx, shade, len)
                 }
             };
             let (i_idx, i_shade, i_len) = mid_caract(tmp_ray_prev);
             let (r_idx, _, _) = mid_caract(tmp_ray_succ);
             let rel_idx = r_idx / i_idx;
             let cos = -incident.dir.unit().dot(ext_normal);
-
 
             match incident.dir.refract(ext_normal, rel_idx) {
                 None => Some((
@@ -424,9 +406,7 @@ pub fn color(r: &Ray, w: &World, depth: i32, sky: &Sky) -> RGB {
                 }
             }
         }
-        HitRecord::Blank => {
-            sky.color(r.dir)
-        }
+        HitRecord::Blank => sky.color(r.dir),
     }
 }
 
@@ -447,7 +427,7 @@ impl Sky {
             .collect::<Vec<_>>();
         let mut it = img.iter();
         let _ = it.next();
-        let mut get = || { it.next().unwrap().parse::<usize>().unwrap() };
+        let mut get = || it.next().unwrap().parse::<usize>().unwrap();
         let wth = get();
         let hgt = get();
         let max = get() as f64;
@@ -462,11 +442,7 @@ impl Sky {
             }
             map.push(v);
         }
-        Self {
-            map,
-            hgt,
-            wth,
-        }
+        Self { map, hgt, wth }
     }
 
     pub fn color(&self, dir: Vec3) -> RGB {
