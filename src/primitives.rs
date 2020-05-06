@@ -240,11 +240,11 @@ impl EmptyCylinder {
 }
 
 impl Hit for EmptyCylinder {
-    fn hit(&self, r: &Ray) -> HitRecord {
+    fn hit(&self, ray: &Ray) -> HitRecord {
         let ab = self.center2 - self.center1;
-        let ao = r.orig - self.center1;
+        let ao = ray.orig - self.center1;
         let aoxab = ao.cross(ab);
-        let vxab = r.dir.cross(ab);
+        let vxab = ray.dir.cross(ab);
         let ab2 = ab.dot_self();
         let a = vxab.dot_self();
         let b = 2.0 * vxab.dot(aoxab);
@@ -257,26 +257,26 @@ impl Hit for EmptyCylinder {
         let mut rec = HitRecord::Blank;
         let temp = -(b + det.sqrt()) / (2.0 * a);
         if EPSILON < temp {
-            let pos = r.project(temp);
+            let pos = ray.project(temp);
             let u = pos - self.center1;
             let udir = ab.unit();
             let maxlen = ab.len();
-            let p = u.dot(udir);
-            if 0.0 < p && p < maxlen {
-                let v = (u - udir * u.dot(udir)).unit();
-                rec.compare(HitRecord::make(temp, pos, v, self.texture));
+            let proj = u.dot(udir);
+            if 0.0 < proj && proj < maxlen {
+                let normal = (u - udir * u.dot(udir)).unit();
+                rec.compare(HitRecord::make(temp, pos, normal, self.texture));
             }
         }
         let temp = -(b - det.sqrt()) / (2.0 * a);
         if EPSILON < temp {
-            let pos = r.project(temp);
+            let pos = ray.project(temp);
             let u = pos - self.center1;
             let udir = ab.unit();
             let maxlen = ab.len();
-            let p = u.dot(udir);
-            if 0.0 < p && p < maxlen {
-                let v = (u - udir * u.dot(udir)).unit();
-                rec.compare(HitRecord::make(temp, pos, v, self.texture));
+            let proj = u.dot(udir);
+            if 0.0 < proj && proj < maxlen {
+                let normal = (u - udir * u.dot(udir)).unit();
+                rec.compare(HitRecord::make(temp, pos, normal, self.texture));
             }
         }
         rec
@@ -384,20 +384,20 @@ impl EmptyCone {
 }
 
 impl Hit for EmptyCone {
-    fn hit(&self, r: &Ray) -> HitRecord {
-        // let a = (r.dir.dot(&self.dir)).powi(2) - self.angle.cos().powi(2);
-        // let b = 2. * (r.dir.dot(&self.dir) * (r.orig - self.orig).dot(&self.dir) - r.dir.dot(&(r.orig - self.orig)) * self.angle.cos().powi(2));
-        // let c = (r.orig - self.orig).dot(&self.dir).powi(2) - (r.orig - self.orig).dot_self() * self.angle.cos().powi(2);
+    fn hit(&self, ray: &Ray) -> HitRecord {
+        // let a = (ray.dir.dot(&self.dir)).powi(2) - self.angle.cos().powi(2);
+        // let b = 2. * (ray.dir.dot(&self.dir) * (ray.orig - self.orig).dot(&self.dir) - ray.dir.dot(&(ray.orig - self.orig)) * self.angle.cos().powi(2));
+        // let c = (ray.orig - self.orig).dot(&self.dir).powi(2) - (ray.orig - self.orig).dot_self() * self.angle.cos().powi(2);
 
         let axis = self.dir;
         let theta = axis.unit();
-        let m = self.angle.tan().powi(2);
-        let ap = r.orig;
-        let ad = r.dir;
-        let w = ap - self.orig;
-        let a = ad.dot_self() - (m + 1.) * ad.dot(theta).powi(2);
-        let b = 2. * (ad.dot(w) - (m + 1.) * ad.dot(theta) * w.dot(theta));
-        let c = w.dot_self() - (m + 1.) * w.dot(theta).powi(2);
+        let tan2 = self.angle.tan().powi(2);
+        let ap = ray.orig;
+        let ad = ray.dir;
+        let diff = ap - self.orig;
+        let a = ad.dot_self() - (tan2 + 1.) * ad.dot(theta).powi(2);
+        let b = 2. * (ad.dot(diff) - (tan2 + 1.) * ad.dot(theta) * diff.dot(theta));
+        let c = diff.dot_self() - (tan2 + 1.) * diff.dot(theta).powi(2);
 
         let det = b.powi(2) - 4.0 * a * c;
         if det < EPSILON {
@@ -406,7 +406,7 @@ impl Hit for EmptyCone {
         let mut rec = HitRecord::Blank;
         let temp = -(b + det.sqrt()) / (2.0 * a);
         if EPSILON < temp {
-            let pos = r.project(temp);
+            let pos = ray.project(temp);
             let u = pos - self.orig;
             let proj = u.dot(self.dir.unit());
             if self.begin < proj && proj < self.end {
@@ -417,7 +417,7 @@ impl Hit for EmptyCone {
         }
         let temp = -(b - det.sqrt()) / (2.0 * a);
         if EPSILON < temp {
-            let pos = r.project(temp);
+            let pos = ray.project(temp);
             let u = pos - self.orig;
             let proj = u.dot(self.dir.unit());
             if self.begin < proj && proj < self.end {

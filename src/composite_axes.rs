@@ -12,6 +12,7 @@ const BLACK: Texture = Texture::Lambertian(RGB(0.01, 0.01, 0.01));
 pub struct Axes(pub f64);
 
 #[allow(unused_variables)]
+#[allow(clippy::many_single_char_names)]
 impl Axes {
     pub fn build(self) -> Composite {
         let len = self.0;

@@ -58,6 +58,7 @@ impl HitRecord {
 
 
 #[derive(Clone, Copy)]
+#[allow(clippy::large_enum_variant)]
 pub enum Primitive {
     Sphere(Sphere),
     InfinitePlane(InfinitePlane),
@@ -273,14 +274,13 @@ impl World {
             && Interaction::all_outside_except(pos, &group.1, group.1.len())
                 {
                 for item in &group.0 {
-                    match item.texture() {
-                        Texture::Dielectric(shade, idx) => return (idx, shade),
-                        _ => (),
+                    if let Texture::Dielectric(shade, idx) = item.texture() {
+                        return (idx, shade);
                     }
                 }
             }
         }
-        return (1., RGB(1., 1., 1.));
+        (1., RGB(1., 1., 1.))
     }
 }
 
@@ -439,13 +439,13 @@ pub struct Sky {
 
 impl Sky {
     pub fn new(file: &str) -> Self {
-        let s = std::fs::read_to_string(file)
-        .unwrap()
-        .replace("\n", " ")
-        .split(" ")
-        .map(|x| x.to_string())
-        .collect::<Vec<_>>();
-        let mut it = s.iter();
+        let img = std::fs::read_to_string(file)
+            .unwrap()
+            .replace("\n", " ")
+            .split(' ')
+            .map(|x| x.to_string())
+            .collect::<Vec<_>>();
+        let mut it = img.iter();
         let _ = it.next();
         let mut get = || { it.next().unwrap().parse::<usize>().unwrap() };
         let wth = get();
@@ -469,14 +469,14 @@ impl Sky {
         }
     }
 
-    pub fn color(&self, v: Vec3) -> RGB {
+    pub fn color(&self, dir: Vec3) -> RGB {
         let (x, y) = {
-            let mut v = v;
+            let mut v = dir;
             v.1 = 0.;
             let v = v.unit();
             (v.0, v.2)
         };
-        let rise = v.unit().1.abs();
+        let rise = dir.unit().1.abs();
         let mid_i = self.hgt as f64 / 2.;
         let mid_j = self.wth as f64 / 2.;
         let rad = mid_i.min(mid_j) / 1.1;
