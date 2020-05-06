@@ -41,7 +41,6 @@ fn main() {
     let nb_cores = 5;
     let mut writers = Vec::new();
     for id in 0..nb_cores {
-        //let out = File::create(&format!(".out{}.txt", idx)).unwrap();
         let out = BufWriter::new(File::create(&format!(".out{}.txt", id)).unwrap());
         let rng = (id * cfg.hgt / nb_cores)..((id + 1) * cfg.hgt / nb_cores);
         writers.push(Writer {
