@@ -22,11 +22,11 @@ mod rgb;
 mod vec3;
 
 use camera::Camera;
-use composite_axes::*;
-use composite_cradle::*;
-use composite_die::*;
-use composite_erlenmeyer::*;
-use composite_molecules::*;
+use composite_axes::Axes;
+use composite_cradle::NewtonCradle;
+use composite_die::Die;
+use composite_erlenmeyer::Erlenmeyer;
+use composite_molecules::Molecule;
 use hitable::*;
 use primitives::*;
 use rgb::*;
