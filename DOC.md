@@ -403,3 +403,16 @@ pub struct NewtonCradle {
 ```
 
 The cradle can only be facing upwards, it is composed of 5 balls, a stand, and 10 threads.
+
+### `composite_erlenmeyer.rs`
+
+```rust
+pub struct Erlenmeyer {
+    pub a: Vec3,
+    pub size: f64,
+}
+```
+
+Similarly, the erlenmeyer can only face upwards. `a` is the center of the bottom part.
+
+It is made of a very transparent glass with optical index 1.3, and filled with a blue solution. Being made of multiple intersections and removals of dielectrics and shapes such as cones and cylinders, it can be considered the most complex object in this whole project as of now.
