@@ -18,9 +18,9 @@ impl Die {
         let len = self.up.len();
         let w = self.up; // Upwards
         let u1 = {
-            let u = w.cross(Vec3::new(0.0, 0.0, 1.0));
+            let u = w.cross(Vec3(0.0, 0.0, 1.0));
             if u.len() < crate::EPSILON {
-                w.cross(Vec3::new(1.0, 0.0, 0.0))
+                w.cross(Vec3(1.0, 0.0, 0.0))
             } else {
                 u
             }

@@ -17,10 +17,10 @@ impl Axes {
         let len = self.0;
         let rad1 = len * 0.1;
         let rad2 = len * 0.2;
-        let o = Vec3::new(0.0, 0.0, 0.0);
-        let x = Vec3::new(1.0, 0.0, 0.0) * len;
-        let y = Vec3::new(0.0, 1.0, 0.0) * len;
-        let z = Vec3::new(0.0, 0.0, 1.0) * len;
+        let o = Vec3(0.0, 0.0, 0.0);
+        let x = Vec3(1.0, 0.0, 0.0) * len;
+        let y = Vec3(0.0, 1.0, 0.0) * len;
+        let z = Vec3(0.0, 0.0, 1.0) * len;
         let orig = Sphere {
             center: o,
             radius: rad2,

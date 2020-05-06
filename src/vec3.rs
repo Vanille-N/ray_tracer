@@ -3,40 +3,36 @@ use std::ops;
 use crate::EPSILON;
 
 #[derive(Debug, Copy, Clone)]
-pub struct Vec3 {
-    pub x: f64,
-    pub y: f64,
-    pub z: f64,
-}
+pub struct Vec3(
+    pub f64,
+    pub f64,
+    pub f64,
+);
 
 impl Vec3 {
-    pub fn new(x: f64, y: f64, z: f64) -> Self {
-        Self { x, y, z }
-    }
-
     pub fn len(&self) -> f64 {
-        (self.x.powi(2) + self.y.powi(2) + self.z.powi(2)).sqrt()
+        (self.0.powi(2) + self.1.powi(2) + self.2.powi(2)).sqrt()
     }
 
     pub fn unit(&self) -> Self {
         let len = self.len();
-        Self::new(self.x / len, self.y / len, self.z / len)
+        Self(self.0 / len, self.1 / len, self.2 / len)
     }
 
     pub fn dot(&self, other: Self) -> f64 {
-        self.x * other.x + self.y * other.y + self.z * other.z
+        self.0 * other.0 + self.1 * other.1 + self.2 * other.2
     }
 
     pub fn dot_self(&self) -> f64 {
-        self.x * self.x + self.y * self.y + self.z * self.z
+        self.0 * self.0 + self.1 * self.1 + self.2 * self.2
     }
 
     pub fn cross(&self, other: Self) -> Self {
-        Self {
-            x: self.y * other.z - self.z * other.y,
-            y: -(self.x * other.z - self.z * other.x),
-            z: self.x * other.y - self.y * other.x,
-        }
+        Self(
+            self.1 * other.2 - self.2 * other.1,
+            -(self.0 * other.2 - self.2 * other.0),
+            self.0 * other.1 - self.1 * other.0,
+        )
     }
 
     pub fn reflect(&self, normal: Self) -> Self {
@@ -59,19 +55,19 @@ impl ops::Add for Vec3 {
     type Output = Self;
 
     fn add(self, other: Self) -> Self {
-        Self {
-            x: self.x + other.x,
-            y: self.y + other.y,
-            z: self.z + other.z,
-        }
+        Self(
+            self.0 + other.0,
+            self.1 + other.1,
+            self.2 + other.2,
+        )
     }
 }
 
 impl ops::AddAssign for Vec3 {
     fn add_assign(&mut self, other: Self) {
-        self.x += other.x;
-        self.y += other.y;
-        self.z += other.z;
+        self.0 += other.0;
+        self.1 += other.1;
+        self.2 += other.2;
     }
 }
 
@@ -79,19 +75,19 @@ impl ops::Mul<Vec3> for Vec3 {
     type Output = Self;
 
     fn mul(self, other: Self) -> Self {
-        Self {
-            x: self.x * other.x,
-            y: self.y * other.y,
-            z: self.z * other.z,
-        }
+        Self(
+            self.0 * other.0,
+            self.1 * other.1,
+            self.2 * other.2,
+        )
     }
 }
 
 impl ops::MulAssign<Vec3> for Vec3 {
     fn mul_assign(&mut self, other: Self) {
-        self.x *= other.x;
-        self.y *= other.y;
-        self.z *= other.z;
+        self.0 *= other.0;
+        self.1 *= other.1;
+        self.2 *= other.2;
     }
 }
 
@@ -99,19 +95,19 @@ impl ops::Mul<f64> for Vec3 {
     type Output = Self;
 
     fn mul(self, other: f64) -> Self {
-        Self {
-            x: self.x * other,
-            y: self.y * other,
-            z: self.z * other,
-        }
+        Self(
+            self.0 * other,
+            self.1 * other,
+            self.2 * other,
+        )
     }
 }
 
 impl ops::MulAssign<f64> for Vec3 {
     fn mul_assign(&mut self, other: f64) {
-        self.x *= other;
-        self.y *= other;
-        self.z *= other;
+        self.0 *= other;
+        self.1 *= other;
+        self.2 *= other;
     }
 }
 
@@ -119,19 +115,19 @@ impl ops::Sub for Vec3 {
     type Output = Self;
 
     fn sub(self, other: Self) -> Self {
-        Self {
-            x: self.x - other.x,
-            y: self.y - other.y,
-            z: self.z - other.z,
-        }
+        Self(
+            self.0 - other.0,
+            self.1 - other.1,
+            self.2 - other.2,
+        )
     }
 }
 
 impl ops::SubAssign for Vec3 {
     fn sub_assign(&mut self, other: Self) {
-        self.x -= other.x;
-        self.y -= other.y;
-        self.z -= other.z;
+        self.0 -= other.0;
+        self.1 -= other.1;
+        self.2 -= other.2;
     }
 }
 
@@ -139,19 +135,19 @@ impl ops::Div<Vec3> for Vec3 {
     type Output = Self;
 
     fn div(self, other: Self) -> Self {
-        Self {
-            x: self.x / other.x,
-            y: self.y / other.y,
-            z: self.z / other.z,
-        }
+        Self(
+            self.0 / other.0,
+            self.1 / other.1,
+            self.2 / other.2,
+        )
     }
 }
 
 impl ops::DivAssign<Vec3> for Vec3 {
     fn div_assign(&mut self, other: Self) {
-        self.x /= other.x;
-        self.y /= other.y;
-        self.z /= other.z;
+        self.0 /= other.0;
+        self.1 /= other.1;
+        self.2 /= other.2;
     }
 }
 
@@ -159,19 +155,19 @@ impl ops::Div<f64> for Vec3 {
     type Output = Self;
 
     fn div(self, other: f64) -> Self {
-        Self {
-            x: self.x / other,
-            y: self.y / other,
-            z: self.z / other,
-        }
+        Self(
+            self.0 / other,
+            self.1 / other,
+            self.2 / other,
+        )
     }
 }
 
 impl ops::DivAssign<f64> for Vec3 {
     fn div_assign(&mut self, other: f64) {
-        self.x /= other;
-        self.y /= other;
-        self.z /= other;
+        self.0 /= other;
+        self.1 /= other;
+        self.2 /= other;
     }
 }
 
@@ -179,10 +175,10 @@ impl ops::Neg for Vec3 {
     type Output = Self;
 
     fn neg(self) -> Self::Output {
-        Self {
-            x: -self.x,
-            y: -self.y,
-            z: -self.z,
-        }
+        Self(
+            -self.0,
+            -self.1,
+            -self.2,
+        )
     }
 }

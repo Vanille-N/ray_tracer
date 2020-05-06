@@ -10,8 +10,8 @@ pub struct Erlenmeyer {
 
 impl Erlenmeyer {
     pub fn build(self) -> Composite {
-        let up = Vec3::new(0.0, self.size, 0.0);
-        let side = Vec3::new(self.size, 0.0, 0.0);
+        let up = Vec3(0.0, self.size, 0.0);
+        let side = Vec3(self.size, 0.0, 0.0);
         let glass = Texture::Dielectric(RGB(0.8, 0.8, 0.8), 1.3);
         let anti_glass = Texture::Dielectric(RGB(0.8, 0.8, 0.8), 1./1.3);
         let water = Texture::Dielectric(RGB(0.5, 0.8, 1.0), 1.4);

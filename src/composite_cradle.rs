@@ -17,9 +17,9 @@ impl NewtonCradle {
         let nylon = Texture::Lambertian(RGB(0.9, 0.9, 0.9));
         let len = self.size;
         let angle = self.angle  * std::f64::consts::PI / 180.;
-        let w = Vec3::new(0.0, len, 0.0); // Upwards
-        let u = Vec3::new(len * angle.cos(), 0.0, len * angle.sin());
-        let v = Vec3::new(len * angle.sin(), 0.0, len * angle.cos());
+        let w = Vec3(0.0, len, 0.0); // Upwards
+        let u = Vec3(len * angle.cos(), 0.0, len * angle.sin());
+        let v = Vec3(len * angle.sin(), 0.0, len * angle.cos());
         let pedestal = Rhombus {
             a: self.a,
             u,

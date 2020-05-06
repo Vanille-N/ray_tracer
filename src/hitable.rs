@@ -96,7 +96,7 @@ impl Interaction {
             Primitive::Triangle(_) => false,
             Primitive::Parallelogram(_) => false,
             Primitive::Rhombus(_) => {
-                Interaction::bidir_hit(obj, pos, Vec3::new(0.0, 1.0, 0.0))
+                Interaction::bidir_hit(obj, pos, Vec3(0.0, 1.0, 0.0))
             }
             Primitive::EmptyCylinder(_) => false,
             Primitive::Disc(_) => false,
@@ -430,11 +430,11 @@ pub fn color(r: &Ray, w: &World, depth: i32, sky: &Sky) -> RGB {
 }
 
 fn random_in_unit_sphere() -> Vec3 {
-    let mut p = Vec3::new(1.0, 1.0, 1.0);
+    let mut p = Vec3(1.0, 1.0, 1.0);
     while p.dot_self() >= 1. {
-        p.x = rand::random::<f64>() * 2. - 1.;
-        p.y = rand::random::<f64>() * 2. - 1.;
-        p.z = rand::random::<f64>() * 2. - 1.;
+        p.0 = rand::random::<f64>() * 2. - 1.;
+        p.1 = rand::random::<f64>() * 2. - 1.;
+        p.2 = rand::random::<f64>() * 2. - 1.;
     }
     p
 }
@@ -481,18 +481,16 @@ impl Sky {
     pub fn color(&self, v: Vec3) -> RGB {
         let (x, y) = {
             let mut v = v;
-            v.y = 0.;
+            v.1 = 0.;
             let v = v.unit();
-            (v.x, v.z)
+            (v.0, v.2)
         };
-        let rise = v.unit().y.abs();
+        let rise = v.unit().1.abs();
         let mid_i = self.hgt as f64 / 2.;
         let mid_j = self.wth as f64 / 2.;
         let rad = mid_i.min(mid_j) / 1.1;
         let i = mid_i + y * rad * (1. - rise);
         let j = mid_j + x * rad * (1. - rise);
-        //println!("{} {}", i, j);
         self.map[i as usize][j as usize]
-        //RGB::new((x+1.)/2., (y+1.)/2., (rise+1.)/2.)
     }
 }

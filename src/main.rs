@@ -130,7 +130,7 @@ fn build_world() -> Cfg {
     let hgt = 100; // height in pixels
     let iter = 50; // number of samples per pixel
     let cam = Camera::new_relative(
-        Vec3::new(0.0, 1.0, 0.0), // target
+        Vec3(0.0, 1.0, 0.0), // target
         180.0,                     // angle (degrees)
         30.0,                     // rise (degrees)
         0.5,                      // distance (meters),
@@ -141,25 +141,25 @@ fn build_world() -> Cfg {
     let sky = Sky::new("data/sky.ppm");
     let mut world = World::new();
     let ground = InfinitePlane {
-        orig: Vec3::new(0.0, -0.5, 0.0),
-        normal: Vec3::new(0.0, 1.0, 0.0),
+        orig: Vec3(0.0, -0.5, 0.0),
+        normal: Vec3(0.0, 1.0, 0.0),
         texture: Texture::Lambertian(RGB(0.8, 0.8, 0.1)),
     }
     .build()
     .wrap();
 
     let mirror1 = Parallelogram {
-        a: Vec3::new(-1., 0., 1.),
-        u: Vec3::new(2., 0., 0.),
-        v: Vec3::new(0., 2., 0.),
+        a: Vec3(-1., 0., 1.),
+        u: Vec3(2., 0., 0.),
+        v: Vec3(0., 2., 0.),
         texture: Texture::Metal(RGB(0.95, 0.95, 0.95), 0.0),
     }
     .build()
     .wrap();
     let mirror2 = Parallelogram {
-        a: Vec3::new(-1., 0., -1.),
-        u: Vec3::new(2., 0., -0.05),
-        v: Vec3::new(0., 2., 0.1),
+        a: Vec3(-1., 0., -1.),
+        u: Vec3(2., 0., -0.05),
+        v: Vec3(0., 2., 0.1),
         texture: Texture::Metal(RGB(0.95, 0.95, 0.95), 0.0),
     }
     .build()
@@ -167,7 +167,7 @@ fn build_world() -> Cfg {
 
 
     let ball1 = Sphere {
-        center: Vec3::new(0., 0.9, 0.),
+        center: Vec3(0., 0.9, 0.),
         radius: 0.2,
         texture: Texture::Metal(RGB(0.6, 0.6, 1.), 0.),
     }
@@ -175,7 +175,7 @@ fn build_world() -> Cfg {
     .wrap();
 
     let ball2 = Sphere {
-        center: Vec3::new(0.3, 1.3, 0.5),
+        center: Vec3(0.3, 1.3, 0.5),
         radius: 0.15,
         texture: Texture::Lambertian(RGB(0., 0.2, 0.)),
     }
@@ -183,7 +183,7 @@ fn build_world() -> Cfg {
     .wrap();
 
     let ball3 = Sphere {
-        center: Vec3::new(-0.4, 1., -0.3),
+        center: Vec3(-0.4, 1., -0.3),
         radius: 0.1,
         texture: Texture::Lambertian(RGB(0.7, 0., 0.)),
     }
@@ -191,7 +191,7 @@ fn build_world() -> Cfg {
     .wrap();
 
     let ball4 = Sphere {
-        center: Vec3::new(0.6, 0.5, -0.5),
+        center: Vec3(0.6, 0.5, -0.5),
         radius: 0.2,
         texture: Texture::Metal(RGB(0.3, 0., 0.7), 0.),
     }

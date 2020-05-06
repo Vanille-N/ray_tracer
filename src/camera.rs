@@ -43,12 +43,12 @@ impl Camera {
             let x = angle_rad.sin();
             let z = angle_rad.cos();
             let y = rise_rad.sin();
-            Vec3::new(x, y, z).unit() * distance + target
+            Vec3(x, y, z).unit() * distance + target
         };
         let w = (eye - target).unit();
         let vert = {
             let tilt_rad = tilt * std::f64::consts::PI / 180.;
-            let up = Vec3::new(0.0, 1.0, 0.0);
+            let up = Vec3(0.0, 1.0, 0.0);
             let horiz = up.cross(w);
             up * tilt_rad.cos() + horiz * tilt_rad.sin()
         };
