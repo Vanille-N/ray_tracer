@@ -3,7 +3,6 @@ use crate::primitives::*;
 use crate::vec3::Vec3;
 
 #[derive(Clone, Copy)]
-
 pub struct Die {
     pub a: Vec3,
     pub up: Vec3,
