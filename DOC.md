@@ -33,21 +33,17 @@ rayon
 
 ### vec3.rs
 ```rust
-pub struct Vec3 {         // Derives Copy
-    pub x: f64,
-    pub y: f64,
-    pub z: f64,
-}
+pub struct Vec3(pub f64, pub f64, pub f64);  // derives Copy
 
 impl Vec3 {
-    pub fn new(f64, f64, f64) -> Self;                    // New vector from coordinates
     pub fn len(&self) -> f64;                             // Length
     pub fn unit(&self) -> Self;                           // Unit vector with same direction
     pub fn dot(&self, &Self) -> f64;                      // Dot product
     pub fn dot_self(&self) -> f64;                        // Dot product with self
-    pub fn cross(&self, &Self) -> Self;                   // Cross product
-    pub fn reflect(&self, &Self) -> Self;                 // Calculate reflection using the surface normal
-    pub fn refract(&self, &Self, f64) -> Option<Self>;    // Calculate refraction using the surface normal and quotient of optical indexes
+    pub fn cross(&self, Self) -> Self;                   // Cross product
+    pub fn reflect(&self, Self) -> Self;                 // Calculate reflection using the surface normal
+    pub fn refract(&self, Self, f64) -> Option<Self>;    // Calculate refraction using the surface normal and quotient of optical indexes
+    pub fn random_unit() -> Self;  // vector in unit sphere
 }
 
 impl ops::Add for Vec3;
@@ -67,15 +63,7 @@ impl ops::Neg for Vec3;
 
 ### rgb.rs
 ```rust
-pub struct RGB {    // derives Copy
-    pub r: f64,
-    pub g: f64,
-    pub b: f64,
-}
-
-impl RGB {
-    pub fn new(f64, f64, f64) -> Self;                    // New color from r/g/b values in [0.; 1.]
-}
+pub struct RGB(pub f64, pub f64, pub f64)   // derives Copy
 
 impl ops::Add for RGB;
 impl ops::AddAssign for RGB;
@@ -354,7 +342,6 @@ fn schlick(f64, f64, f64) -> f64;      // Schlick's approximation
 
 pub fn scatter(&Ray, ActiveHit, &World) -> Option<(RGB, Ray)>;   // Calculate (with randomness) a refracted / reflected ray
 pub fn color(&Ray, &World, i32, &Sky) -> RGB;                    // Recursively calculate color
-fn random_in_unit_sphere() -> Vec3;                              // self-explanatory
 
 pub struct Sky {                // derives Clone
     map: Vec<Vec<RGB>>,
