@@ -2,7 +2,7 @@
 
 ## A Rust script for ray path tracing and image generation
 
-Originally inspired by _Ray Tracing in One Weekend_ (Peter Shirley) 
+Originally inspired by _Ray Tracing in One Weekend_ (Peter Shirley).
 
 ### How to run this program
 
@@ -17,7 +17,7 @@ Originally inspired by _Ray Tracing in One Weekend_ (Peter Shirley)
 
 ### Creating a new scene
 
-To create and render a scene, edit the `build_world` function in `main.rs`, then run as described above. A list of objects and functions to do so can be found below.
+To create and render a scene, edit the `build_world` function in `main.rs`, then run as described above. A list of objects and functions to do so can be found in `DOC.md`.
 
 ### Creating a new complex object
 
