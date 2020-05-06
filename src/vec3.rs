@@ -2,7 +2,7 @@ use std::ops;
 
 use crate::EPSILON;
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Copy, Clone)]
 pub struct Vec3(
     pub f64,
     pub f64,
@@ -48,6 +48,16 @@ impl Vec3 {
         } else {
             None
         }
+    }
+
+    pub fn random_unit() -> Self {
+        let mut p = Self(1.0, 1.0, 1.0);
+        while p.dot_self() >= 1. {
+            p.0 = rand::random::<f64>() * 2. - 1.;
+            p.1 = rand::random::<f64>() * 2. - 1.;
+            p.2 = rand::random::<f64>() * 2. - 1.;
+        }
+        p
     }
 }
 

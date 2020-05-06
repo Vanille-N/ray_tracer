@@ -1,7 +1,7 @@
 use std::fmt;
 use std::ops;
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Copy, Clone)]
 pub struct RGB(
     pub f64,
     pub f64,

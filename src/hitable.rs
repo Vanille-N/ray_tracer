@@ -4,6 +4,59 @@ use crate::rgb::RGB;
 use crate::vec3::Vec3;
 use crate::EPSILON;
 
+pub trait Hit {
+    fn hit(&self, r: &Ray) -> HitRecord;
+}
+
+#[derive(Clone, Copy)]
+pub struct ActiveHit {
+    pub t: f64,
+    pub pos: Vec3,
+    pub normal: Vec3,
+    pub texture: Texture,
+}
+
+impl ActiveHit {
+    pub fn later(self, t: f64) -> Self {
+        ActiveHit {
+            t: self.t + t,
+            ..self
+        }
+    }
+}
+
+#[derive(Clone, Copy)]
+pub enum HitRecord {
+    Blank,
+    Hit(ActiveHit),
+}
+
+impl HitRecord {
+    pub fn make(t: f64, pos: Vec3, normal: Vec3, texture: Texture) -> Self {
+        HitRecord::Hit(ActiveHit {
+            t,
+            pos,
+            normal: normal.unit(),
+            texture,
+        })
+    }
+
+    pub fn compare(&mut self, other: Self) {
+        match other {
+            HitRecord::Blank => (),
+            HitRecord::Hit(b) => match self {
+                HitRecord::Blank => *self = other,
+                HitRecord::Hit(a) => {
+                    if a.t > b.t {
+                        *self = other;
+                    }
+                }
+            },
+        }
+    }
+}
+
+
 #[derive(Clone, Copy)]
 pub enum Primitive {
     Sphere(Sphere),
@@ -145,58 +198,6 @@ impl Interaction {
 
 pub type Composite = Vec<Interaction>;
 
-#[derive(Copy, Clone, Debug)]
-pub struct ActiveHit {
-    pub t: f64,
-    pub pos: Vec3,
-    pub normal: Vec3,
-    pub texture: Texture,
-}
-
-impl ActiveHit {
-    pub fn later(self, t: f64) -> Self {
-        ActiveHit {
-            t: self.t + t,
-            ..self
-        }
-    }
-}
-
-#[derive(Clone, Copy)]
-pub enum HitRecord {
-    Blank,
-    Hit(ActiveHit),
-}
-
-impl HitRecord {
-    pub fn make(t: f64, pos: Vec3, normal: Vec3, texture: Texture) -> Self {
-        HitRecord::Hit(ActiveHit {
-            t,
-            pos,
-            normal: normal.unit(),
-            texture,
-        })
-    }
-
-    pub fn compare(&mut self, other: Self) {
-        match other {
-            HitRecord::Blank => (),
-            HitRecord::Hit(b) => match self {
-                HitRecord::Blank => *self = other,
-                HitRecord::Hit(a) => {
-                    if a.t > b.t {
-                        *self = other;
-                    }
-                }
-            },
-        }
-    }
-}
-
-pub trait Hit {
-    fn hit(&self, r: &Ray) -> HitRecord;
-}
-
 #[derive(Clone)]
 pub struct World(
     Composite
@@ -283,7 +284,7 @@ impl World {
     }
 }
 
-#[derive(Copy, Clone, Debug)]
+#[derive(Clone, Copy)]
 pub enum Texture {
     Lambertian(RGB),
     Metal(RGB, f64),
@@ -301,7 +302,7 @@ pub fn scatter(incident: &Ray, record: ActiveHit, w: &World) -> Option<(RGB, Ray
     match record.texture {
         Texture::Lambertian(albedo) => {
             let reflec = incident.dir.unit().reflect(record.normal);
-            let scattered = Ray::new(record.pos, reflec + random_in_unit_sphere() * 0.8);
+            let scattered = Ray::new(record.pos, reflec + Vec3::random_unit() * 0.8);
             let attenuation = albedo;
             let normal = {
                 if scattered.dir.dot(record.normal) > 0.0 {
@@ -320,7 +321,7 @@ pub fn scatter(incident: &Ray, record: ActiveHit, w: &World) -> Option<(RGB, Ray
             let reflec = incident.dir.unit().reflect(record.normal);
             let scattered = Ray::new(
                 record.pos,
-                reflec + random_in_unit_sphere() * fuzziness * 0.8,
+                reflec + Vec3::random_unit() * fuzziness * 0.8,
             );
             let attenuation = albedo;
             let normal = {
@@ -429,16 +430,6 @@ pub fn color(r: &Ray, w: &World, depth: i32, sky: &Sky) -> RGB {
     }
 }
 
-fn random_in_unit_sphere() -> Vec3 {
-    let mut p = Vec3(1.0, 1.0, 1.0);
-    while p.dot_self() >= 1. {
-        p.0 = rand::random::<f64>() * 2. - 1.;
-        p.1 = rand::random::<f64>() * 2. - 1.;
-        p.2 = rand::random::<f64>() * 2. - 1.;
-    }
-    p
-}
-
 #[derive(Clone)]
 pub struct Sky {
     map: Vec<Vec<RGB>>,
@@ -449,11 +440,11 @@ pub struct Sky {
 impl Sky {
     pub fn new(file: &str) -> Self {
         let s = std::fs::read_to_string(file)
-            .unwrap()
-            .replace("\n", " ")
-            .split(" ")
-            .map(|x| x.to_string())
-            .collect::<Vec<_>>();
+        .unwrap()
+        .replace("\n", " ")
+        .split(" ")
+        .map(|x| x.to_string())
+        .collect::<Vec<_>>();
         let mut it = s.iter();
         let _ = it.next();
         let mut get = || { it.next().unwrap().parse::<usize>().unwrap() };

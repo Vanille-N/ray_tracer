@@ -36,7 +36,6 @@ const EPSILON: f64 = 0.000_000_1;
 
 const SYS: &str = "linux";
 
-#[allow(unused_variables)]
 fn main() {
     let cfg = build_world();
     let nb_cores = 5;

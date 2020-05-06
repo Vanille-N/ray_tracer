@@ -3,7 +3,7 @@ use crate::ray::Ray;
 use crate::vec3::Vec3;
 use crate::EPSILON;
 
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone)]
 pub struct Sphere {
     pub center: Vec3,
     pub radius: f64,
@@ -367,7 +367,7 @@ impl Hit for CylinderObject {
     }
 }
 
-#[derive(Copy, Clone)]
+#[derive(Clone, Copy)]
 pub struct EmptyCone {
     pub orig: Vec3,
     pub dir: Vec3,

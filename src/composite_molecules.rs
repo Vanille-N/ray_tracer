@@ -64,16 +64,6 @@ fn double_builder(r: f64) -> Box<dyn Fn(Vec3, Vec3, Vec3) -> [EmptyCylinder; 2]>
     })
 }
 
-pub fn dimensions(len: f64) -> [f64; 5] {
-    [
-        len * 1.4, // big atoms (C, N, O) radius
-        len * 0.8, // small atoms (H) radius
-        len * 0.3, // link radius
-        len * 5.0, // long link length
-        len * 3.0, // short link length
-    ]
-}
-
 fn triple_builder(r: f64) -> Box<dyn Fn(Vec3, Vec3, Vec3) -> [EmptyCylinder; 3]> {
     Box::new(move |c1, c2, c3| {
         let axis = c2 - c1;
@@ -102,6 +92,17 @@ fn triple_builder(r: f64) -> Box<dyn Fn(Vec3, Vec3, Vec3) -> [EmptyCylinder; 3]>
         ]
     })
 }
+
+pub fn dimensions(len: f64) -> [f64; 5] {
+    [
+        len * 1.4, // big atoms (C, N, O) radius
+        len * 0.8, // small atoms (H) radius
+        len * 0.3, // link radius
+        len * 5.0, // long link length
+        len * 3.0, // short link length
+    ]
+}
+
 
 #[allow(unused_variables)]
 impl Molecule {
