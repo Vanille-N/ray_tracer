@@ -21,6 +21,7 @@ mod ray;
 mod rgb;
 mod vec3;
 mod sky;
+mod world;
 
 use camera::Camera;
 use composite_axes::Axes;
@@ -33,6 +34,7 @@ use primitives::*;
 use rgb::*;
 use vec3::Vec3;
 use sky::Sky;
+use world::World;
 
 const EPSILON: f64 = 0.000_000_1;
 
