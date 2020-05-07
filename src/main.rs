@@ -19,8 +19,8 @@ mod hitable;
 mod primitives;
 mod ray;
 mod rgb;
-mod vec3;
 mod sky;
+mod vec3;
 mod world;
 
 use camera::Camera;
@@ -32,8 +32,8 @@ use composite_molecules::Molecule;
 use hitable::*;
 use primitives::*;
 use rgb::*;
-use vec3::Vec3;
 use sky::Sky;
+use vec3::Vec3;
 use world::World;
 
 const EPSILON: f64 = 0.000_000_1;
@@ -133,10 +133,10 @@ fn build_world() -> Cfg {
     let iter = 100; // number of samples per pixel
     let cam = Camera::new_relative(
         Vec3(0.0, 1.0, 0.0),     // target
-        0.0,                   // angle (degrees)
+        0.0,                     // angle (degrees)
         60.0,                    // rise (degrees)
         3.0,                     // distance (meters),
-        0.0,                    // tilt (degrees)
+        0.0,                     // tilt (degrees)
         90.0,                    // aperture (degrees)
         wth as f64 / hgt as f64, // aspect ratio
     );
@@ -156,7 +156,6 @@ fn build_world() -> Cfg {
         color: RGB(0.5, 0.8, 1.0),
     }
     .florence();
-
 
     world.push(ground);
     world.push_vec(erlen);

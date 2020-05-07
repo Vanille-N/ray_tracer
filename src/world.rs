@@ -1,8 +1,8 @@
 use crate::hitable::*;
 use crate::ray::Ray;
-use crate::vec3::Vec3;
 use crate::rgb::RGB;
 use crate::sky::Sky;
+use crate::vec3::Vec3;
 use crate::EPSILON;
 
 #[derive(Clone)]
@@ -87,7 +87,6 @@ impl World {
         (1., RGB(1., 1., 1.))
     }
 }
-
 
 //  https://en.wikipedia.org/wiki/Schlick's_approximation
 fn schlick(cos: f64, n1: f64, n2: f64) -> f64 {

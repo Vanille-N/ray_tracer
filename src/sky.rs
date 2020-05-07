@@ -37,7 +37,11 @@ impl Sky {
     }
 
     pub fn blank() -> Self {
-        Self { hgt: 1, wth: 1, map: vec![vec![crate::rgb::WHITE]] }
+        Self {
+            hgt: 1,
+            wth: 1,
+            map: vec![vec![crate::rgb::WHITE]],
+        }
     }
 
     pub fn color(&self, dir: Vec3) -> RGB {

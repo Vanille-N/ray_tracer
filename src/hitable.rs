@@ -1,8 +1,8 @@
 use crate::primitives::*;
 use crate::ray::Ray;
 use crate::rgb::RGB;
-use crate::vec3::Vec3;
 use crate::sky::Sky;
+use crate::vec3::Vec3;
 use crate::world::World;
 use crate::EPSILON;
 

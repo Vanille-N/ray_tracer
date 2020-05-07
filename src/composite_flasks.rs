@@ -99,7 +99,7 @@ impl Flask {
                 radius: hgt * len / 4. - e,
                 texture: air,
             }
-            .build()
+            .build(),
         );
         base.remove(
             Cylinder {
@@ -108,7 +108,7 @@ impl Flask {
                 radius: e * 3.,
                 texture: air,
             }
-            .build()
+            .build(),
         );
 
         let neck = Cylinder {
@@ -125,7 +125,7 @@ impl Flask {
                 radius: e * 2.,
                 texture: air,
             }
-            .build()
+            .build(),
         );
 
         let solution = Sphere {
@@ -141,10 +141,9 @@ impl Flask {
                 radius: hgt * len,
                 texture: water,
             }
-            .build()
+            .build(),
         );
 
         vec![base, neck, solution]
     }
-
 }
