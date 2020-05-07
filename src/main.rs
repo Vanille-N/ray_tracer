@@ -38,7 +38,7 @@ const SYS: &str = "linux";
 
 fn main() {
     let cfg = build_world();
-    let nb_cores = 5;
+    let nb_cores = 3;
     let mut writers = Vec::new();
     for id in 0..nb_cores {
         let out = BufWriter::new(File::create(&format!(".out{}.txt", id)).unwrap());
@@ -124,9 +124,9 @@ struct Writer<W: Write> {
 }
 
 fn build_world() -> Cfg {
-    let wth = 200; // width in pixels
-    let hgt = 100; // height in pixels
-    let iter = 50; // number of samples per pixel
+    let wth = 1000; // width in pixels
+    let hgt = 1000; // height in pixels
+    let iter = 100; // number of samples per pixel
     let cam = Camera::new_relative(
         Vec3(0.0, 1.0, 0.0),     // target
         0.0,                   // angle (degrees)
@@ -151,7 +151,7 @@ fn build_world() -> Cfg {
         size: 1.,
         color: RGB(0.5, 0.8, 1.0),
     }
-    .erlenmeyer();
+    .florence();
 
 
     world.push(ground);
