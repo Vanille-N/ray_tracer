@@ -13,7 +13,7 @@ mod camera;
 mod composite_axes;
 mod composite_cradle;
 mod composite_die;
-mod composite_erlenmeyer;
+mod composite_flasks;
 mod composite_molecules;
 mod hitable;
 mod primitives;
@@ -25,7 +25,7 @@ use camera::Camera;
 use composite_axes::Axes;
 use composite_cradle::NewtonCradle;
 use composite_die::Die;
-use composite_erlenmeyer::Erlenmeyer;
+use composite_flasks::Flask;
 use composite_molecules::Molecule;
 use hitable::*;
 use primitives::*;
@@ -129,81 +129,33 @@ fn build_world() -> Cfg {
     let iter = 50; // number of samples per pixel
     let cam = Camera::new_relative(
         Vec3(0.0, 1.0, 0.0),     // target
-        180.0,                   // angle (degrees)
-        30.0,                    // rise (degrees)
-        0.5,                     // distance (meters),
-        30.0,                    // tilt (degrees)
+        0.0,                   // angle (degrees)
+        60.0,                    // rise (degrees)
+        3.0,                     // distance (meters),
+        0.0,                    // tilt (degrees)
         90.0,                    // aperture (degrees)
         wth as f64 / hgt as f64, // aspect ratio
     );
-    let sky = Sky::new("data/sky.ppm");
+    let sky = Sky::blank();
     let mut world = World::new();
     let ground = InfinitePlane {
-        orig: Vec3(0.0, -0.5, 0.0),
+        orig: Vec3(0.0, 0.0, 0.0),
         normal: Vec3(0.0, 1.0, 0.0),
-        texture: Texture::Lambertian(RGB(0.8, 0.8, 0.1)),
+        texture: Texture::Lambertian(RGB(0.3, 0.3, 0.6)),
     }
     .build()
     .wrap();
 
-    let mirror1 = Parallelogram {
-        a: Vec3(-1., 0., 1.),
-        u: Vec3(2., 0., 0.),
-        v: Vec3(0., 2., 0.),
-        texture: Texture::Metal(RGB(0.95, 0.95, 0.95), 0.0),
+    let erlen = Flask {
+        a: Vec3(0.0, 0.0, 0.0),
+        size: 1.,
+        color: RGB(0.5, 0.8, 1.0),
     }
-    .build()
-    .wrap();
-    let mirror2 = Parallelogram {
-        a: Vec3(-1., 0., -1.),
-        u: Vec3(2., 0., -0.05),
-        v: Vec3(0., 2., 0.1),
-        texture: Texture::Metal(RGB(0.95, 0.95, 0.95), 0.0),
-    }
-    .build()
-    .wrap();
+    .erlenmeyer();
 
-    let ball1 = Sphere {
-        center: Vec3(0., 0.9, 0.),
-        radius: 0.2,
-        texture: Texture::Metal(RGB(0.6, 0.6, 1.), 0.),
-    }
-    .build()
-    .wrap();
-
-    let ball2 = Sphere {
-        center: Vec3(0.3, 1.3, 0.5),
-        radius: 0.15,
-        texture: Texture::Lambertian(RGB(0., 0.2, 0.)),
-    }
-    .build()
-    .wrap();
-
-    let ball3 = Sphere {
-        center: Vec3(-0.4, 1., -0.3),
-        radius: 0.1,
-        texture: Texture::Lambertian(RGB(0.7, 0., 0.)),
-    }
-    .build()
-    .wrap();
-
-    let ball4 = Sphere {
-        center: Vec3(0.6, 0.5, -0.5),
-        radius: 0.2,
-        texture: Texture::Metal(RGB(0.3, 0., 0.7), 0.),
-    }
-    .build()
-    .wrap();
-
-    world.push(ball1);
-    world.push(ball2);
-    world.push(ball3);
-    world.push(ball4);
-
-    world.push(mirror1);
-    world.push(mirror2);
 
     world.push(ground);
+    world.push_vec(erlen);
 
     Cfg {
         hgt,
