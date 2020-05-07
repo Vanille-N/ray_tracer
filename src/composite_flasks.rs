@@ -3,18 +3,18 @@ use crate::primitives::*;
 use crate::rgb::RGB;
 use crate::vec3::Vec3;
 
-pub struct Erlenmeyer {
+pub struct Flask {
     pub a: Vec3,
     pub size: f64,
+    pub color: RGB,
 }
 
-impl Erlenmeyer {
-    pub fn build(self) -> Composite {
+impl Flask {
+    pub fn erlenmeyer(self) -> Composite {
         let up = Vec3(0.0, self.size, 0.0);
-        let side = Vec3(self.size, 0.0, 0.0);
         let glass = Texture::Dielectric(RGB(0.8, 0.8, 0.8), 1.3);
         let anti_glass = Texture::Dielectric(RGB(0.8, 0.8, 0.8), 1. / 1.3);
-        let water = Texture::Dielectric(RGB(0.5, 0.8, 1.0), 1.4);
+        let water = Texture::Dielectric(self.color, 1.4);
         let len = self.size;
         let e = 0.05;
         let theta = 0.4;
@@ -72,15 +72,6 @@ impl Erlenmeyer {
             .build(),
         );
 
-        let shaker = EmptyCylinder {
-            center1: up * (tot_hgt + 4. * e) - side * e * 3.5,
-            center2: up * e * 1.5 + side * e * 10.,
-            radius: e / 2.,
-            texture: Texture::Lambertian(RGB(0.5, 0.5, 0.5)),
-        }
-        .build()
-        .wrap();
-
-        vec![base, solution, neck, shaker]
+        vec![base, solution, neck]
     }
 }
