@@ -370,7 +370,7 @@ pub fn scatter(incident: &Ray, record: ActiveHit, w: &World) -> Option<(RGB, Ray
                         let shade = RGB(1., 1., 1.) - (RGB(1., 1., 1.) - i_shade) * i_len * 1.5;
 
                         Some((
-                            shade,
+                            shade.validate(),
                             Ray {
                                 orig: record.pos,
                                 dir: refracted,

@@ -4,6 +4,12 @@ use std::ops;
 #[derive(Copy, Clone)]
 pub struct RGB(pub f64, pub f64, pub f64);
 
+impl RGB {
+    pub fn validate(self) -> RGB {
+        Self(self.0.max(0.), self.1.max(0.), self.2.max(0.))
+    }
+}
+
 impl ops::Add for RGB {
     type Output = Self;
 
