@@ -86,7 +86,7 @@ fn main() {
                     let vfrac = (i + rand::random::<f64>()) / ni;
                     let hfrac = (j + rand::random::<f64>()) / nj;
                     let r = cfg.cam.get_ray(hfrac, vfrac);
-                    c += hitable::color(&r, &w.world, 0, &w.sky);
+                    c += world::color(&r, &w.world, 0, &w.sky);
                 }
                 write!(w.stdout, "{}", c / cfg.iter as f64).unwrap();
             }
