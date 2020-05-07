@@ -141,7 +141,7 @@ fn build_world() -> Cfg {
     let ground = InfinitePlane {
         orig: Vec3(0.0, 0.0, 0.0),
         normal: Vec3(0.0, 1.0, 0.0),
-        texture: Texture::Lambertian(RGB(0.3, 0.3, 0.6)),
+        texture: Texture::Lambertian(RGB(0.5, 0.5, 0.6)),
     }
     .build()
     .wrap();

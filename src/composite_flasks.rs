@@ -20,7 +20,7 @@ impl Flask {
         let theta = 0.4;
         let hgt = 2.0;
         let epsilon = 0.1 * hgt;
-        let tot_hgt = hgt * 1.3;
+        let tot_hgt = hgt * 1.;
         let liq_hgt = hgt * 0.2;
         let neck_start = 0.75 * hgt;
         let base = Cone {
