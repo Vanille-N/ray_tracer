@@ -20,6 +20,7 @@ mod primitives;
 mod ray;
 mod rgb;
 mod vec3;
+mod sky;
 
 use camera::Camera;
 use composite_axes::Axes;
@@ -31,6 +32,7 @@ use hitable::*;
 use primitives::*;
 use rgb::*;
 use vec3::Vec3;
+use sky::Sky;
 
 const EPSILON: f64 = 0.000_000_1;
 
