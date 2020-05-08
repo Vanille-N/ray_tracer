@@ -46,5 +46,6 @@ The `hit` implementations for many objects were inspired by or debugged with the
 - Although the first versions of the `Texture::Dielectric` branch of `hitable::scatter` were copied, later versions were fully remade from scratch with a completely different approach, which (unlike the original one) correctly deals with dielectric/dielectric interfaces
 - `hitable::HitRecord` was also fully revised
 - The `hitable::Sky` texture was of my own initiative
+- Brand new `camera::Camera` abstraction: instead of `(look_from, look_at, upwards, field_of_view_angle, aspect_ratio)`, it is much easier to fine-tune a view with `(look_at, angle_around_target, angle_above_target, distance_to_target, tilt, field_of_view_angle, aspect_ratio)` 
 - The original version did not support multithreading
 - All scenes visible in `img/` are of my own creation
