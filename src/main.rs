@@ -51,9 +51,9 @@ fn main() {
             id: id as u8,
             stdout: out,
             rng,
-            cam: cfg.cam.clone(),
-            world: cfg.world.clone(),
-            sky: cfg.sky.clone(),
+            cam: &cfg.cam,
+            world: &cfg.world,
+            sky: &cfg.sky,
         });
     }
 
@@ -86,7 +86,7 @@ fn main() {
                     let vfrac = (i + rand::random::<f64>()) / ni;
                     let hfrac = (j + rand::random::<f64>()) / nj;
                     let r = cfg.cam.get_ray(hfrac, vfrac);
-                    c += world::color(&r, &w.world, 0, &w.sky);
+                    c += world::color(&r, w.world, 0, w.sky);
                 }
                 write!(w.stdout, "{}", c / cfg.iter as f64).unwrap();
             }
@@ -118,13 +118,13 @@ struct Cfg {
 }
 
 #[derive(Clone)]
-struct Writer<W: Write> {
+struct Writer<'a, W: Write> {
     id: u8,
     stdout: W,
     rng: Range<usize>,
-    cam: Camera,
-    world: World,
-    sky: Sky,
+    cam: &'a Camera,
+    world: &'a World,
+    sky: &'a Sky,
 }
 
 fn build_world() -> Cfg {
