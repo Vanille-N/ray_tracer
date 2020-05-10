@@ -7,12 +7,7 @@ Originally inspired by _Ray Tracing in One Weekend_ (Peter Shirley).
 ### How to run this program
 
 - Clone this repository
-- If `rsmake` is not already executable then run `$ chmod u+x rsmake`
-- `$ ./rsmake` will do a few things :
-  - compile in release mode (debug mode is useless since rendering an image takes longer than compiling), make sure that `cargo` is in your `$PATH`
-  - copy the executable to the root directory of the project as `exec`
-  If `rsmake` fails, one common reason is the presence of multiple executables in `./release/deps/`. The problem can be fixed by deleting `./release/` before running `rsmake` again.
-- Run `$ ./exec`
+- Execute `cargo run --release` (not using `--release` is useless since execution is a lot longer than compilation)
 - Open the newly generated `img.ppm`
 
 ### Creating a new scene
@@ -46,6 +41,6 @@ The `hit` implementations for many objects were inspired by or debugged with the
 - Although the first versions of the `Texture::Dielectric` branch of `hitable::scatter` were copied, later versions were fully remade from scratch with a completely different approach, which (unlike the original one) correctly deals with dielectric/dielectric interfaces
 - `hitable::HitRecord` was also fully revised
 - The `hitable::Sky` texture was of my own initiative
-- Brand new `camera::Camera` abstraction: instead of `(look_from, look_at, upwards, field_of_view_angle, aspect_ratio)`, it is much easier to fine-tune a view with `(look_at, angle_around_target, angle_above_target, distance_to_target, tilt, field_of_view_angle, aspect_ratio)` 
+- Brand new `camera::Camera` abstraction: instead of `(look_from, look_at, upwards, field_of_view_angle, aspect_ratio)`, it is much easier to fine-tune a view with `(look_at, angle_around_target, angle_above_target, distance_to_target, tilt, field_of_view_angle, aspect_ratio)`
 - The original version did not support multithreading
 - All scenes visible in `img/` are of my own creation
