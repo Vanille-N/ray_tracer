@@ -1,4 +1,4 @@
-# ray_tracer
+# Ray Tracer
 
 ## A Rust script for ray path tracing and image generation
 
