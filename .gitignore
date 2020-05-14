@@ -5,3 +5,4 @@ exec
 *.jpg
 perf.data
 !data/*
+deps.png
