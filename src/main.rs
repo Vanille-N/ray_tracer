@@ -65,7 +65,7 @@ fn main() {
                     if i * 100 % cfg.hgt == 0 {
                         let load = 100 - i * 100 / cfg.hgt;
                         if load % 2 == 0 {
-                            eprint!("\x1b[2B\x1b[{}C{}█\x1b[3A\n", load / 2, color);
+                            eprint!("\x1b[{}C{}█\x1b[1A\n", load / 2, color);
                         }
                     }
                 } else if i * 100 % cfg.hgt == 0 {
