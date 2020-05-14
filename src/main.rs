@@ -2,8 +2,9 @@
 #![allow(unused_imports)]
 
 extern crate rand;
-extern crate rayon;
-use rayon::prelude::*;
+extern crate threadpool;
+use threadpool::ThreadPool;
+use std::sync::{Arc, Barrier};
 use std::fs::File;
 use std::io::{BufWriter, Write};
 use std::ops::Range;
@@ -42,58 +43,55 @@ const SYS: &str = "linux";
 
 fn main() {
     let cfg = build_world();
-    let nb_cores = 3;
-    let mut writers = Vec::new();
-    for id in 0..nb_cores {
-        let out = BufWriter::new(File::create(&format!(".out{}.txt", id)).unwrap());
-        let rng = (id * cfg.hgt / nb_cores)..((id + 1) * cfg.hgt / nb_cores);
-        writers.push(Writer {
-            id: id as u8,
-            stdout: out,
-            rng,
-            cam: &cfg.cam,
-            world: &cfg.world,
-            sky: &cfg.sky,
-        });
-    }
-
+    let nb_cores = 4;
     if SYS == "linux" {
         eprint!("\n\nRendering image...\n");
         eprint!("|\x1b[50C|\x1b[1A\n");
     }
-    writers.par_iter_mut().for_each(|w| {
-        let color = &format!("\x1b[3{}m", w.id + 1);
-        let ni = cfg.hgt as f64;
-        let nj = cfg.wth as f64;
-        for i in w.rng.clone().rev() {
-            if SYS == "linux" {
-                if i * 100 % cfg.hgt == 0 {
-                    let load = 100 - i * 100 / cfg.hgt;
-                    if load % 2 == 0 {
-                        eprint!("\x1b[2B\x1b[{}C{}█\x1b[3A\n", load / 2, color);
+    let pool = ThreadPool::new(nb_cores);
+    let barrier = Arc::new(Barrier::new(nb_cores + 1));
+    for id in 0..nb_cores {
+        // Clone essential info
+        let mut stdout = BufWriter::new(File::create(&format!(".out{}.txt", id)).unwrap());
+        let rng = (id * cfg.hgt / nb_cores)..((id + 1) * cfg.hgt / nb_cores);
+        let barrier = barrier.clone();
+        let cfg = cfg.clone();
+        pool.execute(move || {
+            let color = &format!("\x1b[3{}m", id + 1);
+            let ni = cfg.hgt as f64;
+            let nj = cfg.wth as f64;
+            for i in rng.rev() {
+                if SYS == "linux" {
+                    if i * 100 % cfg.hgt == 0 {
+                        let load = 100 - i * 100 / cfg.hgt;
+                        if load % 2 == 0 {
+                            eprint!("\x1b[2B\x1b[{}C{}█\x1b[3A\n", load / 2, color);
+                        }
                     }
+                } else if i * 100 % cfg.hgt == 0 {
+                    let load = 100 - i * 100 / cfg.hgt;
+                    eprintln!("{}%", load);
                 }
-            } else if i * 100 % cfg.hgt == 0 {
-                let load = 100 - i * 100 / cfg.hgt;
-                eprintln!("{}%", load);
-            }
 
-            for j in 0..cfg.wth {
-                let mut c = BLACK;
-                let i = i as f64;
-                let j = j as f64;
-                for _ in 0..cfg.iter {
-                    let vfrac = (i + rand::random::<f64>()) / ni;
-                    let hfrac = (j + rand::random::<f64>()) / nj;
-                    let r = cfg.cam.get_ray(hfrac, vfrac);
-                    c += world::color(&r, w.world, 0, w.sky);
+                for j in 0..cfg.wth {
+                    let mut c = BLACK;
+                    let i = i as f64;
+                    let j = j as f64;
+                    for _ in 0..cfg.iter {
+                        let vfrac = (i + rand::random::<f64>()) / ni;
+                        let hfrac = (j + rand::random::<f64>()) / nj;
+                        let r = cfg.cam.get_ray(hfrac, vfrac);
+                        c += world::color(&r, &cfg.world, 0, &cfg.sky);
+                    }
+                    write!(stdout, "{}", c / cfg.iter as f64).unwrap();
                 }
-                write!(w.stdout, "{}", c / cfg.iter as f64).unwrap();
+                writeln!(stdout).unwrap();
             }
-            writeln!(w.stdout).unwrap();
-        }
-        w.stdout.flush().unwrap();
-    });
+            stdout.flush().unwrap();
+            barrier.wait();
+        });
+    }
+    barrier.wait();
     if SYS == "linux" {
         eprint!("\n\n\n\x1b[0m");
     }
@@ -108,6 +106,7 @@ fn main() {
     }
 }
 
+#[derive(Clone)]
 struct Cfg {
     hgt: usize,
     wth: usize,
@@ -117,19 +116,9 @@ struct Cfg {
     sky: Sky,
 }
 
-#[derive(Clone)]
-struct Writer<'a, W: Write> {
-    id: u8,
-    stdout: W,
-    rng: Range<usize>,
-    cam: &'a Camera,
-    world: &'a World,
-    sky: &'a Sky,
-}
-
 fn build_world() -> Cfg {
-    let wth = 1000; // width in pixels
-    let hgt = 1000; // height in pixels
+    let wth = 500; // width in pixels
+    let hgt = 500; // height in pixels
     let iter = 100; // number of samples per pixel
     let cam = Camera::new_relative(
         Vec3(0.0, 1.0, 0.0),     // target
