@@ -58,20 +58,7 @@ impl HitRecord {
     }
 }
 
-#[derive(Clone, Copy)]
-#[allow(clippy::large_enum_variant)]
-pub enum Primitive {
-    Sphere(Sphere),
-    InfinitePlane(InfinitePlane),
-    Triangle(Triangle),
-    Parallelogram(Parallelogram),
-    Rhombus(RhombusObject),
-    EmptyCylinder(EmptyCylinder),
-    Disc(Disc),
-    Cylinder(CylinderObject),
-    EmptyCone(EmptyCone),
-    Cone(ConeObject),
-}
+pub struct Primitive(pub Box<dyn Hit>);
 
 impl Primitive {
     pub fn wrap(self) -> Interaction {
