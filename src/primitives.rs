@@ -12,7 +12,7 @@ pub struct Sphere {
 
 impl Sphere {
     pub fn build(self) -> Primitive {
-        Primitive::Sphere(self)
+        Primitive(Box::new(self))
     }
 }
 
@@ -49,7 +49,7 @@ pub struct InfinitePlane {
 
 impl InfinitePlane {
     pub fn build(self) -> Primitive {
-        Primitive::InfinitePlane(self)
+        Primitive(Box::new(self))
     }
 }
 
@@ -81,7 +81,7 @@ pub struct Triangle {
 
 impl Triangle {
     pub fn build(self) -> Primitive {
-        Primitive::Triangle(self)
+        Primitive(Box::new(self))
     }
 }
 
@@ -110,7 +110,7 @@ pub struct Parallelogram {
 
 impl Parallelogram {
     pub fn build(self) -> Primitive {
-        Primitive::Parallelogram(self)
+        Primitive(Box::new(self))
     }
 }
 
@@ -209,7 +209,7 @@ impl Rhombus {
             v: self.w,
             texture: self.texture,
         }; //
-        Primitive::Rhombus(RhombusObject([s1, s2, s3, s4, s5, s6]))
+        Primitive(Box::new(RhombusObject([s1, s2, s3, s4, s5, s6])))
     }
 }
 
@@ -233,7 +233,7 @@ pub struct EmptyCylinder {
 
 impl EmptyCylinder {
     pub fn build(self) -> Primitive {
-        Primitive::EmptyCylinder(self)
+        Primitive(Box::new(self))
     }
 }
 
@@ -291,7 +291,7 @@ pub struct Disc {
 
 impl Disc {
     pub fn build(self) -> Primitive {
-        Primitive::Disc(self)
+        Primitive(Box::new(self))
     }
 }
 
@@ -332,7 +332,7 @@ pub struct CylinderObject {
 impl Cylinder {
     pub fn build(self) -> Primitive {
         let n = (self.center2 - self.center1).unit();
-        Primitive::Cylinder(CylinderObject {
+        Primitive(Box::new(CylinderObject {
             side: EmptyCylinder {
                 center1: self.center1,
                 center2: self.center2,
@@ -351,7 +351,7 @@ impl Cylinder {
                 normal: -n,
                 texture: self.texture,
             },
-        })
+        }))
     }
 }
 
@@ -377,7 +377,7 @@ pub struct EmptyCone {
 
 impl EmptyCone {
     pub fn build(self) -> Primitive {
-        Primitive::EmptyCone(self)
+        Primitive(Box::new(self))
     }
 }
 
@@ -447,7 +447,7 @@ pub struct ConeObject {
 
 impl Cone {
     pub fn build(self) -> Primitive {
-        Primitive::Cone(ConeObject {
+        Primitive(Box::new(ConeObject {
             side: EmptyCone {
                 orig: self.orig,
                 dir: self.dir,
@@ -468,7 +468,7 @@ impl Cone {
                 normal: self.dir.unit(),
                 texture: self.texture,
             },
-        })
+        }))
     }
 }
 
