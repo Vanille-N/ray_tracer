@@ -1,5 +1,14 @@
 # Overview of the types and functions
 
+```diff
+- WARNING
+This document may not be perfectly up to date.
+```
+```diff
++ LAST UPDATED: 2020-05-06
+(up to date with the code commited under 6c8c826)
+```
+
 ### Modules
 
 ```rust
