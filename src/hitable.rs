@@ -6,7 +6,7 @@ use crate::vec3::Vec3;
 use crate::world::World;
 use crate::EPSILON;
 
-pub trait Hit {
+pub trait Hit: Send + Sync {
     fn hit(&self, r: &Ray) -> HitRecord;
     fn texture(&self) -> Texture;
     fn inside(&self, pos: Vec3) -> bool;

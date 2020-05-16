@@ -31,7 +31,7 @@ impl World {
             for i in 0..group.0.len() {
                 let mut ray = *r;
                 let mut offset = 0.0;
-                let item = group.0[i];
+                let item = &group.0[i];
                 loop {
                     match item.hit(&ray) {
                         HitRecord::Blank => break,
@@ -50,7 +50,7 @@ impl World {
             for i in 0..group.1.len() {
                 let mut ray = *r;
                 let mut offset = 0.0;
-                let item = group.1[i];
+                let item = &group.1[i];
                 loop {
                     match item.hit(&ray) {
                         HitRecord::Blank => break,

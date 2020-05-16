@@ -43,6 +43,7 @@ const SYS: &str = "linux";
 
 fn main() {
     let cfg = build_world();
+    let cfg = Arc::new(cfg);
     let nb_cores = 4;
     if SYS == "linux" {
         eprint!("\n\nRendering image...\n");
