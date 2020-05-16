@@ -20,7 +20,7 @@ impl NewtonCradle {
         let w = Vec3(0.0, len, 0.0); // Upwards
         let u = Vec3(len * angle.cos(), 0.0, len * angle.sin());
         let v = Vec3(len * angle.sin(), 0.0, len * angle.cos());
-        let pedestal = Rhombus {
+        let pedestal = Rhomboid {
             a: self.a,
             u,
             v,

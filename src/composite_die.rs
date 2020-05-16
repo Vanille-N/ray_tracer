@@ -30,7 +30,7 @@ impl Die {
         let v = u1 * self.rot.cos() + v1 * self.rot.sin();
         let u = -u1 * self.rot.sin() + v1 * self.rot.cos();
 
-        let mut die: Interaction = Rhombus {
+        let mut die: Interaction = Rhomboid {
             a: self.a,
             u,
             v,

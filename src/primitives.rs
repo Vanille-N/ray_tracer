@@ -162,7 +162,7 @@ impl Hit for Parallelogram {
 }
 
 #[derive(Clone, Copy)]
-pub struct Rhombus {
+pub struct Rhomboid {
     pub a: Vec3,
     pub u: Vec3,
     pub v: Vec3,
@@ -171,17 +171,17 @@ pub struct Rhombus {
 }
 
 #[derive(Clone, Copy)]
-pub struct RhombusObject(pub [Parallelogram; 6]);
+pub struct RhomboidObject(pub [Parallelogram; 6]);
 
-impl Rhombus {
-    pub fn orthogonal(self) -> Rhombus {
+impl Rhomboid {
+    pub fn orthogonal(self) -> Self {
         let wlen = self.w.len();
         let ulen = self.u.len();
         let vlen = self.v.len();
         let w = self.w.unit() * wlen; // Upwards
         let u = self.v.cross(w).unit() * ulen;
         let v = w.cross(u).unit() * vlen;
-        Rhombus {
+        Self {
             a: self.a,
             u,
             v,
@@ -190,12 +190,12 @@ impl Rhombus {
         }
     }
 
-    pub fn orthonormal(self) -> Rhombus {
+    pub fn orthonormal(self) -> Self {
         let len = self.w.len();
         let w = self.w.unit() * len; // Upwards
         let u = self.v.cross(w).unit() * len;
         let v = w.cross(u).unit() * len;
-        Rhombus {
+        Self {
             a: self.a,
             u,
             v,
@@ -241,11 +241,11 @@ impl Rhombus {
             v: self.w,
             texture: self.texture,
         }; //
-        Primitive(Box::new(RhombusObject([s1, s2, s3, s4, s5, s6])))
+        Primitive(Box::new(RhomboidObject([s1, s2, s3, s4, s5, s6])))
     }
 }
 
-impl Hit for RhombusObject {
+impl Hit for RhomboidObject {
     fn hit(&self, r: &Ray) -> HitRecord {
         let mut rec = HitRecord::Blank;
         for obj in &self.0 {
