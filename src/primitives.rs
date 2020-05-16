@@ -38,6 +38,10 @@ impl Hit for Sphere {
         }
         rec
     }
+
+    fn texture(&self) -> Texture {
+        self.texture
+    }
 }
 
 #[derive(Clone, Copy)]
@@ -69,6 +73,10 @@ impl Hit for InfinitePlane {
             HitRecord::Blank
         }
     }
+
+    fn texture(&self) -> Texture {
+        self.texture
+    }
 }
 
 #[derive(Clone, Copy)]
@@ -98,6 +106,10 @@ impl Hit for Triangle {
             HitRecord::Blank
         }
     }
+
+    fn texture(&self) -> Texture {
+        self.texture
+    }
 }
 
 #[derive(Clone, Copy)]
@@ -126,6 +138,10 @@ impl Hit for Parallelogram {
         } else {
             HitRecord::Blank
         }
+    }
+
+    fn texture(&self) -> Texture {
+        self.texture
     }
 }
 
@@ -221,6 +237,10 @@ impl Hit for RhombusObject {
         }
         rec
     }
+
+    fn texture(&self) -> Texture {
+        self.0[0].texture
+    }
 }
 
 #[derive(Clone, Copy)]
@@ -279,6 +299,10 @@ impl Hit for EmptyCylinder {
         }
         rec
     }
+
+    fn texture(&self) -> Texture {
+        self.texture
+    }
 }
 
 #[derive(Clone, Copy)]
@@ -311,6 +335,10 @@ impl Hit for Disc {
             }
         }
         HitRecord::Blank
+    }
+
+    fn texture(&self) -> Texture {
+        self.texture
     }
 }
 
@@ -363,6 +391,11 @@ impl Hit for CylinderObject {
         rec.compare(self.cap2.hit(r));
         rec
     }
+
+    fn texture(&self) -> Texture {
+        self.side.texture
+    }
+
 }
 
 #[derive(Clone, Copy)]
@@ -426,6 +459,10 @@ impl Hit for EmptyCone {
         }
         rec
     }
+
+    fn texture(&self) -> Texture {
+        self.texture
+    }
 }
 
 #[derive(Copy, Clone)]
@@ -479,5 +516,9 @@ impl Hit for ConeObject {
         rec.compare(self.cap1.hit(r));
         rec.compare(self.cap2.hit(r));
         rec
+    }
+
+    fn texture(&self) -> Texture {
+        self.side.texture
     }
 }
