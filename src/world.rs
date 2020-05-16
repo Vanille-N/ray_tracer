@@ -5,7 +5,6 @@ use crate::sky::Sky;
 use crate::vec3::Vec3;
 use crate::EPSILON;
 
-#[derive(Clone)]
 pub struct World(Composite);
 
 impl World {

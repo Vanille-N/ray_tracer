@@ -106,7 +106,6 @@ fn main() {
     }
 }
 
-#[derive(Clone)]
 struct Cfg {
     hgt: usize,
     wth: usize,
