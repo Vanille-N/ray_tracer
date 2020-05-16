@@ -8,6 +8,8 @@ use crate::EPSILON;
 
 pub trait Hit {
     fn hit(&self, r: &Ray) -> HitRecord;
+    fn texture(&self) -> Texture;
+    fn inside(&self, pos: Vec3) -> bool;
 }
 
 #[derive(Clone, Copy)]
@@ -74,43 +76,23 @@ impl Primitive {
     }
 
     pub fn texture(&self) -> Texture {
-        match self {
-            Primitive::Sphere(s) => s.texture,
-            Primitive::InfinitePlane(s) => s.texture,
-            Primitive::Triangle(s) => s.texture,
-            Primitive::Parallelogram(s) => s.texture,
-            Primitive::Rhombus(s) => s.0[0].texture,
-            Primitive::EmptyCylinder(s) => s.texture,
-            Primitive::Disc(s) => s.texture,
-            Primitive::Cylinder(s) => s.side.texture,
-            Primitive::EmptyCone(s) => s.texture,
-            Primitive::Cone(s) => s.side.texture,
-        }
+        self.0.texture()
+    }
+
+    pub fn hit(&self, r: &Ray) -> HitRecord {
+        self.0.hit(r)
+    }
+
+    pub fn inside(&self, pos: Vec3) -> bool {
+        self.0.inside(pos)
     }
 }
 
-impl Hit for Primitive {
-    fn hit(&self, r: &Ray) -> HitRecord {
-        match self {
-            Primitive::Sphere(s) => s.hit(r),
-            Primitive::InfinitePlane(s) => s.hit(r),
-            Primitive::Triangle(s) => s.hit(r),
-            Primitive::Parallelogram(s) => s.hit(r),
-            Primitive::Rhombus(s) => s.hit(r),
-            Primitive::EmptyCylinder(s) => s.hit(r),
-            Primitive::Disc(s) => s.hit(r),
-            Primitive::Cylinder(s) => s.hit(r),
-            Primitive::EmptyCone(s) => s.hit(r),
-            Primitive::Cone(s) => s.hit(r),
-        }
-    }
-}
-
-#[derive(Clone)]
+//#[derive(Clone)]
 pub struct Interaction(pub Vec<Primitive>, pub Vec<Primitive>);
 
 impl Interaction {
-    pub fn bidir_hit(obj: &Primitive, pos: Vec3, v: Vec3) -> bool {
+    pub fn bidir_hit<T: Hit>(obj: &T, pos: Vec3, v: Vec3) -> bool {
         let ray1 = Ray { orig: pos, dir: v };
         let ray2 = Ray { orig: pos, dir: -v };
         match (obj.hit(&ray1), obj.hit(&ray2)) {
@@ -121,22 +103,7 @@ impl Interaction {
     }
 
     pub fn inside(obj: &Primitive, pos: Vec3) -> bool {
-        match *obj {
-            Primitive::Sphere(s) => (pos - s.center).len() < s.radius,
-            Primitive::InfinitePlane(_) => false,
-            Primitive::Triangle(_) => false,
-            Primitive::Parallelogram(_) => false,
-            Primitive::Rhombus(_) => Interaction::bidir_hit(obj, pos, Vec3(0.0, 1.0, 0.0)),
-            Primitive::EmptyCylinder(_) => false,
-            Primitive::Disc(_) => false,
-            Primitive::Cylinder(s) => Interaction::bidir_hit(obj, pos, s.cap1.normal),
-            Primitive::EmptyCone(_) => false,
-            Primitive::Cone(s) => {
-                let u = (pos - s.side.orig).unit();
-                let v = u - s.side.dir * u.dot(s.side.dir);
-                Interaction::bidir_hit(obj, pos, v.cross(s.side.dir))
-            }
-        }
+        obj.inside(pos)
     }
 
     pub fn outside(obj: &Primitive, pos: Vec3) -> bool {
