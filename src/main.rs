@@ -3,12 +3,12 @@
 
 extern crate rand;
 extern crate threadpool;
-use threadpool::ThreadPool;
-use std::sync::{Arc, Barrier};
 use std::fs::File;
 use std::io::{BufWriter, Write};
 use std::ops::Range;
 use std::process::Command;
+use std::sync::{Arc, Barrier};
+use threadpool::ThreadPool;
 
 mod camera;
 mod composite_axes;
