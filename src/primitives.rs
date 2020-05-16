@@ -42,6 +42,10 @@ impl Hit for Sphere {
     fn texture(&self) -> Texture {
         self.texture
     }
+
+    fn inside(&self, pos: Vec3) -> bool {
+        (pos - self.center).len() < self.radius
+    }
 }
 
 #[derive(Clone, Copy)]
@@ -77,6 +81,10 @@ impl Hit for InfinitePlane {
     fn texture(&self) -> Texture {
         self.texture
     }
+
+    fn inside(&self, _pos: Vec3) -> bool {
+        false
+    }
 }
 
 #[derive(Clone, Copy)]
@@ -110,6 +118,10 @@ impl Hit for Triangle {
     fn texture(&self) -> Texture {
         self.texture
     }
+
+    fn inside(&self, _pos: Vec3) -> bool {
+        false
+    }
 }
 
 #[derive(Clone, Copy)]
@@ -142,6 +154,10 @@ impl Hit for Parallelogram {
 
     fn texture(&self) -> Texture {
         self.texture
+    }
+
+    fn inside(&self, _pos: Vec3) -> bool {
+        false
     }
 }
 
@@ -241,6 +257,10 @@ impl Hit for RhombusObject {
     fn texture(&self) -> Texture {
         self.0[0].texture
     }
+
+    fn inside(&self, pos: Vec3) -> bool {
+        Interaction::bidir_hit(self, pos, Vec3(0.0, 1.0, 0.0))
+    }
 }
 
 #[derive(Clone, Copy)]
@@ -303,6 +323,10 @@ impl Hit for EmptyCylinder {
     fn texture(&self) -> Texture {
         self.texture
     }
+
+    fn inside(&self, _pos: Vec3) -> bool {
+        false
+    }
 }
 
 #[derive(Clone, Copy)]
@@ -339,6 +363,10 @@ impl Hit for Disc {
 
     fn texture(&self) -> Texture {
         self.texture
+    }
+
+    fn inside(&self, _pos: Vec3) -> bool {
+        false
     }
 }
 
@@ -396,6 +424,9 @@ impl Hit for CylinderObject {
         self.side.texture
     }
 
+    fn inside(&self, pos: Vec3) -> bool {
+        Interaction::bidir_hit(self, pos, self.cap1.normal)
+    }
 }
 
 #[derive(Clone, Copy)]
@@ -463,6 +494,10 @@ impl Hit for EmptyCone {
     fn texture(&self) -> Texture {
         self.texture
     }
+
+    fn inside(&self, _pos: Vec3) -> bool {
+        false
+    }
 }
 
 #[derive(Copy, Clone)]
@@ -520,5 +555,11 @@ impl Hit for ConeObject {
 
     fn texture(&self) -> Texture {
         self.side.texture
+    }
+
+    fn inside(&self, pos: Vec3) -> bool {
+        let u = (pos - self.side.orig).unit();
+        let v = u - self.side.dir * u.dot(self.side.dir);
+        Interaction::bidir_hit(self, pos, v.cross(self.side.dir))
     }
 }
