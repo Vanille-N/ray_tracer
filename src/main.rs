@@ -1,8 +1,6 @@
 #![allow(dead_code)]
 #![allow(unused_imports)]
 
-extern crate rand;
-extern crate threadpool;
 use std::fs::File;
 use std::io::{BufWriter, Write};
 use std::ops::Range;
