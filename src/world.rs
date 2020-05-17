@@ -21,9 +21,7 @@ impl World {
             self.0.push(x)
         }
     }
-}
-
-impl World {
+    
     pub fn hit(&self, r: &Ray) -> HitRecord {
         let mut rec = HitRecord::Blank;
         for group in &self.0 {

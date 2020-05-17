@@ -106,7 +106,7 @@ pub fn dimensions(len: f64) -> [f64; 5] {
 #[allow(unused_variables)]
 #[allow(clippy::many_single_char_names)]
 impl Molecule {
-    fn directions(self) -> [Vec3; 7] {
+    fn directions(&self) -> [Vec3; 7] {
         let zz = self.up.unit();
         let yy = self.fwd.cross(self.up).unit();
         let xx = zz.cross(yy).unit();

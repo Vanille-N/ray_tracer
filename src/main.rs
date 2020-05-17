@@ -37,20 +37,20 @@ use world::World;
 
 const EPSILON: f64 = 0.000_000_1;
 
-const SYS: &str = "linux";
+// Disable this if your terminal does not support ANSI color codes
+const COLOR_TERM: bool = true;
 
 fn main() {
     let cfg = build_world();
     let cfg = Arc::new(cfg);
     let nb_cores = 4;
-    if SYS == "linux" {
+    if COLOR_TERM {
         eprint!("\n\nRendering image...\n");
         eprint!("|\x1b[50C|\x1b[1A\n");
     }
     let pool = ThreadPool::new(nb_cores);
     let barrier = Arc::new(Barrier::new(nb_cores + 1));
     for id in 0..nb_cores {
-        // Clone essential info
         let mut stdout = BufWriter::new(File::create(&format!(".out{}.txt", id)).unwrap());
         let rng = (id * cfg.hgt / nb_cores)..((id + 1) * cfg.hgt / nb_cores);
         let barrier = barrier.clone();
@@ -60,7 +60,7 @@ fn main() {
             let ni = cfg.hgt as f64;
             let nj = cfg.wth as f64;
             for i in rng.rev() {
-                if SYS == "linux" {
+                if COLOR_TERM {
                     if i * 100 % cfg.hgt == 0 {
                         let load = 100 - i * 100 / cfg.hgt;
                         if load % 2 == 0 {
@@ -91,7 +91,7 @@ fn main() {
         });
     }
     barrier.wait();
-    if SYS == "linux" {
+    if COLOR_TERM {
         eprint!("\n\n\n\x1b[0m");
     }
     let mut f = File::create("img.ppm").unwrap();

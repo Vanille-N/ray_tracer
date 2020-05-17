@@ -88,7 +88,6 @@ impl Primitive {
     }
 }
 
-//#[derive(Clone)]
 pub struct Interaction(pub Vec<Primitive>, pub Vec<Primitive>);
 
 impl Interaction {
