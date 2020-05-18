@@ -87,7 +87,7 @@ impl Flask {
         let tot_hgt = hgt * 1.2;
         let liq_hgt = hgt * 0.6;
         let neck_start = 0.75 * hgt;
-        let mut base = Sphere {
+        let base = Sphere {
             center: self.a + up * hgt / 2.,
             radius: hgt / 4.,
             texture: glass,
@@ -100,8 +100,8 @@ impl Flask {
                 texture: air,
             }
             .build(),
-        );
-        base.remove(
+        )
+        .remove(
             Cylinder {
                 center1: self.a + up * hgt / 2.,
                 center2: self.a + up * hgt,

@@ -39,8 +39,8 @@ impl Die {
         }
         .orthonormal()
         .build()
-        .wrap();
-        die.intersect(
+        .wrap()
+        .intersect(
             Sphere {
                 center: self.a + u / 2. + v / 2. + w / 2.,
                 radius: len * 0.75,
@@ -50,7 +50,7 @@ impl Die {
         );
 
         let mut make_dot = |x: f64, y: f64, z: f64| {
-            die.remove(
+            die.remove_mut(
                 Sphere {
                     center: self.a + u * (0.5 + x / 2.) + v * (0.5 + y / 2.) + w * (0.5 + z / 2.),
                     radius: len * 0.07,

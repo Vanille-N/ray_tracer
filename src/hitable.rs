@@ -109,11 +109,21 @@ impl Interaction {
         !Interaction::inside(obj, pos)
     }
 
-    pub fn intersect(&mut self, other: Primitive) {
+    pub fn intersect(mut self, other: Primitive) -> Self {
+        self.0.push(other);
+        self
+    }
+
+    pub fn remove(mut self, other: Primitive) -> Self {
+        self.1.push(other);
+        self
+    }
+
+    pub fn intersect_mut(&mut self, other: Primitive) {
         self.0.push(other);
     }
 
-    pub fn remove(&mut self, other: Primitive) {
+    pub fn remove_mut(&mut self, other: Primitive) {
         self.1.push(other);
     }
 
