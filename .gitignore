@@ -7,3 +7,5 @@ perf.data
 !data/*
 deps.png
 Cargo.lock
+flame.svg
+perf.data.old

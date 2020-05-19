@@ -9,3 +9,7 @@ edition = "2018"
 [dependencies]
 rand = "0.7"
 threadpool = "1.8.*"
+
+
+#[profile.release]
+#debug = true
