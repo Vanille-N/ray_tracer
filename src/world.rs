@@ -1,30 +1,44 @@
 use crate::hitable::*;
 use crate::ray::Ray;
-use crate::rgb::RGB;
+use crate::rgb::{self, RGB};
 use crate::sky::Sky;
 use crate::vec3::Vec3;
 use crate::EPSILON;
 
-pub struct World(Composite);
+pub struct World {
+    obj: Composite,
+    dark: bool,
+}
 
 impl World {
     pub fn new() -> Self {
-        Self(Vec::new())
+        Self {
+            obj: Vec::new(),
+            dark: false,
+        }
     }
 
     pub fn push(&mut self, x: Interaction) {
-        self.0.push(x);
+        self.obj.push(x);
     }
 
     pub fn push_vec(&mut self, v: Composite) {
         for x in v {
-            self.0.push(x)
+            self.obj.push(x)
         }
     }
-    
+
+    pub fn dark_mode(&mut self) {
+        self.dark = true;
+    }
+
+    pub fn is_dark(&self) -> bool {
+        self.dark
+    }
+
     pub fn hit(&self, r: &Ray) -> HitRecord {
         let mut rec = HitRecord::Blank;
-        for group in &self.0 {
+        for group in &self.obj {
             let mut record = HitRecord::Blank;
             for i in 0..group.0.len() {
                 let mut ray = *r;
@@ -70,7 +84,7 @@ impl World {
     }
 
     pub fn caracteristics(&self, pos: Vec3) -> (f64, RGB) {
-        for group in &self.0 {
+        for group in &self.obj {
             if Interaction::all_inside_except(pos, &group.0, group.0.len())
                 && Interaction::all_outside_except(pos, &group.1, group.1.len())
             {
@@ -218,5 +232,29 @@ pub fn color(r: &Ray, w: &World, depth: i32, sky: &Sky) -> RGB {
             }
         }
         HitRecord::Blank => sky.color(r.dir),
+    }
+}
+
+pub fn calc_color(r: &Ray, w: &World, sky: &Sky) -> RGB {
+    match w.hit(r) {
+        HitRecord::Hit(record) => {
+            if let Some((attenuation, scattered)) = scatter(r, record, w) {
+                attenuation * color(&scattered, &w, 1, sky)
+            } else {
+                match record.texture {
+                    Texture::Lambertian(color) => color,
+                    Texture::Metal(color, _) => color,
+                    Texture::Light(color) => color,
+                    Texture::Dielectric(color, _) => color,
+                }
+            }
+        }
+        HitRecord::Blank => {
+            if w.is_dark() {
+                rgb::BLACK
+            } else {
+                sky.color(r.dir)
+            }
+        },
     }
 }
