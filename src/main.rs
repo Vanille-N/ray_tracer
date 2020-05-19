@@ -43,7 +43,7 @@ const COLOR_TERM: bool = true;
 fn main() {
     let cfg = build_world();
     let cfg = Arc::new(cfg);
-    let nb_cores = 4;
+    let nb_cores = 7;
     if COLOR_TERM {
         eprint!("\n\nRendering image...\n");
         eprint!("|\x1b[50C|\x1b[1A\n");
@@ -80,7 +80,7 @@ fn main() {
                         let vfrac = (i + rand::random::<f64>()) / ni;
                         let hfrac = (j + rand::random::<f64>()) / nj;
                         let r = cfg.cam.get_ray(hfrac, vfrac);
-                        c += world::color(&r, &cfg.world, 0, &cfg.sky);
+                        c += world::calc_color(&r, &cfg.world, &cfg.sky);
                     }
                     write!(stdout, "{}", c / cfg.iter as f64).unwrap();
                 }
@@ -115,37 +115,316 @@ struct Cfg {
 }
 
 fn build_world() -> Cfg {
-    let wth = 500; // width in pixels
+    let wth = 1000; // width in pixels
     let hgt = 500; // height in pixels
-    let iter = 100; // number of samples per pixel
+    let iter = 200; // number of samples per pixel
     let cam = Camera::new_relative(
-        Vec3(0.0, 1.0, 0.0),     // target
-        0.0,                     // angle (degrees)
-        60.0,                    // rise (degrees)
-        3.0,                     // distance (meters),
+        Vec3(75.0, 15.0, 0.0),   // target
+        -20.0,                   // angle (degrees)
+        20.0,                    // rise (degrees)
+        300.0,                   // distance (meters),
         0.0,                     // tilt (degrees)
-        90.0,                    // aperture (degrees)
+        20.0,                    // aperture (degrees)
         wth as f64 / hgt as f64, // aspect ratio
     );
     let sky = Sky::blank();
     let mut world = World::new();
-    let ground = InfinitePlane {
-        orig: Vec3(0.0, 0.0, 0.0),
-        normal: Vec3(0.0, 1.0, 0.0),
-        texture: Texture::Lambertian(RGB(0.5, 0.5, 0.6)),
+
+    world.dark_mode();
+
+    let t1 = Texture::Lambertian(RGB(0.0, 0.7, 0.7));
+    let t2 = Texture::Lambertian(RGB(0.2, 0.8, 0.3));
+    let t3 = Texture::Lambertian(RGB(0.5, 0.7, 0.0));
+
+    let x = Vec3(10., 0., 0.);
+    let y = Vec3(0., 10., 0.);
+    let z = Vec3(0., 0., 30.);
+
+    let nbase = Rhomboid {
+        a: -x * 0.2,
+        u: y * 0.5,
+        v: x * 1.4,
+        w: z,
+        texture: t1,
     }
     .build()
     .wrap();
 
-    let erlen = Flask {
-        a: Vec3(0.0, 0.0, 0.0),
-        size: 1.,
-        color: RGB(0.5, 0.8, 1.0),
+    let nlbar = Rhomboid {
+        a: x * 0.25,
+        u: y * 4.55,
+        v: x * 0.5,
+        w: z,
+        texture: t1,
     }
-    .florence();
+    .build()
+    .wrap();
 
-    world.push(ground);
-    world.push_vec(erlen);
+    let nlserif = Rhomboid {
+        a: y * 0.5,
+        u: y * 0.25,
+        v: x,
+        w: z,
+        texture: t1,
+    }
+    .build()
+    .remove(
+        Cylinder {
+            center1: y * 0.75 - z * 0.1,
+            center2: y * 0.75 + z * 1.1,
+            radius: 2.5,
+            texture: t1,
+        }
+        .build(),
+    )
+    .remove(
+        Cylinder {
+            center1: x + y * 0.75 - z * 0.1,
+            center2: x + y * 0.75 + z * 1.1,
+            radius: 2.5,
+            texture: t1,
+        }
+        .build(),
+    );
+
+    let nmidbar = Rhomboid {
+        a: -x * 0.2 + y * 5.,
+        u: x * 1.65,
+        v: x * 5. - y * 5.,
+        w: z,
+        texture: t1,
+    }
+    .build()
+    .remove(
+        Rhomboid {
+            a: x * 0.62 + y * 4.7 - z * 0.1,
+            u: x * 0.6,
+            v: x * 5. - y * 5.,
+            w: z * 1.2,
+            texture: t1,
+        }
+        .build(),
+    )
+    .remove(
+        Cylinder {
+            center1: x * 5.,
+            center2: x * 7.,
+            radius: 40.,
+            texture: t1,
+        }
+        .build(),
+    );
+
+    let nrbar = Rhomboid {
+        a: x * 4.8,
+        u: y * 5.,
+        v: x * 0.5,
+        w: z,
+        texture: t1,
+    }
+    .build()
+    .wrap();
+
+    let ntop = Rhomboid {
+        a: x * 4.30 + y * 4.5,
+        u: y * 0.5,
+        v: x * 1.4,
+        w: z,
+        texture: t1,
+    }
+    .build()
+    .wrap();
+
+    let nrserif = Rhomboid {
+        a: x * 4.55 + y * 4.25,
+        u: y * 0.25,
+        v: x,
+        w: z,
+        texture: t1,
+    }
+    .build()
+    .remove(
+        Cylinder {
+            center1: x * 4.55 + y * 4.25 - z * 0.1,
+            center2: x * 4.55 + y * 4.25 + z * 1.1,
+            radius: 2.5,
+            texture: t1,
+        }
+        .build(),
+    )
+    .remove(
+        Cylinder {
+            center1: x * 5.55 + y * 4.25 - z * 0.1,
+            center2: x * 5.55 + y * 4.25 + z * 1.1,
+            radius: 2.5,
+            texture: t1,
+        }
+        .build(),
+    );
+
+    let ecirc = Cylinder {
+        center1: x * 7.5 + y * 1.5,
+        center2: x * 7.5 + y * 1.5 + z,
+        radius: 15.,
+        texture: t2,
+    }
+    .build()
+    .remove(
+        Cylinder {
+            center1: x * 7.5 + y * 1.5 - z * 0.1,
+            center2: x * 7.5 + y * 1.5 + z * 1.1,
+            radius: 10.,
+            texture: t2,
+        }
+        .build(),
+    )
+    .remove(
+        Rhomboid {
+            a: x * 7.5 + y * 1.5 - z * 0.1,
+            u: x * 10. + y * 5.,
+            v: x * 10. - y * 5.,
+            w: z * 1.2,
+            texture: t2,
+        }
+        .build(),
+    );
+
+    let ehbar = Rhomboid {
+        a: x * 6.5 + y * 1.,
+        u: x * 2. + y * 1.,
+        v: y * 0.57,
+        w: z,
+        texture: t2,
+    }
+    .build()
+    .wrap();
+
+    let vlbar = Rhomboid {
+        a: x * 9.5,
+        u: y * 5.,
+        v: x * 0.5,
+        w: z,
+        texture: t3,
+    }
+    .build()
+    .wrap();
+
+    let vltop = Rhomboid {
+        a: x * 9. + y * 4.5,
+        u: y * 0.5,
+        v: x * 1.4,
+        w: z,
+        texture: t3,
+    }
+    .build()
+    .wrap();
+
+    let vlserif = Rhomboid {
+        a: x * 9.25 + y * 4.25,
+        u: y * 0.25,
+        v: x,
+        w: z,
+        texture: t3,
+    }
+    .build()
+    .remove(
+        Cylinder {
+            center1: x * 9.25 + y * 4.25 - z * 0.1,
+            center2: x * 9.25 + y * 4.25 + z * 1.1,
+            radius: 2.5,
+            texture: t3,
+        }
+        .build(),
+    )
+    .remove(
+        Cylinder {
+            center1: x * 10.25 + y * 4.25 - z * 0.1,
+            center2: x * 10.25 + y * 4.25 + z * 1.1,
+            radius: 2.5,
+            texture: t3,
+        }
+        .build(),
+    );
+
+    let vmidlo = Cylinder {
+        center1: x * 5.13 + y * 9.88,
+        center2: x * 5.13 + y * 9.88 + z,
+        radius: 110.3,
+        texture: t3,
+    }
+    .build()
+    .intersect(
+        Rhomboid {
+            a: x * 9.5,
+            u: y * 5.,
+            v: x * 6.,
+            w: z * 1.2,
+            texture: t3,
+        }
+        .build(),
+    )
+    .remove(
+        Cylinder {
+            center1: x * 5.13 + y * 9.88 - z * 0.1,
+            center2: x * 5.13 + y * 9.88 + z * 1.1,
+            radius: 105.,
+            texture: t3,
+        }
+        .build(),
+    );
+
+    let vmidhi = Cylinder {
+        center1: x * 5.13 + y * 9.88,
+        center2: x * 5.13 + y * 9.88 + z,
+        radius: 100.,
+        texture: t3,
+    }
+    .build()
+    .intersect(
+        Rhomboid {
+            a: x * 9.5,
+            u: y * 5.,
+            v: x * 6.,
+            w: z * 1.2,
+            texture: t3,
+        }
+        .build(),
+    )
+    .remove(
+        Cylinder {
+            center1: x * 5.13 + y * 9.88 - z * 0.1,
+            center2: x * 5.13 + y * 9.88 + z * 1.1,
+            radius: 95.,
+            texture: t3,
+        }
+        .build(),
+    );
+
+    let vrtop = Rhomboid {
+        a: x * 12.5 + y * 4.5,
+        u: y * 0.5,
+        v: x * 3.,
+        w: z,
+        texture: t3,
+    }
+    .build()
+    .wrap();
+
+    world.push(nbase);
+    world.push(nlbar);
+    world.push(nlserif);
+    world.push(nmidbar);
+    world.push(nrbar);
+    world.push(ntop);
+    world.push(nrserif);
+    world.push(ecirc);
+    world.push(ehbar);
+    world.push(vlbar);
+    world.push(vlserif);
+    world.push(vltop);
+    world.push(vmidlo);
+    world.push(vmidhi);
+    world.push(vrtop);
 
     Cfg {
         hgt,

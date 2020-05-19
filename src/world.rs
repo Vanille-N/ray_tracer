@@ -255,6 +255,6 @@ pub fn calc_color(r: &Ray, w: &World, sky: &Sky) -> RGB {
             } else {
                 sky.color(r.dir)
             }
-        },
+        }
     }
 }
