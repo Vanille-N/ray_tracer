@@ -9,3 +9,4 @@ deps.png
 Cargo.lock
 flame.svg
 perf.data.old
+*.so
