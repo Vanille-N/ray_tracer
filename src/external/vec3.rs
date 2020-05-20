@@ -6,8 +6,11 @@ use crate::internal;
 #[pyclass]
 #[derive(Clone, Copy)]
 pub struct Vec3 {
+    #[pyo3(get, set)]
     pub x: f64,
+    #[pyo3(get, set)]
     pub y: f64,
+    #[pyo3(get, set)]
     pub z: f64,
 }
 
