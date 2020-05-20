@@ -43,4 +43,20 @@ impl Camera {
             aspect: -1.,
         }
     }
+
+    pub fn set_target(&mut self, x: f64, y: f64, z: f64) {
+        self.target = internal::Vec3(x, y, z);
+    }
+
+    pub fn set_distance(&mut self, d: f64) {
+        self.distance = d;
+    }
+
+    pub fn set_angle(&mut self, a: f64) {
+        self.angle = a;
+    }
+
+    pub fn set_rise(&mut self, r: f64) {
+        self.rise = r;
+    }
 }
