@@ -1,10 +1,5 @@
 use std::sync::Arc;
-use crate::hitable::*;
-use crate::ray::Ray;
-use crate::rgb::{self, RGB};
-use crate::sky::Sky;
-use crate::vec3::Vec3;
-use crate::EPSILON;
+use crate::internal::*;
 
 #[derive(Clone)]
 pub struct World {

@@ -1,5 +1,4 @@
-use crate::ray::Ray;
-use crate::vec3::Vec3;
+use crate::internal::*;
 
 #[derive(Clone)]
 pub struct Camera {

@@ -1,11 +1,7 @@
 use std::sync::Arc;
-use crate::primitives::*;
-use crate::ray::Ray;
-use crate::rgb::RGB;
-use crate::sky::Sky;
-use crate::vec3::Vec3;
-use crate::world::World;
-use crate::EPSILON;
+use crate::internal::*;
+use pyo3::prelude::*;
+use pyo3::wrap_pyfunction;
 
 pub trait Hit: Send + Sync {
     fn hit(&self, r: &Ray) -> HitRecord;

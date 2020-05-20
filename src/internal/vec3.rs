@@ -1,6 +1,6 @@
 use std::ops;
 
-use crate::EPSILON;
+use crate::internal::EPSILON;
 
 #[derive(Clone, Copy)]
 pub struct Vec3(pub f64, pub f64, pub f64);

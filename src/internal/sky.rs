@@ -1,5 +1,4 @@
-use crate::rgb::RGB;
-use crate::vec3::Vec3;
+use crate::internal::*;
 
 use pyo3::prelude::*;
 use pyo3::wrap_pyfunction;
@@ -48,7 +47,7 @@ impl Sky {
         Self {
             hgt: 1,
             wth: 1,
-            map: vec![vec![crate::rgb::WHITE]],
+            map: vec![vec![rgb::WHITE]],
         }
     }
 }

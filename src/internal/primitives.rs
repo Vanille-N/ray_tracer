@@ -1,7 +1,4 @@
-use crate::hitable::*;
-use crate::ray::Ray;
-use crate::vec3::Vec3;
-use crate::EPSILON;
+use crate::internal::*;
 
 #[derive(Copy, Clone)]
 pub struct Sphere {
