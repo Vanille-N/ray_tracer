@@ -2,6 +2,14 @@
 
 ## A Rust script for ray path tracing and image generation
 
+```diff
+- WARNING
+This branch is currently being developed to provide an interface
+with Python. It may not be usable yet.
+For a standalone application, go to the master branch instead.
+```
+
+
 Originally inspired by _Ray Tracing in One Weekend_ (Peter Shirley).
 
 ### How to run this program
