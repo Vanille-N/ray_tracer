@@ -1,6 +1,10 @@
 use crate::rgb::RGB;
 use crate::vec3::Vec3;
 
+use pyo3::prelude::*;
+use pyo3::wrap_pyfunction;
+
+#[pyclass]
 #[derive(Clone)]
 pub struct Sky {
     map: Vec<Vec<RGB>>,
@@ -8,7 +12,9 @@ pub struct Sky {
     wth: usize,
 }
 
+#[pymethods]
 impl Sky {
+    #[new]
     pub fn new(file: &str) -> Self {
         let img = std::fs::read_to_string(file)
             .unwrap()
@@ -36,6 +42,8 @@ impl Sky {
         Self { map, hgt, wth }
     }
 
+    #[text_signature = "()"]
+    #[staticmethod]
     pub fn blank() -> Self {
         Self {
             hgt: 1,
@@ -43,7 +51,9 @@ impl Sky {
             map: vec![vec![crate::rgb::WHITE]],
         }
     }
+}
 
+impl Sky {
     pub fn color(&self, dir: Vec3) -> RGB {
         let (x, y) = {
             let mut v = dir;
