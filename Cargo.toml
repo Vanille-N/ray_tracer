@@ -16,6 +16,5 @@ threadpool = "1.8.*"
 version = "0.10.1"
 features = ["extension-module"]
 
-
 #[profile.release]
 #debug = true
