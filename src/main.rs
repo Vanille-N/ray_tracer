@@ -43,7 +43,7 @@ const COLOR_TERM: bool = true;
 fn main() {
     let cfg = build_world();
     let cfg = Arc::new(cfg);
-    let nb_cores = 7;
+    let nb_cores = 5;
     if COLOR_TERM {
         eprint!("\n\nRendering image...\n");
         eprint!("|\x1b[50C|\x1b[1A\n");
@@ -102,6 +102,10 @@ fn main() {
             .output()
             .unwrap_or_else(|e| panic!("failed to execute process: {}", e));
         write!(f, "{}", String::from_utf8_lossy(&output.stdout)).unwrap();
+        Command::new("rm")
+            .arg(&format!(".out{}.txt", idx))
+            .status()
+            .expect("Failed to cleanup directory");
     }
 }
 
@@ -115,9 +119,9 @@ struct Cfg {
 }
 
 fn build_world() -> Cfg {
-    let wth = 1000; // width in pixels
-    let hgt = 500; // height in pixels
-    let iter = 200; // number of samples per pixel
+    let wth = 100; // width in pixels
+    let hgt = 50; // height in pixels
+    let iter = 20; // number of samples per pixel
     let cam = Camera::new_relative(
         Vec3(75.0, 15.0, 0.0),   // target
         -20.0,                   // angle (degrees)
@@ -401,9 +405,9 @@ fn build_world() -> Cfg {
     );
 
     let vrtop = Rhomboid {
-        a: x * 12.5 + y * 4.5,
+        a: x * 13.5 + y * 4.5,
         u: y * 0.5,
-        v: x * 3.,
+        v: x * 0.9,
         w: z,
         texture: t3,
     }
