@@ -1,6 +1,4 @@
-use crate::hitable::*;
-use crate::primitives::*;
-use crate::vec3::Vec3;
+use crate::internal::*;
 
 #[derive(Clone, Copy)]
 pub struct Die {
@@ -18,7 +16,7 @@ impl Die {
         let w = self.up; // Upwards
         let u1 = {
             let u = w.cross(Vec3(0.0, 0.0, 1.0));
-            if u.len() < crate::EPSILON {
+            if u.len() < EPSILON {
                 w.cross(Vec3(1.0, 0.0, 0.0))
             } else {
                 u

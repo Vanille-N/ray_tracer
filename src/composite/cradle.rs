@@ -1,7 +1,5 @@
-use crate::hitable::*;
-use crate::primitives::*;
-use crate::rgb::RGB;
-use crate::vec3::Vec3;
+use crate::internal::*;
+
 
 #[derive(Clone, Copy)]
 pub struct NewtonCradle {

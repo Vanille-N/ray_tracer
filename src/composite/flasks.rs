@@ -1,7 +1,4 @@
-use crate::hitable::*;
-use crate::primitives::*;
-use crate::rgb::RGB;
-use crate::vec3::Vec3;
+use crate::internal::*;
 
 pub struct Flask {
     pub a: Vec3,
@@ -83,10 +80,10 @@ impl Flask {
         let len = self.size;
         let e = 0.05;
         let hgt = 2.0;
-        let epsilon = 0.1 * hgt;
+        let _epsilon = 0.1 * hgt;
         let tot_hgt = hgt * 1.2;
         let liq_hgt = hgt * 0.6;
-        let neck_start = 0.75 * hgt;
+        let _neck_start = 0.75 * hgt;
         let base = Sphere {
             center: self.a + up * hgt / 2.,
             radius: hgt / 4.,

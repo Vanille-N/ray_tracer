@@ -1,7 +1,4 @@
-use crate::hitable::*;
-use crate::primitives::*;
-use crate::rgb::RGB;
-use crate::vec3::Vec3;
+use crate::internal::*;
 
 const BLACK: RGB = RGB(0.05, 0.05, 0.05);
 const RED: RGB = RGB(0.9, 0.1, 0.1);

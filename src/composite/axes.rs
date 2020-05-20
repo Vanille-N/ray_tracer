@@ -1,7 +1,4 @@
-use crate::hitable::*;
-use crate::primitives::*;
-use crate::rgb::RGB;
-use crate::vec3::Vec3;
+use crate::internal::*;
 
 const RED: Texture = Texture::Lambertian(RGB(0.9, 0.1, 0.1));
 const BLUE: Texture = Texture::Lambertian(RGB(0.0, 0.2, 0.7));
