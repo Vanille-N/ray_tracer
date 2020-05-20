@@ -1,3 +1,4 @@
+use std::sync::Arc;
 use crate::primitives::*;
 use crate::ray::Ray;
 use crate::rgb::RGB;
@@ -29,7 +30,6 @@ impl ActiveHit {
     }
 }
 
-#[derive(Clone, Copy)]
 pub enum HitRecord {
     Blank,
     Hit(ActiveHit),
@@ -143,6 +143,10 @@ impl Interaction {
             }
         }
         true
+    }
+
+    pub fn lock(self) -> Arc<Self> {
+        Arc::new(self)
     }
 }
 

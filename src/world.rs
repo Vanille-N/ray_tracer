@@ -1,3 +1,4 @@
+use std::sync::Arc;
 use crate::hitable::*;
 use crate::ray::Ray;
 use crate::rgb::{self, RGB};
@@ -5,8 +6,9 @@ use crate::sky::Sky;
 use crate::vec3::Vec3;
 use crate::EPSILON;
 
+#[derive(Clone)]
 pub struct World {
-    obj: Composite,
+    obj: Vec<Arc<Interaction>>,
     dark: bool,
 }
 
@@ -19,12 +21,12 @@ impl World {
     }
 
     pub fn push(&mut self, x: Interaction) {
-        self.obj.push(x);
+        self.obj.push(x.lock());
     }
 
     pub fn push_vec(&mut self, v: Composite) {
         for x in v {
-            self.obj.push(x)
+            self.obj.push(x.lock())
         }
     }
 
