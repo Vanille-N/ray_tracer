@@ -81,9 +81,6 @@ fn render(build: external::Builder) {
                             eprint!("\x1b[{}C{}█\x1b[1A\n", load / 2, color);
                         }
                     }
-                } else if i * 100 % build.hgt == 0 {
-                    let load = 100 - i * 100 / build.hgt;
-                    eprintln!("{}%", load);
                 }
 
                 for j in 0..build.wth {
