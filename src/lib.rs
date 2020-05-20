@@ -11,49 +11,9 @@ use std::process::Command;
 use std::sync::{Arc, Barrier};
 use threadpool::ThreadPool;
 
-mod camera;
-mod composite_axes;
-mod composite_cradle;
-mod composite_die;
-mod composite_flasks;
-mod composite_molecules;
-mod hitable;
-mod primitives;
-mod ray;
-mod rgb;
-mod sky;
-mod vec3;
-mod world;
-
-mod pycfg;
-mod pycamera;
-mod pyvec3;
-
-mod internal {
-    pub use crate::camera::Camera;
-    pub use crate::composite_axes::Axes;
-    pub use crate::composite_cradle::NewtonCradle;
-    pub use crate::composite_die::Die;
-    pub use crate::composite_flasks::Flask;
-    pub use crate::composite_molecules::Molecule;
-    pub use crate::hitable::*;
-    pub use crate::primitives::*;
-    pub use crate::rgb::*;
-    pub use crate::world::World;
-    pub use crate::vec3::Vec3;
-    pub use crate::sky::Sky;
-}
-
-mod external {
-    pub use crate::pycfg::*;
-    pub use crate::pycamera::*;
-    pub use crate::pyvec3::*;
-    pub use crate::sky::*;
-}
-
-
-const EPSILON: f64 = 0.000_000_1;
-
+mod internal;
+mod composite;
+mod external;
 
 fn render(build: external::Builder) {
     let build = Arc::new(build);
@@ -84,14 +44,14 @@ fn render(build: external::Builder) {
                 }
 
                 for j in 0..build.wth {
-                    let mut c = internal::BLACK;
+                    let mut c = internal::rgb::BLACK;
                     let i = i as f64;
                     let j = j as f64;
                     for _ in 0..build.iter {
                         let vfrac = (i + rand::random::<f64>()) / ni;
                         let hfrac = (j + rand::random::<f64>()) / nj;
                         let r = build.cam.get_ray(hfrac, vfrac);
-                        c += world::calc_color(&r, &build.world, &build.sky);
+                        c += internal::world::calc_color(&r, &build.world, &build.sky);
                     }
                     write!(stdout, "{}", c / build.iter as f64).unwrap();
                 }
