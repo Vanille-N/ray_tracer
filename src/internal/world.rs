@@ -1,7 +1,7 @@
 use std::sync::Arc;
 use crate::internal::*;
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct World {
     obj: Vec<Interaction>,
     pub background: Option<RGB>,
