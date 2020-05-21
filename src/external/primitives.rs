@@ -215,6 +215,25 @@ pub struct Cylinder {
     pub texture: Texture,
 }
 
+#[pymethods]
+impl Cylinder {
+    #[new]
+    pub fn new(center1: Vec3, center2: Vec3, radius: f64, texture: Texture) -> Self {
+        Self { center1, center2, radius, texture }
+    }
+}
+
+impl ToInternal for Cylinder {
+    fn to_internal(self) -> internal::Primitive {
+        internal::Cylinder {
+            center1: self.center1.to_internal(),
+            center2: self.center2.to_internal(),
+            radius: self.radius,
+            texture: self.texture.to_internal(),
+        }.build()
+    }
+}
+
 #[derive(Clone, Copy)]
 pub struct EmptyCone {
     pub orig: Vec3,
