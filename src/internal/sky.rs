@@ -1,4 +1,5 @@
 use crate::internal::*;
+use crate::external;
 
 use pyo3::prelude::*;
 use pyo3::wrap_pyfunction;
@@ -43,11 +44,11 @@ impl Sky {
 
     #[text_signature = "()"]
     #[staticmethod]
-    pub fn blank() -> Self {
+    pub fn uniform(c: external::RGB) -> Self {
         Self {
             hgt: 1,
             wth: 1,
-            map: vec![vec![rgb::WHITE]],
+            map: vec![vec![c.to_internal()]],
         }
     }
 }
