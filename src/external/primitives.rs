@@ -258,16 +258,44 @@ impl ToInternal for Cylinder {
     }
 }
 
+
+#[pyclass]
 #[derive(Clone, Copy)]
 pub struct EmptyCone {
+    #[pyo3(get, set)]
     pub orig: Vec3,
+    #[pyo3(get, set)]
     pub dir: Vec3,
+    #[pyo3(get, set)]
     pub angle: f64,
+    #[pyo3(get, set)]
     pub begin: f64,
+    #[pyo3(get, set)]
     pub end: f64,
+    #[pyo3(get, set)]
     pub texture: Texture,
 }
 
+#[pymethods]
+impl EmptyCone {
+    #[new]
+    pub fn new(orig: Vec3, dir: Vec3, angle: f64, begin: f64, end: f64, texture: Texture) -> Self {
+        Self { orig, dir, angle, begin, end, texture }
+    }
+}
+
+impl ToInternal for EmptyCone {
+    fn to_internal(self) -> Primitive {
+        internal::EmptyCone {
+            orig: self.orig.to_internal(),
+            dir: self.dir.to_internal(),
+            angle: self.angle,
+            begin: self.begin,
+            end: self.end,
+            texture: self.texture.to_internal(),
+        }
+    }
+}
 #[derive(Copy, Clone)]
 pub struct Cone {
     pub orig: Vec3,
