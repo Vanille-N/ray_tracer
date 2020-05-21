@@ -2,7 +2,7 @@ use pyo3::prelude::*;
 use pyo3::wrap_pyfunction;
 
 use crate::internal;
-use crate::external;
+use crate::external::*;
 use crate::composite;
 
 #[pyclass]
@@ -11,9 +11,9 @@ pub struct Cfg {
     pub hgt: usize,
     pub wth: usize,
     pub iter: usize,
-    pub cam: Option<external::Camera>,
+    pub cam: Option<Camera>,
     pub world: internal::World,
-    pub sky: Option<external::Sky>,
+    pub sky: Option<Sky>,
 }
 
 pub struct Builder {
@@ -73,13 +73,18 @@ impl Cfg {
         }
     }
 
+    #[text_signature = "($self, color)"]
+    pub fn set_background(&mut self, c: RGB) {
+        self.world.background = Some(c.to_internal());
+    }
+
     #[text_signature = "($self, sky)"]
-    pub fn add_cam(&mut self, cam: external::Camera) {
+    pub fn set_cam(&mut self, cam: Camera) {
         self.cam = Some(cam);
     }
 
     #[text_signature = "($self, sky)"]
-    pub fn add_sky(&mut self, sky: external::Sky) {
+    pub fn set_sky(&mut self, sky: Sky) {
         self.sky = Some(sky)
     }
 
