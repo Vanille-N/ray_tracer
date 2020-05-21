@@ -1,11 +1,27 @@
 #!/usr/bin/python3
 
-import pytrace as tr
+from pytrace import *
+from os import system
 
-trace = tr.Cfg(100, 100, 20)
-trace.add_cam(tr.Camera(25, 25, 0))
-trace.add_sky(tr.Sky.blank())
-trace.add_obj()
+def lpad(l, n):
+    return "0" * (l - len(str(n))) + str(n)
 
-trace.silence()
-trace.render()
+tr = Cfg(200, 200, 20)
+tr.add_sky(Sky("data/sky.ppm"))
+tr.populate()
+tr.silence()
+
+cam = Camera(0, .5, 0)
+cam.set_distance(5)
+cam.set_rise(30)
+
+for i in range(180):
+    cam.set_angle(i*2)
+    tr.add_cam(cam)
+    tr.render(lpad(5, i))
+    print(i)
+
+
+system("rm sky.avi")
+system("ffmpeg -pattern_type glob -framerate 25 -i \"img-*.ppm\" -vcodec libx264 sky.avi")
+system("rm img-*.ppm")
