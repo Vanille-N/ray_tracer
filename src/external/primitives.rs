@@ -3,6 +3,8 @@ use pyo3::wrap_pyfunction;
 use crate::internal;
 use crate::external::*;
 
+// I hope to eventually be able to shorten this file with macros...
+
 #[pyclass]
 #[derive(Copy, Clone)]
 pub struct Sphere {
@@ -82,23 +84,27 @@ impl Triangle {
     }
 }
 
-impl Triangle {
-    pub fn to_internal(self) -> internal::Triangle {
+impl ToInternal for Triangle {
+    fn to_internal(self) -> internal::Primitive {
         internal::Triangle {
             a: self.a.to_internal(),
             u: self.u.to_internal(),
             v: self.v.to_internal(),
             texture: self.texture.to_internal(),
-        }
+        }.build()
     }
 }
 
 #[pyclass]
 #[derive(Clone, Copy)]
 pub struct Parallelogram {
+    #[pyo3(get, set)]
     pub a: Vec3,
+    #[pyo3(get, set)]
     pub u: Vec3,
+    #[pyo3(get, set)]
     pub v: Vec3,
+    #[pyo3(get, set)]
     pub texture: Texture,
 }
 
@@ -110,24 +116,29 @@ impl Parallelogram {
     }
 }
 
-impl Parallelogram {
-    pub fn to_internal(self) -> internal::Parallelogram {
+impl ToInternal for Parallelogram {
+    fn to_internal(self) -> internal::Primitive {
         internal::Parallelogram {
             a: self.a.to_internal(),
             u: self.u.to_internal(),
             v: self.v.to_internal(),
             texture: self.texture.to_internal()
-        }
+        }.build()
     }
 }
 
 #[pyclass]
 #[derive(Clone, Copy)]
 pub struct Rhomboid {
+    #[pyo3(get, set)]
     pub a: Vec3,
+    #[pyo3(get, set)]
     pub u: Vec3,
+    #[pyo3(get, set)]
     pub v: Vec3,
+    #[pyo3(get, set)]
     pub w: Vec3,
+    #[pyo3(get, set)]
     pub texture: Texture,
 }
 
@@ -139,24 +150,28 @@ impl Rhomboid {
     }
 }
 
-impl Rhomboid {
-    pub fn to_internal(self) -> internal::Rhomboid {
+impl ToInternal for Rhomboid {
+    fn to_internal(self) -> internal::Primitive {
         internal::Rhomboid {
             a: self.a.to_internal(),
             u: self.u.to_internal(),
             v: self.v.to_internal(),
             w: self.w.to_internal(),
             texture: self.texture.to_internal(),
-        }
+        }.build()
     }
 }
 
 #[pyclass]
 #[derive(Clone, Copy)]
 pub struct EmptyCylinder {
+    #[pyo3(get, set)]
     pub center1: Vec3,
+    #[pyo3(get, set)]
     pub center2: Vec3,
+    #[pyo3(get, set)]
     pub radius: f64,
+    #[pyo3(get, set)]
     pub texture: Texture,
 }
 
@@ -168,23 +183,27 @@ impl EmptyCylinder {
     }
 }
 
-impl EmptyCylinder {
-    pub fn to_internal(self) -> internal::EmptyCylinder {
+impl ToInternal for EmptyCylinder {
+    fn to_internal(self) -> internal::Primitive {
         internal::EmptyCylinder {
             center1: self.center1.to_internal(),
             center2: self.center2.to_internal(),
             radius: self.radius,
             texture: self.texture.to_internal(),
-        }
+        }.build()
     }
 }
 
 #[pyclass]
 #[derive(Clone, Copy)]
 pub struct Disc {
+    #[pyo3(get, set)]
     pub center: Vec3,
+    #[pyo3(get, set)]
     pub normal: Vec3,
+    #[pyo3(get, set)]
     pub radius: f64,
+    #[pyo3(get, set)]
     pub texture: Texture,
 }
 
@@ -196,22 +215,27 @@ impl Disc {
     }
 }
 
-impl Disc {
-    pub fn to_internal(self) -> internal::Disc {
+impl ToInternal for Disc {
+    fn to_internal(self) -> internal::Primitive {
         internal::Disc {
             center: self.center.to_internal(),
             normal: self.normal.to_internal(),
             radius: self.radius,
             texture: self.texture.to_internal(),
-        }
+        }.build()
     }
 }
 
+#[pyclass]
 #[derive(Clone, Copy)]
 pub struct Cylinder {
+    #[pyo3(get, set)]
     pub center1: Vec3,
+    #[pyo3(get, set)]
     pub center2: Vec3,
+    #[pyo3(get, set)]
     pub radius: f64,
+    #[pyo3(get, set)]
     pub texture: Texture,
 }
 
