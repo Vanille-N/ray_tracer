@@ -4,14 +4,14 @@ use crate::internal::*;
 #[derive(Clone)]
 pub struct World {
     obj: Vec<Interaction>,
-    dark: bool,
+    pub background: Option<RGB>,
 }
 
 impl World {
     pub fn new() -> Self {
         Self {
             obj: Vec::new(),
-            dark: false,
+            background: None,
         }
     }
 
@@ -23,14 +23,6 @@ impl World {
         for x in v {
             self.obj.push(x)
         }
-    }
-
-    pub fn dark_mode(&mut self) {
-        self.dark = true;
-    }
-
-    pub fn is_dark(&self) -> bool {
-        self.dark
     }
 
     pub fn hit(&self, r: &Ray) -> HitRecord {
@@ -247,10 +239,9 @@ pub fn calc_color(r: &Ray, w: &World, sky: &Sky) -> RGB {
             }
         }
         HitRecord::Blank => {
-            if w.is_dark() {
-                rgb::BLACK
-            } else {
-                sky.color(r.dir)
+            match w.background {
+                None => sky.color(r.dir),
+                Some(c) => c,
             }
         }
     }
