@@ -3,7 +3,7 @@ use crate::internal::*;
 
 #[derive(Clone)]
 pub struct World {
-    obj: Vec<Arc<Interaction>>,
+    obj: Vec<Interaction>,
     dark: bool,
 }
 
@@ -16,12 +16,12 @@ impl World {
     }
 
     pub fn push(&mut self, x: Interaction) {
-        self.obj.push(x.lock());
+        self.obj.push(x);
     }
 
     pub fn push_vec(&mut self, v: Composite) {
         for x in v {
-            self.obj.push(x.lock())
+            self.obj.push(x)
         }
     }
 

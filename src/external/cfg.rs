@@ -3,6 +3,7 @@ use pyo3::wrap_pyfunction;
 
 use crate::internal;
 use crate::external;
+use crate::composite;
 
 #[pyclass]
 pub struct Cfg {
@@ -16,6 +17,7 @@ pub struct Cfg {
 }
 
 pub struct Builder {
+    pub name: String,
     pub silent: bool,
     pub hgt: usize,
     pub wth: usize,
@@ -46,14 +48,15 @@ impl Cfg {
         self.silent = true;
     }
 
-    #[text_signature = "($self)"]
-    pub fn render(&self) {
+    #[text_signature = "($self, name)"]
+    pub fn render(&self, name: String) {
         if let Some(mut cam) = self.cam {
             if cam.aspect < 0. {
                 cam.aspect = self.wth as f64 / self.hgt as f64;
             }
             if let Some(sky) = &self.sky {
                 crate::render(Builder {
+                    name,
                     silent: self.silent,
                     hgt: self.hgt,
                     wth: self.wth,
@@ -80,50 +83,17 @@ impl Cfg {
         self.sky = Some(sky)
     }
 
-    pub fn add_obj(&mut self) {
-        let t2 = internal::Texture::Lambertian(internal::RGB(0.2, 0.8, 0.3));
-
-        let x = internal::Vec3(10., 0., 0.);
-        let y = internal::Vec3(0., 10., 0.);
-        let z = internal::Vec3(0., 0., 30.);
-
-        let ecirc = internal::Cylinder {
-            center1: x * 7.5 + y * 1.5,
-            center2: x * 7.5 + y * 1.5 + z,
-            radius: 15.,
-            texture: t2,
-        }
-        .build()
-        .remove(
-            internal::Cylinder {
-                center1: x * 7.5 + y * 1.5 - z * 0.1,
-                center2: x * 7.5 + y * 1.5 + z * 1.1,
-                radius: 10.,
-                texture: t2,
-            }
-            .build(),
-        )
-        .remove(
-            internal::Rhomboid {
-                a: x * 7.5 + y * 1.5 - z * 0.1,
-                u: x * 10. + y * 5.,
-                v: x * 10. - y * 5.,
-                w: z * 1.2,
-                texture: t2,
-            }
-            .build(),
-        );
-
-        let ehbar = internal::Rhomboid {
-            a: x * 6.5 + y * 1.,
-            u: x * 2. + y * 1.,
-            v: y * 0.57,
-            w: z,
-            texture: t2,
-        }
-        .build()
-        .wrap();
-        self.world.push(ecirc);
-        self.world.push(ehbar);
+    #[text_signature = "($self)"]
+    pub fn populate(&mut self) {
+        self.world.push_vec(composite::NewtonCradle {
+            a: internal::Vec3(-0.5, 0., -0.5),
+            angle: 0.,
+            size: 1.,
+        }.build());
+        self.world.push(internal::InfinitePlane {
+            orig: internal::Vec3(0., 0., 0.),
+            normal: internal::Vec3(0., 1., 0.),
+            texture: internal::Texture::Lambertian(internal::RGB(0.5, 0.5, 0.5)),
+        }.build().wrap());
     }
 }

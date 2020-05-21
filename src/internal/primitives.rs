@@ -1,4 +1,5 @@
 use crate::internal::*;
+use std::sync::Arc;
 
 #[derive(Copy, Clone)]
 pub struct Sphere {
@@ -9,7 +10,7 @@ pub struct Sphere {
 
 impl Sphere {
     pub fn build(self) -> Primitive {
-        Primitive(Box::new(self))
+        Primitive(Arc::new(self))
     }
 }
 
@@ -54,7 +55,7 @@ pub struct InfinitePlane {
 
 impl InfinitePlane {
     pub fn build(self) -> Primitive {
-        Primitive(Box::new(self))
+        Primitive(Arc::new(self))
     }
 }
 
@@ -94,7 +95,7 @@ pub struct Triangle {
 
 impl Triangle {
     pub fn build(self) -> Primitive {
-        Primitive(Box::new(self))
+        Primitive(Arc::new(self))
     }
 }
 
@@ -131,7 +132,7 @@ pub struct Parallelogram {
 
 impl Parallelogram {
     pub fn build(self) -> Primitive {
-        Primitive(Box::new(self))
+        Primitive(Arc::new(self))
     }
 }
 
@@ -238,7 +239,7 @@ impl Rhomboid {
             v: self.w,
             texture: self.texture,
         }; //
-        Primitive(Box::new(RhomboidObject([s1, s2, s3, s4, s5, s6])))
+        Primitive(Arc::new(RhomboidObject([s1, s2, s3, s4, s5, s6])))
     }
 }
 
@@ -270,7 +271,7 @@ pub struct EmptyCylinder {
 
 impl EmptyCylinder {
     pub fn build(self) -> Primitive {
-        Primitive(Box::new(self))
+        Primitive(Arc::new(self))
     }
 }
 
@@ -336,7 +337,7 @@ pub struct Disc {
 
 impl Disc {
     pub fn build(self) -> Primitive {
-        Primitive(Box::new(self))
+        Primitive(Arc::new(self))
     }
 }
 
@@ -385,7 +386,7 @@ pub struct CylinderObject {
 impl Cylinder {
     pub fn build(self) -> Primitive {
         let n = (self.center2 - self.center1).unit();
-        Primitive(Box::new(CylinderObject {
+        Primitive(Arc::new(CylinderObject {
             side: EmptyCylinder {
                 center1: self.center1,
                 center2: self.center2,
@@ -438,7 +439,7 @@ pub struct EmptyCone {
 
 impl EmptyCone {
     pub fn build(self) -> Primitive {
-        Primitive(Box::new(self))
+        Primitive(Arc::new(self))
     }
 }
 
@@ -516,7 +517,7 @@ pub struct ConeObject {
 
 impl Cone {
     pub fn build(self) -> Primitive {
-        Primitive(Box::new(ConeObject {
+        Primitive(Arc::new(ConeObject {
             side: EmptyCone {
                 orig: self.orig,
                 dir: self.dir,

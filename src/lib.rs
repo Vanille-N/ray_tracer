@@ -25,7 +25,7 @@ fn render(build: external::Builder) {
     let pool = ThreadPool::new(nb_cores);
     let barrier = Arc::new(Barrier::new(nb_cores + 1));
     for id in 0..nb_cores {
-        let mut stdout = BufWriter::new(File::create(&format!(".out{}.txt", id)).unwrap());
+        let mut stdout = BufWriter::new(File::create(&format!(".out-{}-{}.txt", &build.name, id)).unwrap());
         let rng = (id * build.hgt / nb_cores)..((id + 1) * build.hgt / nb_cores);
         let barrier = barrier.clone();
         let build = build.clone();
@@ -65,16 +65,16 @@ fn render(build: external::Builder) {
     if !build.silent {
         eprint!("\n\n\n\x1b[0m");
     }
-    let mut f = File::create("img.ppm").unwrap();
+    let mut f = File::create(&format!("img-{}.ppm", &build.name)).unwrap();
     writeln!(f, "P3\n{} {}\n255", build.wth, build.hgt).unwrap();
     for idx in (0..nb_cores).rev() {
         let output = Command::new("cat")
-            .arg(&format!(".out{}.txt", idx))
+            .arg(&format!(".out-{}-{}.txt", &build.name, idx))
             .output()
             .unwrap_or_else(|e| panic!("failed to execute process: {}", e));
         write!(f, "{}", String::from_utf8_lossy(&output.stdout)).unwrap();
         Command::new("rm")
-            .arg(&format!(".out{}.txt", idx))
+            .arg(&format!(".out-{}-{}.txt", &build.name, idx))
             .status()
             .expect("Failed to cleanup directory");
     }
@@ -86,5 +86,14 @@ fn pytrace(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_class::<external::Camera>().unwrap();
     m.add_class::<external::Vec3>().unwrap();
     m.add_class::<external::Sky>().unwrap();
+    m.add_class::<external::RGB>().unwrap();
+    m.add_class::<external::Texture>().unwrap();
+    m.add_class::<external::Sphere>().unwrap();
+    m.add_class::<external::InfinitePlane>().unwrap();
+    m.add_class::<external::Triangle>().unwrap();
+    m.add_class::<external::Parallelogram>().unwrap();
+    m.add_class::<external::Rhomboid>().unwrap();
+    m.add_class::<external::EmptyCylinder>().unwrap();
+    m.add_class::<external::Disc>().unwrap();
     Ok(())
 }

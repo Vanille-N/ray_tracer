@@ -56,7 +56,13 @@ impl HitRecord {
     }
 }
 
-pub struct Primitive(pub Box<dyn Hit>);
+pub struct Primitive(pub Arc<dyn Hit>);
+
+impl Clone for Primitive {
+    fn clone(&self) -> Self {
+        Primitive(self.0.clone())
+    }
+}
 
 impl Primitive {
     pub fn wrap(self) -> Interaction {
@@ -84,6 +90,7 @@ impl Primitive {
     }
 }
 
+#[derive(Clone)]
 pub struct Interaction(pub Vec<Primitive>, pub Vec<Primitive>);
 
 impl Interaction {
@@ -139,10 +146,6 @@ impl Interaction {
             }
         }
         true
-    }
-
-    pub fn lock(self) -> Arc<Self> {
-        Arc::new(self)
     }
 }
 
