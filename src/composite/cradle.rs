@@ -98,7 +98,7 @@ impl NewtonCradle {
             )
         };
         let (sphere1, ring1, thread1a, thread1b) =
-            make_ball(self.a + u * 0.5 + v * 0.15 + v.unit() * 3. * r + w * 0.3);
+            make_ball(self.a + u * 0.5 + v * 0.15 + v.unit() * 1. * r + w * 0.3);
         let (sphere2, ring2, thread2a, thread2b) =
             make_ball(self.a + u * 0.5 + v * 0.15 + v.unit() * 3. * r + w * 0.3);
         let (sphere3, ring3, thread3a, thread3b) =
