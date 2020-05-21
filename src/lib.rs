@@ -34,12 +34,10 @@ fn render(build: external::Builder) {
             let ni = build.hgt as f64;
             let nj = build.wth as f64;
             for i in rng.rev() {
-                if !build.silent {
-                    if i * 100 % build.hgt == 0 {
-                        let load = 100 - i * 100 / build.hgt;
-                        if load % 2 == 0 {
-                            eprint!("\x1b[{}C{}█\x1b[1A\n", load / 2, color);
-                        }
+                if !build.silent && i * 100 % build.hgt == 0 {
+                    let load = 100 - i * 100 / build.hgt;
+                    if load % 2 == 0 {
+                        eprint!("\x1b[{}C{}█\x1b[1A\n", load / 2, color);
                     }
                 }
 
