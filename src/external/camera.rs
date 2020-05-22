@@ -4,15 +4,16 @@ use pyo3::wrap_pyfunction;
 use crate::internal;
 
 #[pyclass]
+#[text_signature = "(x, y, z, /)"]
 #[derive(Clone, Copy)]
 pub struct Camera {
     pub target: internal::Vec3,
-    pub angle: f64,
-    pub rise: f64,
-    pub distance: f64,
-    pub tilt: f64,
-    pub aperture: f64,
-    pub aspect: f64,
+    #[pyo3(get, set)] pub angle: f64,
+    #[pyo3(get, set)] pub rise: f64,
+    #[pyo3(get, set)] pub distance: f64,
+    #[pyo3(get, set)] pub tilt: f64,
+    #[pyo3(get, set)] pub aperture: f64,
+    #[pyo3(get, set)] pub aspect: f64,
 }
 
 impl Camera {
@@ -44,19 +45,8 @@ impl Camera {
         }
     }
 
+    #[text_signature = "($self, x, y, z, /)"]
     pub fn set_target(&mut self, x: f64, y: f64, z: f64) {
         self.target = internal::Vec3(x, y, z);
-    }
-
-    pub fn set_distance(&mut self, d: f64) {
-        self.distance = d;
-    }
-
-    pub fn set_angle(&mut self, a: f64) {
-        self.angle = a;
-    }
-
-    pub fn set_rise(&mut self, r: f64) {
-        self.rise = r;
     }
 }
