@@ -3,7 +3,50 @@ use crate::internal;
 use pyo3::prelude::*;
 use pyo3::wrap_pyfunction;
 
-// I hope to eventually be able to shorten this file with macros...
+macro_rules! internalize {
+    ( $caller:ident, $member:ident, f64 ) => { $caller.$member };
+    ( $caller:ident, $member:ident, $t:tt ) => {
+        $caller.$member.to_internal() }
+}
+
+macro_rules! dvp {
+    ($name:ident, $( $member:ident : $t:tt ),*) => {
+        #[pyclass]
+        #[derive(Copy, Clone)]
+        struct $name {
+            $(
+                #[pyo3(get, set)]
+                $member: $t
+            ),*
+        }
+
+        #[pymethods]
+        impl $name {
+            #[new]
+            pub fn new(
+                $( $member: $t ),*
+            ) -> Self {
+                Self {
+                    $( $member ),*
+                }
+            }
+        }
+
+        impl ToInternal for $name {
+            fn to_internal(self) -> internal::Primitive {
+                internal:: $name {
+                    $( $member: internalize![self, $member, $t] ),*
+                }
+            }
+        }
+    }
+}
+
+
+
+
+
+
 
 #[pyclass]
 #[derive(Copy, Clone)]
