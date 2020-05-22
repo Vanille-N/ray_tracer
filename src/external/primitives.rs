@@ -28,6 +28,7 @@ macro_rules! dvp {
         #[pymethods]
         impl $name {
             #[new]
+            #[allow(clippy::new_ret_no_self)]
             pub fn new( $( $member: $t, )* texture: Texture ) -> Primitive {
                 Primitive {
                     obj: Arc::new(Self {
