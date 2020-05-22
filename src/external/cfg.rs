@@ -107,4 +107,9 @@ impl Cfg {
             .wrap(),
         );
     }
+
+    #[text_signature = "($self, object)"]
+    pub fn add_obj(&mut self, obj: Primitive) {
+        self.world.push(obj.extract());
+    }
 }

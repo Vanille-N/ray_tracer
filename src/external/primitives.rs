@@ -2,6 +2,7 @@ use crate::external::*;
 use crate::internal;
 use pyo3::prelude::*;
 use pyo3::wrap_pyfunction;
+use std::sync::Arc;
 
 macro_rules! internalize {
     ( $caller:ident, $member:ident, f64 ) => {
@@ -28,16 +29,18 @@ macro_rules! dvp {
         #[pymethods]
         impl $name {
             #[new]
-            pub fn new( $( $member: $t, )* texture: Texture ) -> Self {
-                Self {
-                    $( $member, )*
-                    texture,
+            pub fn new( $( $member: $t, )* texture: Texture ) -> Primitive {
+                Primitive {
+                    obj: Arc::new(Self {
+                        $( $member, )*
+                        texture,
+                    }),
                 }
             }
         }
 
         impl ToInternal for $name {
-            fn to_internal(self) -> internal::Primitive {
+            fn to_internal(&self) -> internal::Primitive {
                 internal:: $name {
                     $( $member: internalize![self, $member, $t], )*
                     texture: self.texture.to_internal(),
