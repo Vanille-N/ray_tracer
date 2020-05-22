@@ -9,6 +9,14 @@ macro_rules! auto_texture {
     }
 }
 
+macro_rules! empty_object {
+    () => {
+        fn inside(&self, _pos: Vec3) -> bool {
+            false
+        }
+    }
+}
+
 #[derive(Copy, Clone)]
 pub struct Sphere {
     pub center: Vec3,
@@ -82,10 +90,8 @@ impl Hit for InfinitePlane {
         }
     }
 
-    fn inside(&self, _pos: Vec3) -> bool {
-        false
-    }
     auto_texture!{}
+    empty_object!{}
 }
 
 #[derive(Clone, Copy)]
@@ -116,10 +122,8 @@ impl Hit for Triangle {
         }
     }
 
-    fn inside(&self, _pos: Vec3) -> bool {
-        false
-    }
     auto_texture!{}
+    empty_object!{}
 }
 
 #[derive(Clone, Copy)]
@@ -150,10 +154,8 @@ impl Hit for Parallelogram {
         }
     }
 
-    fn inside(&self, _pos: Vec3) -> bool {
-        false
-    }
     auto_texture!{}
+    empty_object!{}
 }
 
 #[derive(Clone, Copy)]
@@ -315,10 +317,8 @@ impl Hit for EmptyCylinder {
         rec
     }
 
-    fn inside(&self, _pos: Vec3) -> bool {
-        false
-    }
     auto_texture!{}
+    empty_object!{}
 }
 
 #[derive(Clone, Copy)]
@@ -353,10 +353,8 @@ impl Hit for Disc {
         HitRecord::Blank
     }
 
-    fn inside(&self, _pos: Vec3) -> bool {
-        false
-    }
     auto_texture!{}
+    empty_object!{}
 }
 
 #[derive(Clone, Copy)]
@@ -480,10 +478,8 @@ impl Hit for EmptyCone {
         rec
     }
 
-    fn inside(&self, _pos: Vec3) -> bool {
-        false
-    }
     auto_texture!{}
+    empty_object!{}
 }
 
 #[derive(Copy, Clone)]
