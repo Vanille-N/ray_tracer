@@ -1,7 +1,7 @@
+use crate::external::*;
+use crate::internal;
 use pyo3::prelude::*;
 use pyo3::wrap_pyfunction;
-use crate::internal;
-use crate::external::*;
 use std::sync::Arc;
 
 pub trait ToInternal {

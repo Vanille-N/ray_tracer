@@ -1,5 +1,5 @@
-use std::sync::Arc;
 use crate::internal::*;
+use std::sync::Arc;
 
 #[derive(Clone, Default)]
 pub struct World {
@@ -238,11 +238,9 @@ pub fn calc_color(r: &Ray, w: &World, sky: &Sky) -> RGB {
                 }
             }
         }
-        HitRecord::Blank => {
-            match w.background {
-                None => sky.color(r.dir),
-                Some(c) => c,
-            }
-        }
+        HitRecord::Blank => match w.background {
+            None => sky.color(r.dir),
+            Some(c) => c,
+        },
     }
 }

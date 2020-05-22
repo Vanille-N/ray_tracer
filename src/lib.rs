@@ -11,9 +11,9 @@ use std::process::Command;
 use std::sync::{Arc, Barrier};
 use threadpool::ThreadPool;
 
-mod internal;
 mod composite;
 mod external;
+mod internal;
 
 fn render(build: external::Builder) {
     let build = Arc::new(build);
@@ -25,7 +25,8 @@ fn render(build: external::Builder) {
     let pool = ThreadPool::new(nb_cores);
     let barrier = Arc::new(Barrier::new(nb_cores + 1));
     for id in 0..nb_cores {
-        let mut stdout = BufWriter::new(File::create(&format!(".out-{}-{}.txt", &build.name, id)).unwrap());
+        let mut stdout =
+            BufWriter::new(File::create(&format!(".out-{}-{}.txt", &build.name, id)).unwrap());
         let rng = (id * build.hgt / nb_cores)..((id + 1) * build.hgt / nb_cores);
         let barrier = barrier.clone();
         let build = build.clone();

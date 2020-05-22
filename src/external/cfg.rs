@@ -1,9 +1,9 @@
 use pyo3::prelude::*;
 use pyo3::wrap_pyfunction;
 
-use crate::internal;
-use crate::external::*;
 use crate::composite;
+use crate::external::*;
+use crate::internal;
 
 #[pyclass]
 pub struct Cfg {
@@ -26,7 +26,6 @@ pub struct Builder {
     pub world: internal::World,
     pub sky: internal::Sky,
 }
-
 
 #[pymethods]
 impl Cfg {
@@ -90,15 +89,22 @@ impl Cfg {
 
     #[text_signature = "($self)"]
     pub fn populate(&mut self) {
-        self.world.push_vec(composite::NewtonCradle {
-            a: internal::Vec3(-0.5, 0., -0.5),
-            angle: 0.,
-            size: 1.,
-        }.build());
-        self.world.push(internal::InfinitePlane {
-            orig: internal::Vec3(0., 0., 0.),
-            normal: internal::Vec3(0., 1., 0.),
-            texture: internal::Texture::Lambertian(internal::RGB(0.5, 0.5, 0.5)),
-        }.build().wrap());
+        self.world.push_vec(
+            composite::NewtonCradle {
+                a: internal::Vec3(-0.5, 0., -0.5),
+                angle: 0.,
+                size: 1.,
+            }
+            .build(),
+        );
+        self.world.push(
+            internal::InfinitePlane {
+                orig: internal::Vec3(0., 0., 0.),
+                normal: internal::Vec3(0., 1., 0.),
+                texture: internal::Texture::Lambertian(internal::RGB(0.5, 0.5, 0.5)),
+            }
+            .build()
+            .wrap(),
+        );
     }
 }

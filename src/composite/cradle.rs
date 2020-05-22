@@ -1,6 +1,5 @@
 use crate::internal::*;
 
-
 #[derive(Clone, Copy)]
 pub struct NewtonCradle {
     pub a: Vec3,
