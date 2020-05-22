@@ -1,6 +1,14 @@
 use crate::internal::*;
 use std::sync::Arc;
 
+macro_rules! auto_texture {
+    () => {
+        fn texture(&self) -> Texture {
+            self.texture
+        }
+    }
+}
+
 #[derive(Copy, Clone)]
 pub struct Sphere {
     pub center: Vec3,
@@ -37,9 +45,7 @@ impl Hit for Sphere {
         rec
     }
 
-    fn texture(&self) -> Texture {
-        self.texture
-    }
+    auto_texture!{}
 
     fn inside(&self, pos: Vec3) -> bool {
         (pos - self.center).len() < self.radius
@@ -76,13 +82,10 @@ impl Hit for InfinitePlane {
         }
     }
 
-    fn texture(&self) -> Texture {
-        self.texture
-    }
-
     fn inside(&self, _pos: Vec3) -> bool {
         false
     }
+    auto_texture!{}
 }
 
 #[derive(Clone, Copy)]
@@ -113,13 +116,10 @@ impl Hit for Triangle {
         }
     }
 
-    fn texture(&self) -> Texture {
-        self.texture
-    }
-
     fn inside(&self, _pos: Vec3) -> bool {
         false
     }
+    auto_texture!{}
 }
 
 #[derive(Clone, Copy)]
@@ -150,13 +150,10 @@ impl Hit for Parallelogram {
         }
     }
 
-    fn texture(&self) -> Texture {
-        self.texture
-    }
-
     fn inside(&self, _pos: Vec3) -> bool {
         false
     }
+    auto_texture!{}
 }
 
 #[derive(Clone, Copy)]
@@ -318,13 +315,10 @@ impl Hit for EmptyCylinder {
         rec
     }
 
-    fn texture(&self) -> Texture {
-        self.texture
-    }
-
     fn inside(&self, _pos: Vec3) -> bool {
         false
     }
+    auto_texture!{}
 }
 
 #[derive(Clone, Copy)]
@@ -359,13 +353,10 @@ impl Hit for Disc {
         HitRecord::Blank
     }
 
-    fn texture(&self) -> Texture {
-        self.texture
-    }
-
     fn inside(&self, _pos: Vec3) -> bool {
         false
     }
+    auto_texture!{}
 }
 
 #[derive(Clone, Copy)]
@@ -489,13 +480,10 @@ impl Hit for EmptyCone {
         rec
     }
 
-    fn texture(&self) -> Texture {
-        self.texture
-    }
-
     fn inside(&self, _pos: Vec3) -> bool {
         false
     }
+    auto_texture!{}
 }
 
 #[derive(Copy, Clone)]
