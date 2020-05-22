@@ -6,11 +6,12 @@ use crate::external::*;
 use crate::internal;
 
 #[pyclass]
+#[text_signature = "(wth, hgt, iter, /)"]
 pub struct Cfg {
     pub silent: bool,
-    pub hgt: usize,
-    pub wth: usize,
-    pub iter: usize,
+    #[pyo3(get, set)] pub hgt: usize,
+    #[pyo3(get, set)] pub wth: usize,
+    #[pyo3(get, set)] pub iter: usize,
     pub cam: Option<Camera>,
     pub world: internal::World,
     pub sky: Option<Sky>,
@@ -42,12 +43,12 @@ impl Cfg {
         }
     }
 
-    #[text_signature = "($self)"]
+    #[text_signature = "($self, /)"]
     pub fn silence(&mut self) {
         self.silent = true;
     }
 
-    #[text_signature = "($self, name)"]
+    #[text_signature = "($self, name, /)"]
     pub fn render(&self, name: String) {
         if let Some(mut cam) = self.cam {
             if cam.aspect < 0. {
@@ -72,22 +73,27 @@ impl Cfg {
         }
     }
 
-    #[text_signature = "($self, color)"]
-    pub fn set_background(&mut self, c: RGB) {
-        self.world.background = Some(c.to_internal());
+    #[text_signature = "($self, color, /)"]
+    pub fn set_background(&mut self, color: RGB) {
+        self.world.background = Some(color.to_internal());
     }
 
-    #[text_signature = "($self, sky)"]
+    #[text_signature = "($self)"]
+    pub fn true_background(&mut self) {
+        self.world.background = None;
+    }
+
+    #[text_signature = "($self, sky, /)"]
     pub fn set_cam(&mut self, cam: Camera) {
         self.cam = Some(cam);
     }
 
-    #[text_signature = "($self, sky)"]
+    #[text_signature = "($self, sky, /)"]
     pub fn set_sky(&mut self, sky: Sky) {
         self.sky = Some(sky)
     }
 
-    #[text_signature = "($self)"]
+    #[text_signature = "($self, /)"]
     pub fn populate(&mut self) {
         self.world.push_vec(
             composite::NewtonCradle {
@@ -108,8 +114,8 @@ impl Cfg {
         );
     }
 
-    #[text_signature = "($self, object)"]
-    pub fn add_obj(&mut self, obj: Primitive) {
-        self.world.push(obj.extract());
+    #[text_signature = "($self, object, /)"]
+    pub fn add_obj(&mut self, object: Primitive) {
+        self.world.push(object.extract());
     }
 }
