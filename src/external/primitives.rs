@@ -4,30 +4,34 @@ use pyo3::prelude::*;
 use pyo3::wrap_pyfunction;
 
 macro_rules! internalize {
-    ( $caller:ident, $member:ident, f64 ) => { $caller.$member };
+    ( $caller:ident, $member:ident, f64 ) => {
+        $caller.$member
+    };
     ( $caller:ident, $member:ident, $t:tt ) => {
-        $caller.$member.to_internal() }
+        $caller.$member.to_internal()
+    }
 }
 
 macro_rules! dvp {
-    ($name:ident, $( $member:ident : $t:tt ),*) => {
+    ($name:ident, $( $member:ident : $t:tt, )*) => {
         #[pyclass]
         #[derive(Copy, Clone)]
-        struct $name {
+        pub struct $name {
             $(
                 #[pyo3(get, set)]
-                $member: $t
-            ),*
+                pub $member: $t,
+            )*
+            pub texture: Texture,
         }
+
 
         #[pymethods]
         impl $name {
             #[new]
-            pub fn new(
-                $( $member: $t ),*
-            ) -> Self {
+            pub fn new( $( $member: $t, )* texture: Texture ) -> Self {
                 Self {
-                    $( $member ),*
+                    $( $member, )*
+                    texture,
                 }
             }
         }
@@ -35,8 +39,9 @@ macro_rules! dvp {
         impl ToInternal for $name {
             fn to_internal(self) -> internal::Primitive {
                 internal:: $name {
-                    $( $member: internalize![self, $member, $t] ),*
-                }
+                    $( $member: internalize![self, $member, $t], )*
+                    texture: self.texture.to_internal(),
+                }.build()
             }
         }
     }
