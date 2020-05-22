@@ -6,7 +6,7 @@ macro_rules! auto_texture {
         fn texture(&self) -> Texture {
             self.texture
         }
-    }
+    };
 }
 
 macro_rules! empty_object {
@@ -14,7 +14,7 @@ macro_rules! empty_object {
         fn inside(&self, _pos: Vec3) -> bool {
             false
         }
-    }
+    };
 }
 
 #[derive(Copy, Clone)]
@@ -53,7 +53,7 @@ impl Hit for Sphere {
         rec
     }
 
-    auto_texture!{}
+    auto_texture! {}
 
     fn inside(&self, pos: Vec3) -> bool {
         (pos - self.center).len() < self.radius
@@ -90,8 +90,8 @@ impl Hit for InfinitePlane {
         }
     }
 
-    auto_texture!{}
-    empty_object!{}
+    auto_texture! {}
+    empty_object! {}
 }
 
 #[derive(Clone, Copy)]
@@ -122,8 +122,8 @@ impl Hit for Triangle {
         }
     }
 
-    auto_texture!{}
-    empty_object!{}
+    auto_texture! {}
+    empty_object! {}
 }
 
 #[derive(Clone, Copy)]
@@ -154,8 +154,8 @@ impl Hit for Parallelogram {
         }
     }
 
-    auto_texture!{}
-    empty_object!{}
+    auto_texture! {}
+    empty_object! {}
 }
 
 #[derive(Clone, Copy)]
@@ -317,8 +317,8 @@ impl Hit for EmptyCylinder {
         rec
     }
 
-    auto_texture!{}
-    empty_object!{}
+    auto_texture! {}
+    empty_object! {}
 }
 
 #[derive(Clone, Copy)]
@@ -353,8 +353,8 @@ impl Hit for Disc {
         HitRecord::Blank
     }
 
-    auto_texture!{}
-    empty_object!{}
+    auto_texture! {}
+    empty_object! {}
 }
 
 #[derive(Clone, Copy)]
@@ -478,8 +478,8 @@ impl Hit for EmptyCone {
         rec
     }
 
-    auto_texture!{}
-    empty_object!{}
+    auto_texture! {}
+    empty_object! {}
 }
 
 #[derive(Copy, Clone)]

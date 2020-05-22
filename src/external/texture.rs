@@ -31,7 +31,7 @@ macro_rules! color {
         impl RGB {
             #[staticmethod]
             #[text_signature = "(/)"]
-            pub fn $name () -> RGB {
+            pub fn $name() -> RGB {
                 RGB {
                     r: $r,
                     g: $g,
@@ -39,7 +39,7 @@ macro_rules! color {
                 }
             }
         }
-    }
+    };
 }
 
 color!(red: _, 1.0, 0.0, 0.0);

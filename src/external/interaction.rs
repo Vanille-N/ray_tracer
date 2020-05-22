@@ -4,7 +4,7 @@ use pyo3::prelude::*;
 use pyo3::wrap_pyfunction;
 use std::sync::Arc;
 
-pub trait ToInternal: {
+pub trait ToInternal {
     fn to_internal(&self) -> internal::Primitive;
 }
 
@@ -19,7 +19,6 @@ impl Primitive {
         self.obj.to_internal().wrap()
     }
 }
-
 
 // pub enum Interaction {
 //     Intersection,

@@ -9,9 +9,12 @@ use crate::internal;
 #[text_signature = "(wth, hgt, iter, /)"]
 pub struct Cfg {
     pub silent: bool,
-    #[pyo3(get, set)] pub hgt: usize,
-    #[pyo3(get, set)] pub wth: usize,
-    #[pyo3(get, set)] pub iter: usize,
+    #[pyo3(get, set)]
+    pub hgt: usize,
+    #[pyo3(get, set)]
+    pub wth: usize,
+    #[pyo3(get, set)]
+    pub iter: usize,
     pub cam: Option<Camera>,
     pub world: internal::World,
     pub sky: Option<Sky>,

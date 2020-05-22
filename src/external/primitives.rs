@@ -10,7 +10,7 @@ macro_rules! internalize {
     };
     ( $caller:ident, $member:ident, $t:tt ) => {
         $caller.$member.to_internal()
-    }
+    };
 }
 
 macro_rules! dvp {
@@ -49,54 +49,54 @@ macro_rules! dvp {
     }
 }
 
-dvp!{Sphere,
+dvp! {Sphere,
     center: Vec3,
     radius: f64,
 }
 
-dvp!{InfinitePlane,
+dvp! {InfinitePlane,
     orig: Vec3,
     normal: Vec3,
 }
 
-dvp!{Triangle,
+dvp! {Triangle,
     a: Vec3,
     u: Vec3,
     v: Vec3,
 }
 
-dvp!{Parallelogram,
+dvp! {Parallelogram,
     a: Vec3,
     u: Vec3,
     v: Vec3,
 }
 
-dvp!{Rhomboid,
+dvp! {Rhomboid,
     a: Vec3,
     u: Vec3,
     v: Vec3,
     w: Vec3,
 }
 
-dvp!{EmptyCylinder,
+dvp! {EmptyCylinder,
     center1: Vec3,
     center2: Vec3,
     radius: f64,
 }
 
-dvp!{Disc,
+dvp! {Disc,
     center: Vec3,
     normal: Vec3,
     radius: f64,
 }
 
-dvp!{Cylinder,
+dvp! {Cylinder,
     center1: Vec3,
     center2: Vec3,
     radius: f64,
 }
 
-dvp!{EmptyCone,
+dvp! {EmptyCone,
     orig: Vec3,
     dir: Vec3,
     angle: f64,
@@ -104,7 +104,7 @@ dvp!{EmptyCone,
     end: f64,
 }
 
-dvp!{Cone,
+dvp! {Cone,
     orig: Vec3,
     dir: Vec3,
     angle: f64,

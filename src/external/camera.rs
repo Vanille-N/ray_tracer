@@ -8,12 +8,18 @@ use crate::internal;
 #[derive(Clone, Copy)]
 pub struct Camera {
     pub target: internal::Vec3,
-    #[pyo3(get, set)] pub angle: f64,
-    #[pyo3(get, set)] pub rise: f64,
-    #[pyo3(get, set)] pub distance: f64,
-    #[pyo3(get, set)] pub tilt: f64,
-    #[pyo3(get, set)] pub aperture: f64,
-    #[pyo3(get, set)] pub aspect: f64,
+    #[pyo3(get, set)]
+    pub angle: f64,
+    #[pyo3(get, set)]
+    pub rise: f64,
+    #[pyo3(get, set)]
+    pub distance: f64,
+    #[pyo3(get, set)]
+    pub tilt: f64,
+    #[pyo3(get, set)]
+    pub aperture: f64,
+    #[pyo3(get, set)]
+    pub aspect: f64,
 }
 
 impl Camera {
