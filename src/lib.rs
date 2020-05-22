@@ -94,5 +94,8 @@ fn pytrace(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_class::<external::Rhomboid>().unwrap();
     m.add_class::<external::EmptyCylinder>().unwrap();
     m.add_class::<external::Disc>().unwrap();
+    m.add_class::<external::Cylinder>().unwrap();
+    m.add_class::<external::EmptyCone>().unwrap();
+    m.add_class::<external::Cone>().unwrap();
     Ok(())
 }
