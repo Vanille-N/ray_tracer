@@ -19,10 +19,9 @@ macro_rules! dvp {
         #[derive(Copy, Clone)]
         pub struct $name {
             $(
-                #[pyo3(get, set)]
-                pub $member: $t,
+                #[pyo3(get, set)] pub $member: $t,
             )*
-            pub texture: Texture,
+            #[pyo3(get, set)] pub texture: Texture,
         }
 
 
