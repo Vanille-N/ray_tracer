@@ -3,6 +3,7 @@ use pyo3::prelude::*;
 use pyo3::wrap_pyfunction;
 
 #[pyclass]
+#[text_signature = "(r, g, b, /)"]
 #[derive(Copy, Clone)]
 pub struct RGB {
     pub r: f64,
@@ -139,30 +140,34 @@ pub struct Texture {
 #[pymethods]
 impl Texture {
     #[staticmethod]
-    pub fn lambertian(c: RGB) -> Self {
+    #[text_signature = "(color, /)"]
+    pub fn lambertian(color: RGB) -> Self {
         Self {
-            contents: internal::Texture::Lambertian(c.to_internal()),
+            contents: internal::Texture::Lambertian(color.to_internal()),
         }
     }
 
     #[staticmethod]
-    pub fn metal(c: RGB, fuzzy: f64) -> Self {
+    #[text_signature = "(color, fuzzy, /)"]
+    pub fn metal(color: RGB, fuzzy: f64) -> Self {
         Self {
-            contents: internal::Texture::Metal(c.to_internal(), fuzzy),
+            contents: internal::Texture::Metal(color.to_internal(), fuzzy),
         }
     }
 
     #[staticmethod]
-    pub fn light(c: RGB) -> Self {
+    #[text_signature = "(color, /)"]
+    pub fn light(color: RGB) -> Self {
         Self {
-            contents: internal::Texture::Light(c.to_internal()),
+            contents: internal::Texture::Light(color.to_internal()),
         }
     }
 
     #[staticmethod]
-    pub fn dielectric(c: RGB, idx: f64) -> Self {
+    #[text_signature = "(color, index, /)"]
+    pub fn dielectric(color: RGB, index: f64) -> Self {
         Self {
-            contents: internal::Texture::Dielectric(c.to_internal(), idx),
+            contents: internal::Texture::Dielectric(color.to_internal(), index),
         }
     }
 }
