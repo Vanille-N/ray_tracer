@@ -8,10 +8,6 @@ edition = "2018"
 name = "trace"
 crate-type = ["cdylib"]
 
-[[bin]]
-name = "main"
-path = "src/main.rs"
-
 [dependencies]
 rand = "0.7"
 threadpool = "1.8.*"

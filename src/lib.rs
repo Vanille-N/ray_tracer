@@ -1,9 +1,9 @@
 use pyo3::prelude::*;
 
-pub mod composite;
-pub mod external;
-pub mod internal;
-pub mod render;
+mod composite;
+mod external;
+mod internal;
+mod render;
 
 #[pymodule]
 fn pytrace(_py: Python, m: &PyModule) -> PyResult<()> {
