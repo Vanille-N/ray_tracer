@@ -1,6 +1,5 @@
 use crate::internal;
 use pyo3::prelude::*;
-use pyo3::wrap_pyfunction;
 
 #[pyclass]
 #[text_signature = "(r, g, b, /)"]

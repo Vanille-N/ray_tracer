@@ -25,6 +25,10 @@ impl World {
         }
     }
 
+    pub fn set_background(&mut self, c: RGB) {
+        self.background = Some(c);
+    }
+
     pub fn hit(&self, r: &Ray) -> HitRecord {
         let mut rec = HitRecord::Blank;
         for group in &self.obj {

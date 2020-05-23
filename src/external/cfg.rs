@@ -1,9 +1,9 @@
 use pyo3::prelude::*;
-use pyo3::wrap_pyfunction;
 
 use crate::composite;
 use crate::external::*;
 use crate::internal;
+use crate::render::*;
 
 #[pyclass]
 #[text_signature = "(wth, hgt, iter, /)"]
@@ -58,7 +58,7 @@ impl Cfg {
                 cam.aspect = self.wth as f64 / self.hgt as f64;
             }
             if let Some(sky) = &self.sky {
-                crate::render(Builder {
+                render(Builder {
                     name,
                     silent: self.silent,
                     hgt: self.hgt,
