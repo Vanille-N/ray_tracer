@@ -4,8 +4,9 @@ mod interaction;
 mod primitives;
 mod texture;
 mod vec3;
+mod sky;
 
-pub use crate::internal::Sky;
+pub use sky::*;
 pub use camera::*;
 pub use cfg::*;
 pub use interaction::*;

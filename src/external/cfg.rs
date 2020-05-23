@@ -66,7 +66,7 @@ impl Cfg {
                     iter: self.iter,
                     cam: cam.to_internal(),
                     world: self.world.clone(),
-                    sky: sky.clone(),
+                    sky: sky.to_internal(),
                 })
             } else {
                 panic!("No sky provided")

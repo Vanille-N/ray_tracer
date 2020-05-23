@@ -1,10 +1,5 @@
-use crate::external;
 use crate::internal::*;
 
-use pyo3::prelude::*;
-use pyo3::wrap_pyfunction;
-
-#[pyclass]
 #[derive(Clone)]
 pub struct Sky {
     map: Vec<Vec<RGB>>,
@@ -12,9 +7,7 @@ pub struct Sky {
     wth: usize,
 }
 
-#[pymethods]
 impl Sky {
-    #[new]
     pub fn new(file: &str) -> Self {
         let img = std::fs::read_to_string(file)
             .unwrap()
@@ -42,13 +35,11 @@ impl Sky {
         Self { map, hgt, wth }
     }
 
-    #[text_signature = "()"]
-    #[staticmethod]
-    pub fn uniform(c: external::RGB) -> Self {
+    pub fn uniform(c: RGB) -> Self {
         Self {
             hgt: 1,
             wth: 1,
-            map: vec![vec![c.to_internal()]],
+            map: vec![vec![c]],
         }
     }
 }
