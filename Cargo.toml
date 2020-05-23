@@ -5,8 +5,12 @@ authors = ["Vanille-N <neven.villani@gmail.com>"]
 edition = "2018"
 
 [lib]
-name = "pytrace"
+name = "trace"
 crate-type = ["cdylib"]
+
+[[bin]]
+name = "main"
+path = "src/main.rs"
 
 [dependencies]
 rand = "0.7"
