@@ -1,5 +1,4 @@
 use crate::internal::*;
-use std::sync::Arc;
 
 #[derive(Clone, Default)]
 pub struct World {

@@ -5,6 +5,7 @@ use crate::internal::EPSILON;
 #[derive(Clone, Copy)]
 pub struct Vec3(pub f64, pub f64, pub f64);
 
+#[allow(clippy::len_without_is_empty)]
 impl Vec3 {
     pub fn len(&self) -> f64 {
         (self.0.powi(2) + self.1.powi(2) + self.2.powi(2)).sqrt()
