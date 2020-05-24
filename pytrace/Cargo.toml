@@ -1,0 +1,16 @@
+[package]
+name = "pytrace"
+version = "0.1.0"
+authors = ["Vanille-N <neven.villani@gmail.com>"]
+edition = "2018"
+
+[lib]
+name = "pytrace"
+crate-type = ["cdylib"]
+
+[dependencies]
+libtrace = {path = "../libtrace"}
+
+[dependencies.pyo3]
+version = "0.10.1"
+features = ["extension-module"]
