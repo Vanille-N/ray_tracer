@@ -1,5 +1,12 @@
 #!/usr/bin/python3
 
+################################
+# THIS FILE IS OUT OF DATE     #
+# It has not yet been modified #
+# to adjust to the new version #
+# of the library               #
+################################
+
 from pytrace import *
 from os import system
 
