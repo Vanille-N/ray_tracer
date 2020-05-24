@@ -1,12 +1,12 @@
-/target
+target
 .*.txt
 *.ppm
 exec
 *.jpg
 perf.data
-!data/*
 deps.png
 Cargo.lock
 flame.svg
-perf.data.old
 *.so
+
+!data/*
