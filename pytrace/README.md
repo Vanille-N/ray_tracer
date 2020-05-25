@@ -2,6 +2,11 @@
 
 ### How to use
 
+```diff
+- WARNING
+PyTrace uses PyO3, and can thus only be built with the nightly Rust compiler.
+```
+
 - Run `cargo build --release`
 - Copy `target/release/libpytrace.so` anywhere in your `$PATH` under the name `pytrace.so`. For example, any of the following could work, depending on your platform and environment:
     - `cp target/release/libpytrace.so usr/bin/pytrace.so`
