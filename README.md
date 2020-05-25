@@ -2,6 +2,8 @@
 
 ## A Rust library for ray path tracing and image generation
 
+<img src="img/NeV.gif" size=600>
+
 ### Contents
 - `libtrace` contains most of the path tracing logic.
 - `rstrace` is a standalone `.rs` file that gives access to the internal library. It can be used to generate scenes.
