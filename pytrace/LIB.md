@@ -64,6 +64,8 @@ CLASSES
      |
      |  add_obj(self, object, /)
      |
+     |  clear(self, /)
+     |
      |  populate(self, /)
      |
      |  render(self, name, /)
