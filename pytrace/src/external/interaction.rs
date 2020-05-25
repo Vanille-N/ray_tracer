@@ -92,8 +92,12 @@ impl InterTree {
                             for x in acc {
                                 let internal::Interaction(x_in, x_out) = &x;
                                 let internal::Interaction(y_in, y_out) = &y;
-                                res.push(internal::Interaction(x_in.to_vec(), vec_union(&x_out, &y_in)));
-                                res.push(internal::Interaction(vec_union(&x_in, &y_out), x_out.to_vec()));
+                                for z in y_in {
+                                    res.push(internal::Interaction(x_in.to_vec(), vec_union(&x_out, &[z.clone()])));
+                                }
+                                if y_out.len() > 0 {
+                                    res.push(internal::Interaction(vec_union(&x_in, &y_out), x_out.to_vec()));
+                                }
                             }
                         }
                         res
