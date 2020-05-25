@@ -21,7 +21,7 @@ pub fn render(build: Builder) {
     let build = Arc::new(build);
     let nb_cores = 5;
     if !build.silent {
-        eprint!("\n\nRendering image...\n");
+        eprint!("Rendering image...\n");
         eprint!("|\x1b[50C|\x1b[1A\n");
     }
     let pool = ThreadPool::new(nb_cores);
@@ -64,7 +64,7 @@ pub fn render(build: Builder) {
     }
     barrier.wait();
     if !build.silent {
-        eprint!("\n\n\n\x1b[0m");
+        eprint!("\n\x1b[0m");
     }
     let mut f = File::create(&format!("img-{}.ppm", &build.name)).unwrap();
     writeln!(f, "P3\n{} {}\n255", build.wth, build.hgt).unwrap();
