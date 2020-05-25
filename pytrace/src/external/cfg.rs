@@ -112,7 +112,7 @@ impl Cfg {
     }
 
     #[text_signature = "($self, object, /)"]
-    pub fn add_obj(&mut self, object: Primitive) {
-        self.world.push(object.extract());
+    pub fn add_obj(&mut self, object: Construct) {
+        self.world.push_vec(object.contents.canonical());
     }
 }

@@ -27,13 +27,13 @@ macro_rules! dvp {
         impl $name {
             #[new]
             #[allow(clippy::new_ret_no_self)]
-            pub fn new( $( $member: $t, )* texture: Texture ) -> Primitive {
+            pub fn new( $( $member: $t, )* texture: Texture ) -> Construct {
                 Primitive {
                     obj: Arc::new(Self {
                         $( $member, )*
                         texture,
                     }),
-                }
+                }.wrap()
             }
         }
 

@@ -8,6 +8,12 @@ pub trait ToInternal {
 
 #[pyclass]
 #[derive(Clone)]
+pub struct Construct {
+    pub contents: InterTree,
+}
+
+#[pyclass]
+#[derive(Clone)]
 pub struct Primitive {
     pub obj: Arc<dyn ToInternal>,
 }
@@ -17,23 +23,31 @@ impl Primitive {
         self.obj.to_internal().wrap()
     }
 
-    pub fn wrap(self) -> InterTree {
-        InterTree::Item(self)
+    pub fn wrap(self) -> Construct {
+        InterTree::Item(self).wrap()
     }
 }
 
+#[derive(Copy, Clone)]
 pub enum Interaction {
     Inter,
     Diff,
     Union,
 }
 
+#[derive(Clone)]
 pub enum InterTree {
     Item(Primitive),
     Node(Interaction, Box<InterTree>, Box<InterTree>),
 }
 
 impl InterTree {
+    pub fn wrap(self) -> Construct {
+        Construct {
+            contents: self,
+        }
+    }
+
     pub fn inter(self, other: Self) -> Self {
         Self::Node(Interaction::Inter, Box::new(self), Box::new(other))
     }
@@ -100,4 +114,25 @@ fn vec_union<T: Clone>(a: &[T], b: &[T]) -> Vec<T> {
         res.push(x.clone());
     }
     res
+}
+
+#[pymethods]
+impl Construct {
+    pub fn inter(&self, other: &Construct) -> Self {
+        Self {
+            contents: self.contents.clone().inter(other.contents.clone()),
+        }
+    }
+
+    pub fn union(&self, other: &Construct) -> Self {
+        Self {
+            contents: self.contents.clone().union(other.contents.clone()),
+        }
+    }
+
+    pub fn diff(&self, other: &Construct) -> Self {
+        Self {
+            contents: self.contents.clone().diff(other.contents.clone()),
+        }
+    }
 }
