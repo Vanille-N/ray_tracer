@@ -46,7 +46,58 @@ impl InterTree {
         Self::Node(Interaction::Union, Box::new(self), Box::new(other))
     }
 
-    pub fn canonical(self) -> Vec<internal::Interaction> {
-        unimplemented!()
+    pub fn canonical(&self) -> Vec<internal::Interaction> {
+        match self {
+            Self::Item(p) => vec![p.clone().extract()],
+            Self::Node(inter, a, b) => {
+                let a_can = a.canonical();
+                let b_can = b.canonical();
+                match inter {
+                    Interaction::Union => vec_union(&a_can, &b_can),
+                    Interaction::Inter => {
+                        // (A \ B) & (C \ D) = (A & C) \ (B | D)
+                        let mut res = Vec::new();
+                        for x in &a_can {
+                            for y in &b_can {
+                                let internal::Interaction(x_in, x_out) = x;
+                                let internal::Interaction(y_in, y_out) = y;
+                                res.push(internal::Interaction(
+                                    vec_union(x_in, y_in),
+                                    vec_union(x_out, y_out),
+                                ));
+                            }
+                        }
+                        res
+                    }
+                    Interaction::Diff => {
+                        // (A \ B) \ (C \ D) = (A \ (B | C)) | ((A & D) \ B)
+                        let mut res = a_can;
+                        for y in b_can {
+                            let acc = res;
+                            res = Vec::new();
+                            for x in acc {
+                                let internal::Interaction(x_in, x_out) = &x;
+                                let internal::Interaction(y_in, y_out) = &y;
+                                res.push(internal::Interaction(x_in.to_vec(), vec_union(&x_out, &y_in)));
+                                res.push(internal::Interaction(vec_union(&x_in, &y_out), x_out.to_vec()));
+                            }
+                        }
+                        res
+                    }
+                }
+            }
+        }
     }
+}
+
+
+fn vec_union<T: Clone>(a: &[T], b: &[T]) -> Vec<T> {
+    let mut res = Vec::new();
+    for x in a {
+        res.push(x.clone());
+    }
+    for x in b {
+        res.push(x.clone());
+    }
+    res
 }
