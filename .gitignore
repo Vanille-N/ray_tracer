@@ -8,5 +8,6 @@ deps.png
 Cargo.lock
 flame.svg
 *.so
+*.avi
 
 !data/*
