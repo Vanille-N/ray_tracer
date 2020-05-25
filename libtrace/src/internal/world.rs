@@ -24,6 +24,10 @@ impl World {
         }
     }
 
+    pub fn clear(&mut self) {
+        self.obj.clear();
+    }
+
     pub fn set_background(&mut self, c: RGB) {
         self.background = Some(c);
     }

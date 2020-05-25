@@ -106,6 +106,11 @@ impl Cfg {
         );
     }
 
+    #[text_signature = "($self, /)"]
+    pub fn clear(&mut self) {
+        self.world.clear();
+    }
+
     #[text_signature = "($self, object, /)"]
     pub fn add_obj(&mut self, object: Primitive) {
         self.world.push(object.extract());
