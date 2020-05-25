@@ -23,7 +23,6 @@ macro_rules! dvp {
             #[pyo3(get, set)] pub texture: Texture,
         }
 
-
         #[pymethods]
         impl $name {
             #[new]

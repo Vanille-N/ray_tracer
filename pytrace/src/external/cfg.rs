@@ -1,9 +1,9 @@
 use pyo3::prelude::*;
 
+use crate::external::*;
 use libtrace::composite;
 use libtrace::internal;
 use libtrace::render::*;
-use crate::external::*;
 
 #[pyclass]
 #[text_signature = "(wth, hgt, iter, /)"]
