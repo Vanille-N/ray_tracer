@@ -1,16 +1,14 @@
 #!/usr/bin/python3
 
 from pytrace import *
+from os import system
 
-tr = Cfg(1000, 500, 20)
+tr = Cfg(500, 250, 40)
 
-cam = Camera(75, 15, 0)
-cam.angle = 20
+cam = Camera(75, 15, 15)
 cam.rise = 20
 cam.distance = 300
 cam.aperture = 20
-
-tr.set_cam(cam)
 
 sky = Sky.uniform(RGB(1, 1, 1))
 tr.set_sky(sky)
@@ -44,9 +42,9 @@ vltop = Rhomboid(x.mul(9.).add(y.mul(4.5)), y.mul(0.5), x.mul(1.4), z, t3)
 
 vlserif = Rhomboid(x.mul(9.25).add(y.mul(4.25)), y.mul(0.25), x, z, t3).diff(Cylinder(x.mul(9.25).add(y.mul(4.25)).add(z.mul(-0.1)), x.mul(9.25).add(y.mul(4.25)).add(z.mul(1.1)), 2.5, t3)).diff(Cylinder(x.mul(10.25).add(y.mul(4.25)).add(z.mul(-0.1)), x.mul(10.25).add(y.mul(4.25)).add(z.mul(1.1)), 2.5, t3))
 
-vmidlo = Cylinder(x.mul(5.13).add(y.mul(9.88)), x.mul(5.13).add(y.mul(9.88)).add(z), 110.3, t3).inter(Rhomboid(x.mul(9.5), y.mul(5.), x.mul(6.), z.mul(1.2), t3)).diff(Cylinder(x.mul(5.13).add(y.mul(9.88)).add(z.mul(-0.1)), x.mul(5.13).add(y.mul(9.88)).add(z.mul(1.1)), 105., t3))
+vmidlo = Cylinder(x.mul(5.13).add(y.mul(9.88)), x.mul(5.13).add(y.mul(9.88)).add(z), 110.3, t3).inter(Rhomboid(x.mul(9.5).add(z.mul(-0.1)), y.mul(5.), x.mul(6.), z.mul(1.2), t3)).diff(Cylinder(x.mul(5.13).add(y.mul(9.88)).add(z.mul(-0.1)), x.mul(5.13).add(y.mul(9.88)).add(z.mul(1.1)), 105., t3))
 
-vmidhi = Cylinder(x.mul(5.13).add(y.mul(9.88)), x.mul(5.13).add(y.mul(9.88)).add(z), 100., t3).inter(Rhomboid(x.mul(9.5), y.mul(5.), x.mul(6.), z.mul(1.2), t3)).diff(Cylinder(x.mul(5.13).add(y.mul(9.88)).add(z.mul(-0.1)), x.mul(5.13).add(y.mul(9.88)).add(z.mul(1.1)), 95., t3))
+vmidhi = Cylinder(x.mul(5.13).add(y.mul(9.88)), x.mul(5.13).add(y.mul(9.88)).add(z), 100., t3).inter(Rhomboid(x.mul(9.5).add(z.mul(-0.1)), y.mul(5.), x.mul(6.), z.mul(1.2), t3)).diff(Cylinder(x.mul(5.13).add(y.mul(9.88)).add(z.mul(-0.1)), x.mul(5.13).add(y.mul(9.88)).add(z.mul(1.1)), 95., t3))
 
 vrtop = Rhomboid(x.mul(13.5).add(y.mul(4.5)), y.mul(0.5), x.mul(0.95), z, t3)
 
@@ -66,4 +64,15 @@ tr.add_obj(vmidlo);
 tr.add_obj(vmidhi);
 tr.add_obj(vrtop);
 
-tr.render("NeV")
+def lpad(l, n):
+    return "0" * (l - len(str(n))) + str(n)
+
+for i in range(180):
+    cam.angle = i*2
+    tr.set_cam(cam)
+    tr.render("NeV-" + lpad(5, i))
+    print(i)
+
+system("rm sky.avi")
+system("ffmpeg -pattern_type glob -framerate 25 -i \"img-NeV-*.ppm\" -vcodec libx264 sky.avi")
+system("rm img-NeV-*.ppm")
