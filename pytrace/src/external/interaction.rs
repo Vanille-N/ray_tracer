@@ -43,9 +43,7 @@ pub enum InterTree {
 
 impl InterTree {
     pub fn wrap(self) -> Construct {
-        Construct {
-            contents: self,
-        }
+        Construct { contents: self }
     }
 
     pub fn inter(self, other: Self) -> Self {
@@ -93,10 +91,16 @@ impl InterTree {
                                 let internal::Interaction(x_in, x_out) = &x;
                                 let internal::Interaction(y_in, y_out) = &y;
                                 for z in y_in {
-                                    res.push(internal::Interaction(x_in.to_vec(), vec_union(&x_out, &[z.clone()])));
+                                    res.push(internal::Interaction(
+                                        x_in.to_vec(),
+                                        vec_union(&x_out, &[z.clone()]),
+                                    ));
                                 }
                                 if y_out.len() > 0 {
-                                    res.push(internal::Interaction(vec_union(&x_in, &y_out), x_out.to_vec()));
+                                    res.push(internal::Interaction(
+                                        vec_union(&x_in, &y_out),
+                                        x_out.to_vec(),
+                                    ));
                                 }
                             }
                         }
@@ -107,7 +111,6 @@ impl InterTree {
         }
     }
 }
-
 
 fn vec_union<T: Clone>(a: &[T], b: &[T]) -> Vec<T> {
     let mut res = Vec::new();

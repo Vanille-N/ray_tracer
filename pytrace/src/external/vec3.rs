@@ -21,11 +21,19 @@ impl Vec3 {
     }
 
     pub fn mul(self, f: f64) -> Self {
-        Self { x: self.x * f, y: self.y * f, z: self.z * f }
+        Self {
+            x: self.x * f,
+            y: self.y * f,
+            z: self.z * f,
+        }
     }
 
     pub fn add(self, v: Self) -> Self {
-        Self { x: self.x + v.x, y: self.y + v.y, z: self.z + v.z }
+        Self {
+            x: self.x + v.x,
+            y: self.y + v.y,
+            z: self.z + v.z,
+        }
     }
 }
 
