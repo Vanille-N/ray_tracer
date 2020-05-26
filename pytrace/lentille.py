@@ -3,7 +3,7 @@
 from pytrace import *
 from os import system
 
-tr = Cfg(100, 100, 10)
+tr = Cfg(400, 400, 200)
 sky = Sky.uniform(RGB(1, 1, 1))
 tr.set_sky(sky)
 #tr.set_background(RGB(0, 0, 0))
@@ -19,9 +19,16 @@ s2 = Sphere(Vec3(0, 0, -e/2 + r), r, glass)
 
 rtext = Texture.lambertian(RGB(0.1, 0.1, 0.1))
 
-ring = Cylinder(Vec3(0, 0, e/2), Vec3(0, 0, -e/2), (e*r)**(0.5), rtext).diff(Cylinder(Vec3(0, 0, e), Vec3(0, 0, -e), (e*r)**(0.5) * 0.9, rtext))
+ring = Cylinder(Vec3(0, 0, e/10), Vec3(0, 0, -e/10), (e*r)**(0.5), rtext).diff(Cylinder(Vec3(0, 0, e), Vec3(0, 0, -e), (e*r)**(0.5) * 0.9, rtext))
 
-target = lambda y, z: Triangle(Vec3(-2, y, z), Vec3(60, 0, 0), Vec3(0, 20, 0), Texture.lambertian(RGB(0.8, 0.4, 0))).union(Parallelogram(Vec3(0, y+1, z+1), Vec3(1, 0, 0), Vec3(0, 3, 0), Texture.lambertian(RGB(0.9, 0, 0)))).union(Triangle(Vec3(0.5, y+6, z+1), Vec3(-1, -2, 0), Vec3(1, -2, 0), Texture.lambertian(RGB(0.9, 0, 0))))
+def target(y, z):
+    orig = Vec3(-2, y, z)
+    bg = Texture.lambertian(RGB(0.5, 0.8, 0))
+    fg = Texture.lambertian(RGB(0, 0.2, 1))
+    triangle = Triangle(orig, Vec3(60, 0, 0), Vec3(0, 20, 0), bg)
+    arrowrec = Parallelogram(orig.add(Vec3(2, 1, 0.01)), Vec3(1, 0, 0), Vec3(0, 3, 0), fg)
+    arrowhead = Triangle(orig.add(Vec3(2.5, 6, 0.01)), Vec3(-1, -2, 0), Vec3(1, -2, 0), fg)
+    return triangle.union(arrowrec).union(arrowhead)
 
 cam.distance = 100
 tr.set_cam(cam)
@@ -30,6 +37,27 @@ cnt = 0
 
 def lpad(l, n):
     return "0" * (l - len(str(n))) + str(n)
+
+
+tr.add_obj(s1.inter(s2))
+tr.add_obj(target(15, -10))
+tr.add_obj(ring)
+for i in range(50):
+    cam.angle = 90 * (1 - i / 49)
+    cam.distance = 20 + 80 * i / 49
+    tr.set_cam(cam)
+    tr.render("lentille-" + lpad(5, cnt))
+    cnt += 1
+    print(cnt)
+
+for i in range(20):
+    tr.render("lentille-" + lpad(5, cnt))
+    cnt += 1
+    print(cnt)
+
+cam.angle = 0
+cam.distance = 100
+tr.set_cam(cam)
 
 for i in range(60, -9, -1):
     tr.clear()
