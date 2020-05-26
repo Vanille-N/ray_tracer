@@ -1,4 +1,5 @@
 use pyo3::prelude::*;
+use std::process::Command;
 
 use crate::external::*;
 use libtrace::composite;
@@ -15,9 +16,16 @@ pub struct Cfg {
     pub wth: usize,
     #[pyo3(get, set)]
     pub iter: usize,
-    pub cam: Option<Camera>,
-    pub world: internal::World,
-    pub sky: Option<Sky>,
+    cam: Option<Camera>,
+    world: internal::World,
+    sky: Option<Sky>,
+    mov: Option<MovieCfg>,
+}
+
+struct MovieCfg {
+    name: String,
+    cnt: usize,
+    modif: bool,
 }
 
 #[pymethods]
@@ -32,6 +40,7 @@ impl Cfg {
             cam: None,
             world: internal::World::new(),
             sky: None,
+            mov: None,
         }
     }
 
@@ -68,21 +77,25 @@ impl Cfg {
     #[text_signature = "($self, color, /)"]
     pub fn set_background(&mut self, color: RGB) {
         self.world.background = Some(color.to_internal());
+        self.refresh();
     }
 
     #[text_signature = "($self)"]
     pub fn true_background(&mut self) {
         self.world.background = None;
+        self.refresh();
     }
 
     #[text_signature = "($self, sky, /)"]
     pub fn set_cam(&mut self, cam: Camera) {
         self.cam = Some(cam);
+        self.refresh();
     }
 
     #[text_signature = "($self, sky, /)"]
     pub fn set_sky(&mut self, sky: Sky) {
-        self.sky = Some(sky)
+        self.sky = Some(sky);
+        self.refresh();
     }
 
     #[text_signature = "($self, /)"]
@@ -104,15 +117,27 @@ impl Cfg {
             .build()
             .wrap(),
         );
+        self.refresh();
     }
 
     #[text_signature = "($self, /)"]
     pub fn clear(&mut self) {
         self.world.clear();
+        self.refresh();
     }
 
     #[text_signature = "($self, object, /)"]
     pub fn add_obj(&mut self, object: Construct) {
         self.world.push_vec(object.contents.canonical());
+        self.refresh();
+    }
+
+    #[text_signature = "($self, name, /)"]
+    pub fn start_movie(&mut self, name: String) {
+        self.mov = Some(MovieCfg {
+            name,
+            cnt: 0,
+            modif: true,
+        });
     }
 }
