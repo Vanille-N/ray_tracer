@@ -74,6 +74,4 @@ for i in range(120):
     tr.add_obj(ring)
     tr.frame()
 
-system("rm lens.avi")
-system("ffmpeg -pattern_type glob -framerate 25 -i \"img-lentille-*.ppm\" -vcodec libx264 lens.avi")
-system("rm img-lentille-*.ppm")
+tr.end_movie()

@@ -1,5 +1,6 @@
 use pyo3::prelude::*;
 use std::process::Command;
+use glob::glob;
 
 use crate::external::*;
 use libtrace::composite;
@@ -160,6 +161,46 @@ impl Cfg {
         if let Some(m) = &mut self.mov {
             m.cnt += 1;
             m.modif = false;
+        }
+    }
+
+    #[text_signature = "($self, /)"]
+    pub fn end_movie(&mut self) {
+        if let Some(m) = &self.mov {
+            Command::new("rm")
+                .arg(&format!("{}.avi", &m.name))
+                .status()
+                .expect("No file to remove");
+            let e = Command::new("ffmpeg")
+                .arg("-pattern_type")
+                .arg("sequence")
+                .arg("-framerate")
+                .arg("25")
+                .arg("-i")
+                .arg(&format!("img-{}-%d.ppm", &m.name))
+                .arg("-vcodec")
+                .arg("libx264")
+                .arg(&format!("{}.avi", &m.name))
+                .status()
+                .expect("Failed to create movie");
+            if e.success() {
+                println!("Done creating movie, cleanup files");
+                for f in glob(&format!("img-{}-*.ppm", &m.name)).expect("Could not read glob pattern") {
+                    Command::new("rm")
+                        .arg(&format!("{}", f.unwrap().display()))
+                        .status()
+                        .expect("Failed to remove");
+                }
+                self.mov = None;
+            }
+        }
+    }
+}
+
+impl Cfg {
+    fn refresh(&mut self) {
+        if let Some(m) = &mut self.mov {
+            m.modif = true;
         }
     }
 }
