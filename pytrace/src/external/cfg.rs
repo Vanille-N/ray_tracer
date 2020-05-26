@@ -1,6 +1,6 @@
+use glob::glob;
 use pyo3::prelude::*;
 use std::process::Command;
-use glob::glob;
 
 use crate::external::*;
 use libtrace::composite;
@@ -185,7 +185,9 @@ impl Cfg {
                 .expect("Failed to create movie");
             if e.success() {
                 println!("Done creating movie, cleanup files");
-                for f in glob(&format!("img-{}-*.ppm", &m.name)).expect("Could not read glob pattern") {
+                for f in
+                    glob(&format!("img-{}-*.ppm", &m.name)).expect("Could not read glob pattern")
+                {
                     Command::new("rm")
                         .arg(&format!("{}", f.unwrap().display()))
                         .status()

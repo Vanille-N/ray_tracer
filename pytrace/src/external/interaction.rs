@@ -96,7 +96,7 @@ impl InterTree {
                                         vec_union(&x_out, &[z.clone()]),
                                     ));
                                 }
-                                if y_out.len() > 0 {
+                                if !y_out.is_empty() {
                                     res.push(internal::Interaction(
                                         vec_union(&x_in, &y_out),
                                         x_out.to_vec(),
