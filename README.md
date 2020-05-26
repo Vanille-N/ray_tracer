@@ -17,7 +17,7 @@ For more informations, refer to the `README` in each subdirectories.
 
 ### Side note
 
-An interesting corollary of having access to an accurate dielectic material and being able to create intersections is that I can simulate the behavior of a lens from the intersection of two dielectric spheres.
+An interesting corollary of having access to an accurate dielectic material and being able to create intersections is that I can simulate the behavior of a lens built from the intersection of two dielectric spheres.
 
 Below is an animation that demonstrates how an object seen through a converging lens can be upside down. Remember that the ray tracer has no knowledge of what a lens is, all it does is calculate the path that individual light rays follow.
 
