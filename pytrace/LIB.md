@@ -66,6 +66,10 @@ CLASSES
      |
      |  clear(self, /)
      |
+     |  end_movie(self, /)
+     |
+     |  frame(self, name, /)
+     |
      |  populate(self, /)
      |
      |  render(self, name, /)
@@ -77,6 +81,8 @@ CLASSES
      |  set_sky(self, sky, /)
      |
      |  silence(self, /)
+     |
+     |  start_movie(self, name, /)
      |
      |  true_background(self, /)
      |
@@ -341,6 +347,13 @@ CLASSES
      |  v
 
     class Vec3(object)
+     |  Methods defined here:
+     |
+     |  add(...)
+     |
+     |  mul(...)
+     |
+     |  ----------------------------------------------------------------------
      |  Static methods defined here:
      |
      |  __new__(*args, **kwargs) from builtins.type
