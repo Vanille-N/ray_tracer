@@ -140,4 +140,26 @@ impl Cfg {
             modif: true,
         });
     }
+
+    #[text_signature = "($self, name, /)"]
+    pub fn frame(&mut self) {
+        if let Some(m) = &self.mov {
+            println!("Creating frame {}", m.cnt);
+            if m.modif {
+                self.render(format!("{}-{}", &m.name, m.cnt));
+            } else {
+                Command::new("cp")
+                    .arg(&format!("img-{}-{}.ppm", &m.name, m.cnt - 1))
+                    .arg(&format!("img-{}-{}.ppm", &m.name, m.cnt))
+                    .status()
+                    .expect("Could not copy previous image");
+            }
+        } else {
+            panic!("No movie configured");
+        }
+        if let Some(m) = &mut self.mov {
+            m.cnt += 1;
+            m.modif = false;
+        }
+    }
 }

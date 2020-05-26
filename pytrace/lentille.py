@@ -38,6 +38,8 @@ cnt = 0
 def lpad(l, n):
     return "0" * (l - len(str(n))) + str(n)
 
+tr.start_movie("lens")
+
 
 tr.add_obj(s1.inter(s2))
 tr.add_obj(target(15, -10))
@@ -46,14 +48,10 @@ for i in range(50):
     cam.angle = 90 * (1 - i / 49)
     cam.distance = 20 + 80 * i / 49
     tr.set_cam(cam)
-    tr.render("lentille-" + lpad(5, cnt))
-    cnt += 1
-    print(cnt)
+    tr.frame()
 
 for i in range(20):
-    tr.render("lentille-" + lpad(5, cnt))
-    cnt += 1
-    print(cnt)
+    tr.frame()
 
 cam.angle = 0
 cam.distance = 100
@@ -64,24 +62,17 @@ for i in range(60, -9, -1):
     tr.add_obj(s1.inter(s2))
     tr.add_obj(target(i/4, -10))
     tr.add_obj(ring)
-    tr.render("lentille-" + lpad(5, cnt))
-    cnt += 1
-    print(cnt)
-    #raise KeyboardInterrupt
+    tr.frame()
 
 for i in range(20):
-    tr.render("lentille-" + lpad(5, cnt))
-    cnt += 1
-    print(cnt)
+    tr.frame()
 
 for i in range(120):
     tr.clear()
     tr.add_obj(s1.inter(s2))
     tr.add_obj(target(-2, -10-i))
     tr.add_obj(ring)
-    tr.render("lentille-" + lpad(5, cnt))
-    cnt += 1
-    print(cnt)
+    tr.frame()
 
 system("rm lens.avi")
 system("ffmpeg -pattern_type glob -framerate 25 -i \"img-lentille-*.ppm\" -vcodec libx264 lens.avi")
