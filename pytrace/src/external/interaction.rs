@@ -58,6 +58,7 @@ impl InterTree {
         Self::Node(Interaction::Union, Box::new(self), Box::new(other))
     }
 
+    // See explanations below
     pub fn canonical(&self) -> Vec<internal::Interaction> {
         match self {
             Self::Item(p) => vec![p.clone().extract()],
@@ -143,3 +144,42 @@ impl Construct {
         }
     }
 }
+
+
+// About the InterTree::canonical() function
+//
+// The internal algorithm only manages complex objects expressed as :
+// Union_i ( Inter_j (A_i,j) \ Union_k (B_i,k) )
+// This corresponds to a collection (i.e. union) of [Vec, Vec],
+// where the first (resp. second) Vec represents all objects inside
+// (resp. outside) of which we need to be.
+// The user of the Python library need not be aware of this restriction,
+// as the interface allows arbitrary set operations.
+// This is done using a tree (an InterTree) of operations, which is then
+// converted into a canonical representation before being pushed to the
+// scene.
+//
+// The process of translating InterTree -> Vec<[Vec, Vec]> is done recursively
+// by InterTree::canonical()
+// It relies on the following :
+// (&, |, \ represent intersection, union, difference)
+// * a leaf is already under canonical representation :
+//        A -> { [A, ()] }
+// * an union is easy to canonicalize
+//        X | Y -> { X, Y }
+// * A\B & C\D = A&C \ B|D
+//        [A, B] & [C, D] -> [(A.., C..), (B.., D..)]
+// * & is distributive on |
+//        { [A, B], [A', B'] } & { [C, D], [C', D'] }
+//     -> {
+//             [(A.., C..), (B.., D..)],
+//             [(A'.., C..), (B'.., D..)],
+//             [(A.., C'..), (B.., D'..)],
+//             [(A'.., C'..), (B'.., D'..)],
+//        }
+// And finally:
+// * { X, Y } \ { Z, W } = { X\Z\W, Y\Z\W }
+// * [A, B] \ [C, ()] = [A, (B.., C..)]
+// * [A, B] \ [C, D] = { [A, (B.., C..)], [(A.., D..), B] }
+// These three rules are applied by iteratively removing all elements
+// of b_can at each step. The result becomes the basis of the next step.
