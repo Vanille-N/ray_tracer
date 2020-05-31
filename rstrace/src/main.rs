@@ -329,5 +329,6 @@ fn build_world() -> Builder {
         cam,
         world,
         sky,
+        nbsync: 5,
     }
 }
