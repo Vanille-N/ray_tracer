@@ -1,6 +1,6 @@
 use pyo3::prelude::*;
 
-use libtrace::internal;
+use pytrace_core::internal;
 
 #[pyclass]
 #[derive(Clone, Copy)]

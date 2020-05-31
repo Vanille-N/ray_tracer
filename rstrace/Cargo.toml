@@ -5,7 +5,7 @@ authors = ["Vanille-N <neven.villani@gmail.com>"]
 edition = "2018"
 
 [dependencies]
-libtrace = {path = "../libtrace"}
+pytrace_core = "*"
 
 #[profile.release]
 #debug = true

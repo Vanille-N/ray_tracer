@@ -1,5 +1,5 @@
 use crate::external::*;
-use libtrace::internal;
+use pytrace_core::internal;
 
 use pyo3::prelude::*;
 

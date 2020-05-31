@@ -9,7 +9,7 @@ name = "pytrace"
 crate-type = ["cdylib"]
 
 [dependencies]
-libtrace = {path = "../libtrace"}
+pytrace_core = "*"
 glob = "*"
 
 [dependencies.pyo3]

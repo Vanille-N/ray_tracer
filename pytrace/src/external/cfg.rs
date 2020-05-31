@@ -3,9 +3,9 @@ use pyo3::prelude::*;
 use std::process::Command;
 
 use crate::external::*;
-use libtrace::composite;
-use libtrace::internal;
-use libtrace::render::*;
+use pytrace_core::composite;
+use pytrace_core::internal;
+use pytrace_core::render::*;
 
 #[pyclass]
 #[text_signature = "(wth, hgt, iter, /)"]

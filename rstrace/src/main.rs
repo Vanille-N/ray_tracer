@@ -1,5 +1,7 @@
 #![allow(dead_code)]
 
+use pytrace_core as libtrace;
+
 use libtrace::internal::*;
 use libtrace::render::*;
 
