@@ -1,4 +1,4 @@
-# LibTrace
+# PyTrace (core)
 
 Originally inspired by _Ray Tracing in One Weekend_ (Peter Shirley).
 
