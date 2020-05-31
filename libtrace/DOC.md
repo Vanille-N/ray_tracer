@@ -9,6 +9,13 @@ This document may not be perfectly up to date.
 (up to date with the code commited under 3c53f9e)
 ```
 
+```diff
+@@ DISCLAIMER @@
+This document will not be updated anymore, the official documentation
+(`$ cargo doc --open`) is being created and will (hopefully) soon catch up to
+and overtake the document below.
+```
+
 ### Modules
 
 ```rust
