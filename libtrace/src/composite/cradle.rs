@@ -1,9 +1,14 @@
 use crate::internal::*;
 
+/// This instance of a [Newton's cradle](https://en.wikipedia.org/wiki/Newton%27s_cradle)
+/// can be placed anywhere in the space, but can only face upward.
 #[derive(Clone, Copy)]
 pub struct NewtonCradle {
+    /// The position of one of the corners
     pub a: Vec3,
+    /// Rotation around a vertical axis going through a
     pub angle: f64,
+    /// Scale (1.0 will have the size of a 1x1x1 cube)
     pub size: f64,
 }
 
