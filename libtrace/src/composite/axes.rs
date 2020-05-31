@@ -5,6 +5,15 @@ const BLUE: Texture = Texture::Lambertian(RGB(0.0, 0.2, 0.7));
 const GREEN: Texture = Texture::Lambertian(RGB(0.0, 0.9, 0.0));
 const BLACK: Texture = Texture::Lambertian(RGB(0.01, 0.01, 0.01));
 
+/// Axes are a debug structure that indicates the position of the origin of the space
+/// as well as the x, y and z directions.
+///
+/// It is also a way to evaluate distances, as it includes spheres with regular spacing.
+///
+/// Its only parameter is in fact its size.
+///
+/// Its major downside is that being composed of almost 20 objects, it slows down rendering
+/// quite a bit.
 #[derive(Clone, Copy)]
 pub struct Axes(pub f64);
 

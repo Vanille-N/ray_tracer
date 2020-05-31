@@ -19,9 +19,9 @@ pub struct Builder {
     pub nbsync: usize,
 }
 
-/// Create image according to build configuration
+/// Create image according to build configuration.
 ///
-/// Includes cleanup of temporary files
+/// Includes cleanup of temporary files and automatic management of multithreading.
 pub fn render(build: Builder) {
     let build = Arc::new(build);
     if !build.silent {
@@ -47,7 +47,6 @@ pub fn render(build: Builder) {
                         eprint!("\x1b[{}C{}█\x1b[1A\n", load / 2, color);
                     }
                 }
-
                 for j in 0..build.wth {
                     let mut c = rgb::BLACK;
                     let i = i as f64;
