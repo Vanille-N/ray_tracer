@@ -1,5 +1,5 @@
-use pytrace_core::internal;
 use pyo3::prelude::*;
+use pytrace_core::internal;
 
 #[pyclass]
 #[text_signature = "(r, g, b, /)"]

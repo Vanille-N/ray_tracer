@@ -145,7 +145,6 @@ impl Construct {
     }
 }
 
-
 // About the InterTree::canonical() function
 //
 // The internal algorithm only manages complex objects expressed as :
