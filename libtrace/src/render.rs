@@ -16,6 +16,7 @@ pub struct Builder {
     pub cam: Camera,
     pub world: World,
     pub sky: Sky,
+    pub nbsync: usize,
 }
 
 /// Create image according to build configuration
@@ -23,17 +24,16 @@ pub struct Builder {
 /// Includes cleanup of temporary files
 pub fn render(build: Builder) {
     let build = Arc::new(build);
-    let nb_cores = 5;
     if !build.silent {
         eprint!("Rendering image...\n");
         eprint!("|\x1b[50C|\x1b[1A\n");
     }
-    let pool = ThreadPool::new(nb_cores);
-    let barrier = Arc::new(Barrier::new(nb_cores + 1));
-    for id in 0..nb_cores {
+    let pool = ThreadPool::new(build.nbsync);
+    let barrier = Arc::new(Barrier::new(build.nbsync + 1));
+    for id in 0..build.nbsync {
         let mut stdout =
             BufWriter::new(File::create(&format!(".out-{}-{}.txt", &build.name, id)).unwrap());
-        let rng = (id * build.hgt / nb_cores)..((id + 1) * build.hgt / nb_cores);
+        let rng = (id * build.hgt / build.nbsync)..((id + 1) * build.hgt / build.nbsync);
         let barrier = barrier.clone();
         let build = build.clone();
         pool.execute(move || {
@@ -72,7 +72,7 @@ pub fn render(build: Builder) {
     }
     let mut f = File::create(&format!("img-{}.ppm", &build.name)).unwrap();
     writeln!(f, "P3\n{} {}\n255", build.wth, build.hgt).unwrap();
-    for idx in (0..nb_cores).rev() {
+    for idx in (0..build.nbsync).rev() {
         let output = Command::new("cat")
             .arg(&format!(".out-{}-{}.txt", &build.name, idx))
             .output()
