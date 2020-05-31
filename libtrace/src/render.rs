@@ -6,6 +6,7 @@ use threadpool::ThreadPool;
 
 use crate::internal::*;
 
+/// Configuration information for a single image
 pub struct Builder {
     pub name: String,
     pub silent: bool,
@@ -17,6 +18,9 @@ pub struct Builder {
     pub sky: Sky,
 }
 
+/// Create image according to build configuration
+///
+/// Includes cleanup of temporary files
 pub fn render(build: Builder) {
     let build = Arc::new(build);
     let nb_cores = 5;
