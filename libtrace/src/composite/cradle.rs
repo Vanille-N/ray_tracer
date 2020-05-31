@@ -4,7 +4,7 @@ use crate::internal::*;
 /// can be placed anywhere in the space, but can only face upward.
 #[derive(Clone, Copy)]
 pub struct NewtonCradle {
-    /// The position of one of the corners
+    /// Position of one of the corners
     pub a: Vec3,
     /// Rotation around a vertical axis going through a
     pub angle: f64,
