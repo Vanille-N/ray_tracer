@@ -21,6 +21,8 @@ pub struct Cfg {
     world: internal::World,
     sky: Option<Sky>,
     mov: Option<MovieCfg>,
+    #[pyo3(get, set)]
+    nbsync: usize,
 }
 
 struct MovieCfg {
@@ -42,6 +44,7 @@ impl Cfg {
             world: internal::World::new(),
             sky: None,
             mov: None,
+            nbsync: 5,
         }
     }
 
@@ -66,6 +69,7 @@ impl Cfg {
                     cam: cam.to_internal(),
                     world: self.world.clone(),
                     sky: sky.to_internal(),
+                    nbsync: self.nbsync,
                 })
             } else {
                 panic!("No sky provided")
