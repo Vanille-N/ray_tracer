@@ -6,11 +6,16 @@ const BLUE: RGB = RGB(0.0, 0.2, 0.7);
 const WHITE: RGB = RGB(0.9, 0.9, 0.9);
 const LGREY: RGB = RGB(0.7, 0.7, 0.7);
 
+/// Black
 const CARBON: Texture = Texture::Metal(BLACK, 0.0);
+/// Red
 const OXYGEN: Texture = Texture::Metal(RED, 0.0);
+/// Light metallic grey
 const HYDROGEN: Texture = Texture::Metal(WHITE, 0.0);
+/// Blue
 const NITROGEN: Texture = Texture::Metal(BLUE, 0.0);
 
+/// General builder for any molecule
 #[derive(Clone, Copy)]
 pub struct Molecule {
     pub c_ref: Vec3,
@@ -18,12 +23,18 @@ pub struct Molecule {
     pub fwd: Vec3,
 }
 
+/// Collection of balls and sticks
+///
+/// Instead of creating `MoleculeObject`s, it is recommended to build them using a `Molecule`.
 #[derive(Clone)]
 pub struct MoleculeObject {
     pub atoms: Vec<Sphere>,
     pub links: Vec<EmptyCylinder>,
 }
 
+/// Creates an atom-building closure from the radius and texture of the atoms to be made.
+///
+/// The resulting closure takes the center of the sphere.
 fn atom_builder(r: f64, texture: Texture) -> Box<dyn Fn(Vec3) -> Sphere> {
     Box::new(move |u| Sphere {
         center: u,
@@ -32,6 +43,9 @@ fn atom_builder(r: f64, texture: Texture) -> Box<dyn Fn(Vec3) -> Sphere> {
     })
 }
 
+/// Creates a link-building closure from the radius of the links to be made.
+///
+/// The resulting closure takes the centers of the two atoms to join.
 fn link_builder(r: f64) -> Box<dyn Fn(Vec3, Vec3) -> EmptyCylinder> {
     Box::new(move |c1, c2| EmptyCylinder {
         center1: c1,
@@ -41,6 +55,7 @@ fn link_builder(r: f64) -> Box<dyn Fn(Vec3, Vec3) -> EmptyCylinder> {
     })
 }
 
+/// Same as `link_builder` but creates a double link
 fn double_builder(r: f64) -> Box<dyn Fn(Vec3, Vec3, Vec3) -> [EmptyCylinder; 2]> {
     Box::new(move |c1, c2, c3| {
         let orth = (c2 - c1).cross(c3).unit() * (c2 - c1).len();
@@ -61,6 +76,7 @@ fn double_builder(r: f64) -> Box<dyn Fn(Vec3, Vec3, Vec3) -> [EmptyCylinder; 2]>
     })
 }
 
+/// Same as `link_builder` but creates a triple link
 fn triple_builder(r: f64) -> Box<dyn Fn(Vec3, Vec3, Vec3) -> [EmptyCylinder; 3]> {
     Box::new(move |c1, c2, c3| {
         let axis = c2 - c1;
@@ -90,6 +106,7 @@ fn triple_builder(r: f64) -> Box<dyn Fn(Vec3, Vec3, Vec3) -> [EmptyCylinder; 3]>
     })
 }
 
+/// Standard recommended relative sizes for various items.
 pub fn dimensions(len: f64) -> [f64; 5] {
     [
         len * 1.4, // big atoms (C, N, O) radius
@@ -103,6 +120,10 @@ pub fn dimensions(len: f64) -> [f64; 5] {
 #[allow(unused_variables)]
 #[allow(clippy::many_single_char_names)]
 impl Molecule {
+    /// These 7 vectors are meant to ease the process of creating a molecule.
+    ///
+    /// From them and their opposites, one can easily access the 14 possible directions
+    /// that atoms can be relative to each other (approximately).
     fn directions(&self) -> [Vec3; 7] {
         let zz = self.up.unit();
         let yy = self.fwd.cross(self.up).unit();
@@ -118,6 +139,7 @@ impl Molecule {
         [t, u, v, w, x, y, z]
     }
 
+    /// See [Wikipedia](https://en.wikipedia.org/wiki/Cyclohexanol)
     pub fn cyclohexanol(self) -> MoleculeObject {
         let len = self.fwd.len();
         let [rad1, rad2, rad3, len1, len2] = dimensions(len);
@@ -230,6 +252,7 @@ impl Molecule {
         }
     }
 
+    /// See [Wikipedia](https://en.wikipedia.org/wiki/Methane)
     pub fn methane(self) -> MoleculeObject {
         let len = self.fwd.len();
         let [rad1, rad2, rad3, len1, len2] = dimensions(len);
@@ -257,6 +280,7 @@ impl Molecule {
         }
     }
 
+    /// See [Wikipedia](https://en.wikipedia.org/wiki/Ethanol)
     pub fn ethanol(self) -> MoleculeObject {
         let len = self.fwd.len();
         let [rad1, rad2, rad3, len1, len2] = dimensions(len);
@@ -302,6 +326,7 @@ impl Molecule {
         }
     }
 
+    /// See [Wikipedia](https://en.wikipedia.org/wiki/Carbon_dioxide)
     pub fn carbon_dioxide(self) -> MoleculeObject {
         let len = self.fwd.len();
         let [rad1, rad2, rad3, len1, len2] = dimensions(len);
@@ -324,6 +349,7 @@ impl Molecule {
         }
     }
 
+
     pub fn dinitrogen(self) -> MoleculeObject {
         let len = self.fwd.len();
         let [rad1, rad2, rad3, len1, len2] = dimensions(len);
@@ -343,6 +369,7 @@ impl Molecule {
         }
     }
 
+    /// See [Wikipedia](https://en.wikipedia.org/wiki/Benzene)
     pub fn benzene(self) -> MoleculeObject {
         let len = self.fwd.len();
         let [rad1, rad2, rad3, len1, len2] = dimensions(len);
@@ -411,6 +438,7 @@ impl Molecule {
         }
     }
 
+    /// Debug structure
     pub fn test(self) -> MoleculeObject {
         let len = self.fwd.len();
         let [rad1, _, rad3, len1, _] = dimensions(len);
