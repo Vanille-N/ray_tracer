@@ -11,19 +11,23 @@ impl Vec3 {
         (self.0.powi(2) + self.1.powi(2) + self.2.powi(2)).sqrt()
     }
 
+    /// Unit vector with same direction
     pub fn unit(&self) -> Self {
         let len = self.len();
         Self(self.0 / len, self.1 / len, self.2 / len)
     }
 
+    /// Dot product with another vector
     pub fn dot(&self, other: Self) -> f64 {
         self.0 * other.0 + self.1 * other.1 + self.2 * other.2
     }
 
+    /// Square of the length
     pub fn dot_self(&self) -> f64 {
         self.0 * self.0 + self.1 * self.1 + self.2 * self.2
     }
 
+    /// Cross product with another vector
     pub fn cross(&self, other: Self) -> Self {
         Self(
             self.1 * other.2 - self.2 * other.1,
@@ -32,10 +36,12 @@ impl Vec3 {
         )
     }
 
+    /// Symetry from the surface normal
     pub fn reflect(&self, normal: Self) -> Self {
         *self - normal * self.dot(normal) * 2.
     }
 
+    /// Refracted ray from Snell and Descartes' law
     pub fn refract(&self, normal: Self, rel_idx: f64) -> Option<Self> {
         let u = self.unit();
         let dt = u.dot(normal);
@@ -47,6 +53,10 @@ impl Vec3 {
         }
     }
 
+    /// Random ray in the unit sphere.
+    ///
+    /// Expected to fail about half of the time, meaning that the inner loop
+    /// should run an average of two times per function call.
     pub fn random_unit() -> Self {
         let mut p = Self(1.0, 1.0, 1.0);
         while p.dot_self() >= 1. {
