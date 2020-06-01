@@ -109,9 +109,10 @@ impl Primitive {
 pub struct Interaction(pub Vec<Primitive>, pub Vec<Primitive>);
 
 impl Interaction {
-    /// An easy way of checking that a point is inside an object is to verify that there exist
-    /// intersections with the object of two rays that have the same origin and opposite
-    /// directions.
+    /// An easy way of checking that a point is inside an object
+    ///
+    /// Verify that there exist intersections with the object of two rays that
+    /// have the same origin and opposite directions.
     ///
     /// Some specific objects may provide a less costly way to make this test.
     pub fn bidir_hit<T: Hit>(obj: &T, pos: Vec3, v: Vec3) -> bool {
@@ -186,10 +187,10 @@ impl Interaction {
         true
     }
 }
-
+/// A collection of `Interaction`s
+///
 /// The library can only manage set operations on single objects written as
-/// `Union[n=1 to N] ( (Intersection[i=1 to I] A_n,i) \ (Union[j=1 to J] B_n,j) )`,
-/// that is, a collection of `Interaction`s.
+/// `Union[n=1 to N] ( (Intersection[i=1 to I] A_n,i) \ (Union[j=1 to J] B_n,j) )`.
 ///
 /// PyTrace shows that this is not a significant restriction, as any arbitrary set operation
 /// can be expressed in this canonical form (see `pytrace::external::interaction::canonical()`).

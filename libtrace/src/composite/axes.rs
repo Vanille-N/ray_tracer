@@ -5,7 +5,7 @@ const BLUE: Texture = Texture::Lambertian(RGB(0.0, 0.2, 0.7));
 const GREEN: Texture = Texture::Lambertian(RGB(0.0, 0.9, 0.0));
 const BLACK: Texture = Texture::Lambertian(RGB(0.01, 0.01, 0.01));
 
-/// Axes are a debug structure that indicates the position of the origin of the space
+/// Axes are a debug structure that indicate the position of the origin of the space
 /// as well as the x, y and z directions.
 ///
 /// It is also a way to evaluate distances, as it includes spheres with regular spacing.

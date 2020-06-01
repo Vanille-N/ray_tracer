@@ -15,15 +15,19 @@ pub struct Camera {
 
 impl Camera {
     /// Build a camera from its position relative to the origin of the space
+    ///
+    /// eye: vertex of the field of view
+    ///
+    /// vert: vertical direction
+    ///
+    /// vfov: field of view (degrees)
+    ///
+    /// ratio: width/height aspect ratio
     pub fn new_absolute(
-        /// Vertex of the field of view
         eye: Vec3,
         target: Vec3,
-        /// Vertical direction
         vert: Vec3,
-        /// Field of view (degrees)
         vfov: f64,
-        /// Width/height aspect ratio
         ratio: f64,
     ) -> Self {
         let theta = vfov * std::f64::consts::PI / 180.;
@@ -41,19 +45,21 @@ impl Camera {
     }
 
     /// Build a camera from its position relative to the point aimed at
+    ///
+    /// angle: rotation around the target (degrees)
+    ///
+    /// rise: angle above target (degrees, use negative value for low-angle shot)
+    /// dist: distance to target
+    /// tilt: 0 for vertical field of view
+    /// aperture: vertical field of view (degrees)
+    /// ratio: width/height aspect ratio
     pub fn new_relative(
         target: Vec3,
-        /// Rotation around the target (degrees)
         angle: f64,
-        /// Angle above target (degrees, use negative value for low-angle shot)
         rise: f64,
-        /// Distance to target
-        distance: f64,
-        /// 0 for vertical field of view
+        dist: f64,
         tilt: f64,
-        /// Vertical field of view (degrees)
         aperture: f64,
-        /// Width/height aspect ratio
         ratio: f64,
     ) -> Self {
         let theta = aperture * std::f64::consts::PI / 180.;
@@ -65,7 +71,7 @@ impl Camera {
             let x = angle_rad.sin();
             let z = angle_rad.cos();
             let y = rise_rad.sin();
-            Vec3(x, y, z).unit() * distance + target
+            Vec3(x, y, z).unit() * dist + target
         };
         let w = (eye - target).unit();
         let vert = {
