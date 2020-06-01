@@ -1,6 +1,8 @@
 use crate::internal::*;
 use std::sync::Arc;
 
+/// If the object contains a `texture` field, this macro can spare the writing of a few
+/// repetitive lines of `impl`.
 macro_rules! auto_texture {
     () => {
         fn texture(&self) -> Texture {
@@ -9,6 +11,8 @@ macro_rules! auto_texture {
     };
 }
 
+/// Any object that has no interior (plane in particular) can use this default `impl` method
+/// to always fail the inside test.
 macro_rules! empty_object {
     () => {
         fn inside(&self, _pos: Vec3) -> bool {
@@ -96,8 +100,11 @@ impl Hit for InfinitePlane {
 
 #[derive(Clone, Copy)]
 pub struct Triangle {
+    /// One angle of the triangle
     pub a: Vec3,
+    /// One edge
     pub u: Vec3,
+    /// Another edge
     pub v: Vec3,
     pub texture: Texture,
 }
@@ -128,8 +135,11 @@ impl Hit for Triangle {
 
 #[derive(Clone, Copy)]
 pub struct Parallelogram {
+    /// One angle
     pub a: Vec3,
+    /// One edge adjacent to the first angle
     pub u: Vec3,
+    /// Another edge
     pub v: Vec3,
     pub texture: Texture,
 }
@@ -160,9 +170,13 @@ impl Hit for Parallelogram {
 
 #[derive(Clone, Copy)]
 pub struct Rhomboid {
+    /// One corner
     pub a: Vec3,
+    /// One edge adjacent to the corner
     pub u: Vec3,
+    /// Another edge
     pub v: Vec3,
+    /// Another edge
     pub w: Vec3,
     pub texture: Texture,
 }
@@ -171,6 +185,7 @@ pub struct Rhomboid {
 pub struct RhomboidObject(pub [Parallelogram; 6]);
 
 impl Rhomboid {
+    /// Transform into a rectangular cuboid
     pub fn orthogonal(self) -> Self {
         let wlen = self.w.len();
         let ulen = self.u.len();
@@ -187,6 +202,7 @@ impl Rhomboid {
         }
     }
 
+    /// Transform into a cube
     pub fn orthonormal(self) -> Self {
         let len = self.w.len();
         let w = self.w.unit() * len; // Upwards
@@ -262,7 +278,9 @@ impl Hit for RhomboidObject {
 
 #[derive(Clone, Copy)]
 pub struct EmptyCylinder {
+    /// The center of one base
     pub center1: Vec3,
+    /// The center of the other base
     pub center2: Vec3,
     pub radius: f64,
     pub texture: Texture,
@@ -359,7 +377,9 @@ impl Hit for Disc {
 
 #[derive(Clone, Copy)]
 pub struct Cylinder {
+    /// The center of one base
     pub center1: Vec3,
+    /// The center of the other base
     pub center2: Vec3,
     pub radius: f64,
     pub texture: Texture,
@@ -418,10 +438,14 @@ impl Hit for CylinderObject {
 
 #[derive(Clone, Copy)]
 pub struct EmptyCone {
+    /// Apex of the cone
     pub orig: Vec3,
     pub dir: Vec3,
+    /// Opening of the cone (degrees)
     pub angle: f64,
+    /// Distance from the apex to one end
     pub begin: f64,
+    /// Distance from the apex to the other end (should be bigger that `begin`)
     pub end: f64,
     pub texture: Texture,
 }
@@ -434,10 +458,6 @@ impl EmptyCone {
 
 impl Hit for EmptyCone {
     fn hit(&self, ray: &Ray) -> HitRecord {
-        // let a = (ray.dir.dot(&self.dir)).powi(2) - self.angle.cos().powi(2);
-        // let b = 2. * (ray.dir.dot(&self.dir) * (ray.orig - self.orig).dot(&self.dir) - ray.dir.dot(&(ray.orig - self.orig)) * self.angle.cos().powi(2));
-        // let c = (ray.orig - self.orig).dot(&self.dir).powi(2) - (ray.orig - self.orig).dot_self() * self.angle.cos().powi(2);
-
         let axis = self.dir;
         let theta = axis.unit();
         let tan2 = self.angle.tan().powi(2);
@@ -484,10 +504,14 @@ impl Hit for EmptyCone {
 
 #[derive(Copy, Clone)]
 pub struct Cone {
+    /// Apex of the cone
     pub orig: Vec3,
     pub dir: Vec3,
+    /// Opening of the cone (degrees)
     pub angle: f64,
+    /// Distance from the apex to one end
     pub begin: f64,
+    /// Distance from the apex to the other end (should be bigger that `begin`)
     pub end: f64,
     pub texture: Texture,
 }
