@@ -1,12 +1,20 @@
 use crate::internal::*;
 
+/// General builder for a glass flask
+///
+/// Always directed upwards
+#[derive(Clone, Copy)]
 pub struct Flask {
+    /// Center of the base
     pub a: Vec3,
+    /// Height
     pub size: f64,
+    /// Shade of the solution inside
     pub color: RGB,
 }
 
 impl Flask {
+    /// See [Wikipedia](https://en.wikipedia.org/wiki/Erlenmeyer_flask)
     pub fn erlenmeyer(self) -> Composite {
         let up = Vec3(0.0, self.size, 0.0);
         let glass = Texture::Dielectric(RGB(0.8, 0.8, 0.8), 1.3);
@@ -72,6 +80,7 @@ impl Flask {
         vec![base, solution, neck]
     }
 
+    /// See [Wikipedia](https://en.wikipedia.org/wiki/Florence_flask)
     pub fn florence(self) -> Composite {
         let up = Vec3(0.0, self.size, 0.0);
         let glass = Texture::Dielectric(RGB(0.8, 0.8, 0.8), 1.3);
