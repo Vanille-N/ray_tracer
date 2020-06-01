@@ -1,5 +1,6 @@
 use crate::internal::*;
 
+/// Texture of the environment
 #[derive(Clone)]
 pub struct Sky {
     map: Vec<Vec<RGB>>,
@@ -8,6 +9,7 @@ pub struct Sky {
 }
 
 impl Sky {
+    /// Load from Pixmap file.
     pub fn new(file: &str) -> Self {
         let img = std::fs::read_to_string(file)
             .unwrap()
@@ -35,6 +37,7 @@ impl Sky {
         Self { map, hgt, wth }
     }
 
+    /// Create new sky with a uniform color as a texture.
     pub fn uniform(c: RGB) -> Self {
         Self {
             hgt: 1,
@@ -45,6 +48,7 @@ impl Sky {
 }
 
 impl Sky {
+    /// Calculate where on the map a ray arrives depending on its direction.
     pub fn color(&self, dir: Vec3) -> RGB {
         let (x, y) = {
             let mut v = dir;
