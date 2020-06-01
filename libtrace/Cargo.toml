@@ -1,6 +1,6 @@
 [package]
 name = "pytrace_core"
-version = "0.2.1"
+version = "0.2.2"
 authors = ["Vanille-N <neven.villani@gmail.com>"]
 edition = "2018"
 include = ["src/**/*", "README.md"]
@@ -9,6 +9,7 @@ description = "Internal library for the Python module pytrace"
 readme = "README.md"
 repository = "https://github.com/Vanille-N/ray_tracer"
 keywords = ["ray-tracing", "graphics"]
+documentation = "https://docs.rs/pytrace_core"
 
 [dependencies]
 rand = "0.7"
