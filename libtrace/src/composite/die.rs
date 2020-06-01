@@ -1,12 +1,21 @@
 use crate::internal::*;
 
+/// A simple 6-sided die.
+///
+/// Its texture is highly customizable.
 #[derive(Clone, Copy)]
 pub struct Die {
+    /// One of the angles
     pub a: Vec3,
+    /// Direction of one edge adjacent to the reference angle
     pub up: Vec3,
+    /// Rotation around said edge (in degrees)
     pub rot: f64,
+    /// Texture of the area around dots
     pub side_texture: Texture,
+    /// Texture of the carved out area at the corners
     pub edge_texture: Texture,
+    /// Texture inside the dots
     pub dot_texture: Texture,
 }
 
