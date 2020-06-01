@@ -1,5 +1,6 @@
 use crate::internal::*;
 
+/// Collection of all objects to be added to the scene
 #[derive(Clone, Default)]
 pub struct World {
     obj: Vec<Interaction>,
@@ -7,6 +8,7 @@ pub struct World {
 }
 
 impl World {
+    /// New empty scene
     pub fn new() -> Self {
         Self {
             obj: Vec::new(),
@@ -14,24 +16,29 @@ impl World {
         }
     }
 
+    /// Add an object to the scene
     pub fn push(&mut self, x: Interaction) {
         self.obj.push(x);
     }
 
+    /// Unwrap a vector of objects and add them one by one
     pub fn push_vec(&mut self, v: Composite) {
         for x in v {
             self.obj.push(x)
         }
     }
 
+    /// Remove all objects
     pub fn clear(&mut self) {
         self.obj.clear();
     }
 
+    /// Override background given by the Sky
     pub fn set_background(&mut self, c: RGB) {
         self.background = Some(c);
     }
 
+    /// Distribute hit on all objects (including inside/outside tests)
     pub fn hit(&self, r: &Ray) -> HitRecord {
         let mut rec = HitRecord::Blank;
         for group in &self.obj {
@@ -79,6 +86,9 @@ impl World {
         rec
     }
 
+    /// Get optical index and color of a point in space
+    ///
+    /// Only useful if the scene includes `Dielectric` materials
     pub fn caracteristics(&self, pos: Vec3) -> (f64, RGB) {
         for group in &self.obj {
             if Interaction::all_inside_except(pos, &group.0, group.0.len())
@@ -95,12 +105,13 @@ impl World {
     }
 }
 
-//  https://en.wikipedia.org/wiki/Schlick's_approximation
+/// [Schlick's Appriximation](https://en.wikipedia.org/wiki/Schlick's_approximation)
 fn schlick(cos: f64, n1: f64, n2: f64) -> f64 {
     let r = ((n1 - n2) / (n1 + n2)).powi(2);
     r + (1.0 - r) * (1.0 - cos).powi(5)
 }
 
+/// Calculate reflected or refracted rays (with a certain amount of randomness)
 pub fn scatter(incident: &Ray, record: ActiveHit, w: &World) -> Option<(RGB, Ray)> {
     match record.texture {
         Texture::Lambertian(albedo) => {
@@ -204,6 +215,7 @@ pub fn scatter(incident: &Ray, record: ActiveHit, w: &World) -> Option<(RGB, Ray
     }
 }
 
+/// Recursively calculate color af a point in the image from the object the ray hits.
 pub fn color(r: &Ray, w: &World, depth: i32, sky: &Sky) -> RGB {
     match w.hit(r) {
         HitRecord::Hit(record) => {
@@ -231,6 +243,7 @@ pub fn color(r: &Ray, w: &World, depth: i32, sky: &Sky) -> RGB {
     }
 }
 
+/// Calls `color` and initializes the recursion depth counter.
 pub fn calc_color(r: &Ray, w: &World, sky: &Sky) -> RGB {
     match w.hit(r) {
         HitRecord::Hit(record) => {
