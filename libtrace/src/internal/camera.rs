@@ -1,15 +1,31 @@
 use crate::internal::*;
 
+/// Abstraction for the point of view chosen to take the scene from
 #[derive(Clone)]
 pub struct Camera {
+    /// Vertex of the cone of the field of view
     orig: Vec3,
+    /// Bottom left corner of the view
     low_left: Vec3,
+    /// Direction of the bottom edge of the view
     horiz: Vec3,
+    /// Direction of the left edge of the view
     vert: Vec3,
 }
 
 impl Camera {
-    pub fn new_absolute(eye: Vec3, target: Vec3, vert: Vec3, vfov: f64, ratio: f64) -> Self {
+    /// Build a camera from its position relative to the origin of the space
+    pub fn new_absolute(
+        /// Vertex of the field of view
+        eye: Vec3,
+        target: Vec3,
+        /// Vertical direction
+        vert: Vec3,
+        /// Field of view (degrees)
+        vfov: f64,
+        /// Width/height aspect ratio
+        ratio: f64,
+    ) -> Self {
         let theta = vfov * std::f64::consts::PI / 180.;
         let half_hgt = (theta / 2.).tan();
         let half_wth = ratio * half_hgt;
@@ -24,13 +40,20 @@ impl Camera {
         }
     }
 
+    /// Build a camera from its position relative to the point aimed at
     pub fn new_relative(
         target: Vec3,
+        /// Rotation around the target (degrees)
         angle: f64,
+        /// Angle above target (degrees, use negative value for low-angle shot)
         rise: f64,
+        /// Distance to target
         distance: f64,
+        /// 0 for vertical field of view
         tilt: f64,
+        /// Vertical field of view (degrees)
         aperture: f64,
+        /// Width/height aspect ratio
         ratio: f64,
     ) -> Self {
         let theta = aperture * std::f64::consts::PI / 180.;
@@ -61,6 +84,7 @@ impl Camera {
         }
     }
 
+    /// Calculate the direction of a ray given by the position on the image of its destination
     pub fn get_ray(&self, u: f64, v: f64) -> Ray {
         Ray {
             orig: self.orig,
