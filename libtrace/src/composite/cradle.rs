@@ -6,7 +6,7 @@ use crate::internal::*;
 pub struct NewtonCradle {
     /// Position of one of the corners
     pub a: Vec3,
-    /// Rotation around a vertical axis going through a
+    /// Rotation around a vertical axis going through a (degrees)
     pub angle: f64,
     /// Scale (1.0 will have the size of a 1x1x1 cube)
     pub size: f64,
