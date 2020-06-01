@@ -1,7 +1,12 @@
+/// Debug structure
 pub mod axes;
+/// Newton's cradle
 pub mod cradle;
+/// 6-sided die
 pub mod die;
+/// Laboratory glassware
 pub mod flasks;
+/// Molecular model (ball-and-stick)
 pub mod molecules;
 
 pub use axes::Axes;
