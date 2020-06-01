@@ -11,6 +11,8 @@ impl Ray {
         Self { orig, dir }
     }
 
+    /// When `temp` describes the real numbers, `self.project(temp)`
+    /// describes all of the line with the direction of `self.dir`
     pub fn project(&self, temp: f64) -> Vec3 {
         self.orig + self.dir * temp
     }
