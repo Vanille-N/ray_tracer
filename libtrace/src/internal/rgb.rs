@@ -1,10 +1,14 @@
 use std::fmt;
 use std::ops;
 
+/// Three red, green & blue components
+///
+/// Recommended between 0 and 1, the Light texture can have values over 1.
 #[derive(Copy, Clone)]
 pub struct RGB(pub f64, pub f64, pub f64);
 
 impl RGB {
+    /// Make positive all components that are not
     pub fn validate(self) -> RGB {
         Self(self.0.max(0.), self.1.max(0.), self.2.max(0.))
     }
@@ -121,6 +125,10 @@ impl fmt::Display for RGB {
     }
 }
 
+/// C%n is equivalent to C * n / 100.
+///
+/// It is meant to ease mixing colors: to create yellow it is possible to write
+/// RED%50 + GREEN%50
 impl ops::Rem<usize> for RGB {
     type Output = Self;
     fn rem(self, part: usize) -> Self::Output {
