@@ -4,7 +4,13 @@ Originally inspired by _Ray Tracing in One Weekend_ (Peter Shirley).
 
 This library cannot be executed as-is, but it can provide tools that `pytrace` can then use.
 
-What can be done here is creating a new complex object.
+It is also possible to import it from a Rust script: see `rstrace` for a concrete example.
+
+
+### Creating a new complex object
+
+Usually a scene would be created from `pytrace` or `rstrace`, but if one wishes to create
+a new generalizable object, then this is the right crate to modify.
 
 To do so, it is recommended to create a new file in the `composite` module :
 - Create a new file `composite/<object>.rs`
@@ -22,15 +28,15 @@ Many other similarities were partially or completely rewritten halfway into the 
 
 The `hit` implementations for many objects were inspired by or debugged with the help of a wide variety of websites: `internal::hitable::{EmptyCylinder, EmptyCone, Triangle}` were implemented after comparing the implementations of intersection with a ray from at least a dozen sources, most of which had made widely different design choices and were hard to adapt.
 
-`internal::hitable::{InfinitePlane, Disc}` were done by myself without help, `internal::hitable::Parallelogram` was adapted from `internal::hitable::Triangle`, and all of the other are merely wrappers.
+`internal::hitable::{InfinitePlane, Disc}` are original implementations, `internal::hitable::Parallelogram` was adapted from `internal::hitable::Triangle`, and all of the other are merely wrappers.
 
 ## What's new ?
 
-- All composite objects (`composite::axes::Axes`, `composite::cradle::NewtonCradle`, `composite::die::Die`, `composite::erlenmeyer::Erlenmeyer`, `composite::molecules::Molecules`) are my own
-- The intersection/removal mechanism implemented in `internal::hitable::Interaction` was fully implemented without external inspiration
-- Although the first versions of the `internal::hitable::Texture::Dielectric` branch of `internal::hitable::scatter` were copied, later versions were fully remade from scratch with a completely different approach, which (unlike the original one) correctly deals with dielectric/dielectric interfaces
+- All composite objects (`composite::axes::Axes`, `composite::cradle::NewtonCradle`, `composite::die::Die`, `composite::erlenmeyer::Erlenmeyer`, `composite::molecules::Molecules`)
+- The intersection/removal mechanism implemented in `internal::hitable::Interaction` is completely original
+- Although the first versions of the `internal::hitable::Texture::Dielectric` branch of `internal::hitable::scatter` were copied, later versions were fully remade from scratch with a completely different, which (unlike the original one) correctly deals with dielectric/dielectric interfaces (see `internal::world::{scatter, World::caracteristics}`)
 - `internal::hitable::HitRecord` was also fully revised
-- The `internal::sky::Sky` texture was of my own initiative
+- The `internal::sky::Sky` texture
 - Brand new `internal::camera::Camera` abstraction: instead of `(look_from, look_at, upwards, field_of_view_angle, aspect_ratio)`, it is much easier to fine-tune a view with `(look_at, angle_around_target, angle_above_target, distance_to_target, tilt, field_of_view_angle, aspect_ratio)`
 - The original version did not support multithreading
 - All scenes visible in `../img/` are of my own creation
