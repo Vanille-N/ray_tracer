@@ -18,7 +18,7 @@ const NITROGEN: Texture = Texture::Metal(BLUE, 0.0);
 /// General builder for any molecule
 #[derive(Clone, Copy)]
 pub struct Molecule {
-    pub c_ref: Vec3,
+    pub orig: Vec3,
     pub up: Vec3,
     pub fwd: Vec3,
 }
@@ -151,7 +151,7 @@ impl Molecule {
 
         let [t, u, v, w, x, y, z] = self.directions();
 
-        let c1 = self.c_ref;
+        let c1 = self.orig;
         let c2 = c1 - t * len1;
         let c3 = c1 - u * len1;
         let c4 = c2 + v * len1;
@@ -242,7 +242,7 @@ impl Molecule {
 
         let [t, u, v, w, x, y, z] = self.directions();
 
-        let o = self.c_ref;
+        let o = self.orig;
         let h1 = o + x * len2;
         let h2 = o - v * len2;
 
@@ -262,7 +262,7 @@ impl Molecule {
 
         let [t, u, v, w, x, y, z] = self.directions();
 
-        let c = self.c_ref;
+        let c = self.orig;
         let h1 = c + x * len2;
         let h2 = c - u * len2;
         let h3 = c - v * len2;
@@ -291,7 +291,7 @@ impl Molecule {
 
         let [t, u, v, w, x, y, z] = self.directions();
 
-        let c1 = self.c_ref;
+        let c1 = self.orig;
         let c2 = c1 - v * len1;
         let o = c1 - t * len1;
         let h1 = c1 + x * len2;
@@ -336,7 +336,7 @@ impl Molecule {
 
         let [t, u, v, w, x, y, z] = self.directions();
 
-        let c = self.c_ref;
+        let c = self.orig;
         let o1 = c + x * len1;
         let o2 = c - x * len1;
 
@@ -358,7 +358,7 @@ impl Molecule {
 
         let [t, u, v, w, x, y, z] = self.directions();
 
-        let n1 = self.c_ref;
+        let n1 = self.orig;
         let n2 = n1 + x * len1;
 
         let [l1, l2, l3] = link(n1, n2, v);
@@ -380,7 +380,7 @@ impl Molecule {
 
         let [t, u, v, w, x, y, z] = self.directions();
 
-        let c1 = self.c_ref;
+        let c1 = self.orig;
         let c2 = c1 + v * len1;
         let c3 = c2 + x * len1;
         let c4 = c3 - y * len1;
@@ -446,7 +446,7 @@ impl Molecule {
         let [t, u, v, w, x, y, z] = self.directions();
         let link = link_builder(rad3);
 
-        let o = self.c_ref;
+        let o = self.orig;
         let ot = o + t * len1;
         let ou = o + u * len1;
         let ov = o + v * len1;
