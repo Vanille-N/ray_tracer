@@ -103,25 +103,9 @@ impl Cfg {
         self.refresh();
     }
 
-    #[text_signature = "($self, /)"]
-    pub fn populate(&mut self) {
-        self.world.push_vec(
-            composite::NewtonCradle {
-                a: internal::Vec3(-0.5, 0., -0.5),
-                angle: 0.,
-                size: 1.,
-            }
-            .build(),
-        );
-        self.world.push(
-            internal::InfinitePlane {
-                orig: internal::Vec3(0., 0., 0.),
-                normal: internal::Vec3(0., 1., 0.),
-                texture: internal::Texture::Lambertian(internal::RGB(0.5, 0.5, 0.5)),
-            }
-            .build()
-            .wrap(),
-        );
+    #[text_signature = "($self, object, /)"]
+    pub fn populate(&mut self, object: Prebuilt) {
+        self.world.push_vec(object.extract());
         self.refresh();
     }
 
