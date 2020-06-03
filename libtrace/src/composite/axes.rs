@@ -14,13 +14,15 @@ const BLACK: Texture = Texture::Lambertian(RGB(0.01, 0.01, 0.01));
 /// Its major downside is that being composed of almost 20 objects, it slows down rendering
 /// quite a bit.
 #[derive(Clone, Copy)]
-pub struct Axes(pub f64);
+pub struct Axes {
+    pub scale: f64,
+}
 
 #[allow(unused_variables)]
 #[allow(clippy::many_single_char_names)]
 impl Axes {
     pub fn build(self) -> Composite {
-        let len = self.0;
+        let len = self.scale;
         let rad1 = len * 0.1;
         let rad2 = len * 0.2;
         let o = Vec3(0.0, 0.0, 0.0);
