@@ -71,27 +71,31 @@ impl NewtonCradle {
         let smoothtop4 = make_cap(self.a + v * 0.9 + u * 0.1 + w);
         let r = u.len() * 0.7 / 10.0;
 
-        let make_ball = |c| {
+        let make_ball = |c: Vec3, swing: f64| {
+            let axis = Vec3(c.0, w.1, c.2);
+            let theta = swing * std::f64::consts::PI / 180.;
+            let radius = (c - axis).len() / w.len();
+            let local_w = v * radius * theta.sin() + w * radius * theta.cos();
             let sphere = Sphere {
-                center: c,
+                center: axis - local_w ,
                 radius: r,
                 texture: steel,
             };
             let ring = Sphere {
-                center: sphere.center + w.unit() * r,
+                center: sphere.center + local_w.unit() * r,
                 radius: r * 0.3,
                 texture: plastic,
             };
             let threada = EmptyCylinder {
                 center1: ring.center,
-                center2: ring.center + u * 0.40 + w * 0.64,
+                center2: ring.center + u * 0.35 + local_w * 0.9,
                 radius: r * 0.03,
                 texture: nylon,
             }
             .build();
             let threadb = EmptyCylinder {
                 center1: ring.center,
-                center2: ring.center - u * 0.40 + w * 0.64,
+                center2: ring.center - u * 0.35 + local_w * 0.9,
                 radius: r * 0.03,
                 texture: nylon,
             }
@@ -103,16 +107,20 @@ impl NewtonCradle {
                 threadb.wrap(),
             )
         };
+        let pos = match self.pos {
+            None => [0.0; 5],
+            Some(arr) => arr,
+        };
         let (sphere1, ring1, thread1a, thread1b) =
-            make_ball(self.a + u * 0.5 + v * 0.15 + v.unit() * 1. * r + w * 0.3);
+            make_ball(self.a + u * 0.5 + v * 0.15 + v.unit() * 1. * r + w * 0.3, pos[0]);
         let (sphere2, ring2, thread2a, thread2b) =
-            make_ball(self.a + u * 0.5 + v * 0.15 + v.unit() * 3. * r + w * 0.3);
+            make_ball(self.a + u * 0.5 + v * 0.15 + v.unit() * 3. * r + w * 0.3, pos[1]);
         let (sphere3, ring3, thread3a, thread3b) =
-            make_ball(self.a + u * 0.5 + v * 0.15 + v.unit() * 5. * r + w * 0.3);
+            make_ball(self.a + u * 0.5 + v * 0.15 + v.unit() * 5. * r + w * 0.3, pos[2]);
         let (sphere4, ring4, thread4a, thread4b) =
-            make_ball(self.a + u * 0.5 + v * 0.15 + v.unit() * 7. * r + w * 0.3);
+            make_ball(self.a + u * 0.5 + v * 0.15 + v.unit() * 7. * r + w * 0.3, pos[3]);
         let (sphere5, ring5, thread5a, thread5b) =
-            make_ball(self.a + u * 0.5 + v * 0.15 + v.unit() * 9. * r + w * 0.3);
+            make_ball(self.a + u * 0.5 + v * 0.15 + v.unit() * 9. * r + w * 0.3, pos[4]);
         vec![
             pedestal, pillar1, pillar2, pillar3, pillar4, bar1, bar2, smoothtop1, smoothtop2,
             smoothtop3, smoothtop4, sphere1, sphere2, sphere3, sphere4, sphere5, ring1, ring2,
