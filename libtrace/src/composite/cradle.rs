@@ -10,6 +10,8 @@ pub struct NewtonCradle {
     pub angle: f64,
     /// Scale (1.0 will have the size of a 1x1x1 cube)
     pub size: f64,
+    /// Describes the positions of the balls
+    pub pos: Option<[f64; 5]>
 }
 
 impl NewtonCradle {
