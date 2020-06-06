@@ -22,5 +22,6 @@ fn pytrace(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_class::<external::EmptyCone>().unwrap();
     m.add_class::<external::Cone>().unwrap();
     m.add_class::<external::Axes>().unwrap();
+    m.add_class::<external::Cradle>().unwrap();
     Ok(())
 }

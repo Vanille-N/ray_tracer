@@ -50,11 +50,68 @@ impl Develop for Axes {
         }.build()
     }
 }
-        }
 
+#[pyclass]
+#[derive(Copy, Clone)]
+#[text_signature = "(position, rotation, size)"]
+pub struct Cradle {
+    #[pyo3(get, set)] pub position: Vec3,
+    #[pyo3(get, set)] pub rotation: f64,
+    #[pyo3(get, set)] pub size: f64,
+    pub amplitude: f64,
+    pub time: f64,
+}
+
+#[pymethods]
+impl Cradle {
+    #[new]
+    pub fn new(position: Vec3, rotation: f64, size: f64) -> Self {
+        Self {
+            position,
+            rotation,
+            size,
+            amplitude: 0.,
+            time: 0.,
+        }
+    }
+
+    #[text_signature = "($self, /)"]
+    pub fn build(self) -> Prebuilt {
+        Prebuilt {
+            contents: Arc::new(self)
+        }
+    }
+
+    #[text_signature = "($self, amount, /)"]
+    pub fn raise_ball(&mut self, amount: f64) {
+        self.amplitude = amount;
+        self.time = std::f64::consts::PI / 2.;
+    }
+
+    #[text_signature = "($self, dt, /)"]
+    pub fn tick(&mut self, dt: f64) {
+        self.time += dt;
+    }
+}
+
+impl Cradle {
+    fn calc_balls(&self) -> [f64; 5] {
+        let c = self.time.sin() * self.amplitude;
+        if c < 0. {
+            [c, 0., 0., 0., 0.]
+        } else {
+            [0., 0., 0., 0., c]
         }
     }
 }
 
+impl Develop for Cradle {
+    fn develop(&self) -> internal::Composite {
+        composite::NewtonCradle {
+            a: self.position.to_internal(),
+            angle: self.rotation,
+            size: self.size,
+            pos: Some(self.calc_balls()),
+        }.build()
     }
 }
