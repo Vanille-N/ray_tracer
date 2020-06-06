@@ -19,56 +19,42 @@ pub trait Develop {
     fn develop(&self) -> internal::Composite;
 }
 
-macro_rules! internalize {
-    ( $caller:ident, $member:ident, f64 ) => {
-        $caller.$member
-    };
-    ( $caller:ident, $member:ident, $t:tt ) => {
-        $caller.$member.to_internal()
-    };
+#[pyclass]
+#[derive(Copy, Clone)]
+#[text_signature = "(scale, /)"]
+pub struct Axes {
+    #[pyo3(get, set)] pub scale: f64,
 }
 
-macro_rules! dvp {
-    ($( $name:ident { $( $member:ident : $t:tt, )* } )*) => {
-        $(
-        #[pyclass]
-        #[derive(Copy, Clone)]
-        pub struct $name {
-            $(
-                #[pyo3(get, set)] pub $member: $t,
-            )*
+#[pymethods]
+impl Axes {
+    #[new]
+    pub fn new(scale: f64) -> Self {
+        Self {
+            scale,
         }
+    }
 
-        #[pymethods]
-        impl $name {
-            #[new]
-            pub fn new( $( $member: $t ),* ) -> Self {
-                Self {
-                    $( $member, )*
-                }
-            }
-
-            #[text_signature = "($self)"]
-            pub fn build(self) -> Prebuilt {
-                Prebuilt {
-                    contents: Arc::new(self)
-                }
-            }
+    #[text_signature = "($self, /)"]
+    pub fn build(self) -> Prebuilt {
+        Prebuilt {
+            contents: Arc::new(self)
         }
-
-        impl Develop for $name {
-            fn develop(&self) -> internal::Composite {
-                composite:: $name {
-                    $( $member: internalize![self, $member, $t], )*
-                }.build()
-            }
-        }
-        )*
     }
 }
 
-dvp! {
-    Axes {
-        scale: f64,
+impl Develop for Axes {
+    fn develop(&self) -> internal::Composite {
+        composite::Axes {
+            scale: self.scale,
+        }.build()
+    }
+}
+        }
+
+        }
+    }
+}
+
     }
 }
