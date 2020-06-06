@@ -88,14 +88,14 @@ impl NewtonCradle {
             };
             let threada = EmptyCylinder {
                 center1: ring.center,
-                center2: ring.center + u * 0.35 + local_w * 0.9,
+                center2: ring.center + u * 0.372 + local_w * 0.9,
                 radius: r * 0.03,
                 texture: nylon,
             }
             .build();
             let threadb = EmptyCylinder {
                 center1: ring.center,
-                center2: ring.center - u * 0.35 + local_w * 0.9,
+                center2: ring.center - u * 0.372 + local_w * 0.9,
                 radius: r * 0.03,
                 texture: nylon,
             }
