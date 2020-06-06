@@ -1,34 +1,27 @@
 #!/usr/bin/python3
 
-################################
-# THIS FILE IS OUT OF DATE     #
-# It has not yet been modified #
-# to adjust to the new version #
-# of the library               #
-################################
-
 from pytrace import *
 from os import system
 
-def lpad(l, n):
-    return "0" * (l - len(str(n))) + str(n)
 
 tr = Cfg(200, 200, 20)
-tr.add_sky(Sky("data/sky.ppm"))
-tr.populate()
-tr.silence()
+sky = Sky.uniform(RGB(1, 1, 1))
+tr.set_sky(sky)
+tr.set_background(RGB(0, 0, 0))
 
-cam = Camera(0, .5, 0)
-cam.set_distance(5)
-cam.set_rise(30)
+cam = Camera(0, 5, 0)
+cam.distance = 25
 
-for i in range(180):
-    cam.set_angle(i*2)
-    tr.add_cam(cam)
-    tr.render(lpad(5, i))
-    print(i)
+tr.start_movie("cradle")
 
+crad = Cradle(Vec3(-5, 0, -5), 0, 10)
+crad.raise_ball(60)
+for i in range(360):
+    crad.tick(0.2)
+    tr.clear()
+    tr.populate(crad.build())
+    cam.angle = i
+    tr.set_cam(cam)
+    tr.frame()
 
-system("rm sky.avi")
-system("ffmpeg -pattern_type glob -framerate 25 -i \"img-*.ppm\" -vcodec libx264 sky.avi")
-system("rm img-*.ppm")
+tr.end_movie()

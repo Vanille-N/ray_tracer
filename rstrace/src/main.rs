@@ -12,16 +12,16 @@ fn main() {
 }
 
 fn build_world() -> Builder {
-    let wth = 2000; // width in pixels
-    let hgt = 2000; // height in pixels
-    let iter = 100; // number of samples per pixel
+    let wth = 200; // width in pixels
+    let hgt = 200; // height in pixels
+    let iter = 20; // number of samples per pixel
     let cam = Camera::new_relative(
-        Vec3(0.0, 0.5, 0.0),   // target
-        90.0,                   // angle (degrees)
-        40.0,                    // rise (degrees)
-        2.0,                   // distance (meters),
+        Vec3(0.37, 1.0, 0.0),   // target
+        0.,                   // angle (degrees)
+        0.0,                    // rise (degrees)
+        0.1,                   // distance (meters),
         0.0,                     // tilt (degrees)
-        90.0,                    // aperture (degrees)
+        50.0,                    // aperture (degrees)
         wth as f64 / hgt as f64, // aspect ratio
     );
     let sky = Sky::uniform(RGB(0.5, 0.5, 0.5));
