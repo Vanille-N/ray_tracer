@@ -1,6 +1,6 @@
 [package]
 name = "pytrace_core"
-version = "0.2.3"
+version = "0.2.4"
 authors = ["Vanille-N <neven.villani@gmail.com>"]
 edition = "2018"
 include = ["src/**/*", "README.md"]

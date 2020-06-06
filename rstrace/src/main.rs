@@ -12,8 +12,8 @@ fn main() {
 }
 
 fn build_world() -> Builder {
-    let wth = 1000; // width in pixels
-    let hgt = 1000; // height in pixels
+    let wth = 2000; // width in pixels
+    let hgt = 2000; // height in pixels
     let iter = 100; // number of samples per pixel
     let cam = Camera::new_relative(
         Vec3(0.0, 0.5, 0.0),   // target
@@ -33,7 +33,7 @@ fn build_world() -> Builder {
         a: Vec3(-0.5, 0.0, -0.5),
         size: 1.,
         angle: 0.,
-        pos: Some([0., 0., 90., 0., 0.]),
+        pos: Some([-90., -45., 0., 45., 90.]),
     }.build();
 
     world.push_vec(cradle);

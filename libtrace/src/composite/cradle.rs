@@ -112,15 +112,15 @@ impl NewtonCradle {
             Some(arr) => arr,
         };
         let (sphere1, ring1, thread1a, thread1b) =
-            make_ball(self.a + u * 0.5 + v * 0.15 + v.unit() * 1. * r + w * 0.3, pos[0]);
+            make_ball(self.a + u * 0.5 + v * 0.15 + v.unit() * 9. * r + w * 0.3, pos[0]);
         let (sphere2, ring2, thread2a, thread2b) =
-            make_ball(self.a + u * 0.5 + v * 0.15 + v.unit() * 3. * r + w * 0.3, pos[1]);
+            make_ball(self.a + u * 0.5 + v * 0.15 + v.unit() * 7. * r + w * 0.3, pos[1]);
         let (sphere3, ring3, thread3a, thread3b) =
             make_ball(self.a + u * 0.5 + v * 0.15 + v.unit() * 5. * r + w * 0.3, pos[2]);
         let (sphere4, ring4, thread4a, thread4b) =
-            make_ball(self.a + u * 0.5 + v * 0.15 + v.unit() * 7. * r + w * 0.3, pos[3]);
+            make_ball(self.a + u * 0.5 + v * 0.15 + v.unit() * 3. * r + w * 0.3, pos[3]);
         let (sphere5, ring5, thread5a, thread5b) =
-            make_ball(self.a + u * 0.5 + v * 0.15 + v.unit() * 9. * r + w * 0.3, pos[4]);
+            make_ball(self.a + u * 0.5 + v * 0.15 + v.unit() * 1. * r + w * 0.3, pos[4]);
         vec![
             pedestal, pillar1, pillar2, pillar3, pillar4, bar1, bar2, smoothtop1, smoothtop2,
             smoothtop3, smoothtop4, sphere1, sphere2, sphere3, sphere4, sphere5, ring1, ring2,

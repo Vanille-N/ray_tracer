@@ -19,8 +19,10 @@ const NITROGEN: Texture = Texture::Metal(BLUE, 0.0);
 #[derive(Clone, Copy)]
 pub struct Molecule {
     pub orig: Vec3,
+    /// Principal direction of the molecule
     pub up: Vec3,
-    pub fwd: Vec3,
+    /// Rotation around axis
+    pub rot: f64,
 }
 
 /// Collection of balls and sticks
@@ -126,9 +128,19 @@ impl Molecule {
     /// that atoms can be relative to each other (approximately).
     fn directions(&self) -> [Vec3; 7] {
         let zz = self.up.unit();
-        let yy = self.fwd.cross(self.up).unit();
-        let xx = zz.cross(yy).unit();
-
+        let (xx, yy) = {
+            let yy = {
+                let x = Vec3(1., 0., 0.);
+                let y = zz.cross(x);
+                if y.len() == 0. {
+                    zz.cross(Vec3(0., 0., 1.)).unit()
+                } else {
+                    y.unit()
+                }
+            };
+            let xx = zz.cross(yy).unit();
+            (xx * self.rot.cos() + yy * self.rot.sin(), yy * self.rot.cos() - xx * self.rot.sin())
+        };
         let x = zz;
         let v = xx * 0.00 + yy * 0.87 + zz * 0.50;
         let t = xx * 0.74 - yy * 0.44 + zz * 0.50;
@@ -141,7 +153,7 @@ impl Molecule {
 
     /// See [Wikipedia](https://en.wikipedia.org/wiki/Cyclohexanol)
     pub fn cyclohexanol(self) -> MoleculeObject {
-        let len = self.fwd.len();
+        let len = self.up.len();
         let [rad1, rad2, rad3, len1, len2] = dimensions(len);
         let carbon = atom_builder(rad1, CARBON);
         let oxygen = atom_builder(rad1, OXYGEN);
@@ -234,7 +246,7 @@ impl Molecule {
     }
 
     pub fn water(self) -> MoleculeObject {
-        let len = self.fwd.len();
+        let len = self.up.len();
         let [rad1, rad2, rad3, len1, len2] = dimensions(len);
         let oxygen = atom_builder(rad1, OXYGEN);
         let hydrogen = atom_builder(rad2, HYDROGEN);
@@ -254,7 +266,7 @@ impl Molecule {
 
     /// See [Wikipedia](https://en.wikipedia.org/wiki/Methane)
     pub fn methane(self) -> MoleculeObject {
-        let len = self.fwd.len();
+        let len = self.up.len();
         let [rad1, rad2, rad3, len1, len2] = dimensions(len);
         let carbon = atom_builder(rad1, CARBON);
         let hydrogen = atom_builder(rad2, HYDROGEN);
@@ -282,7 +294,7 @@ impl Molecule {
 
     /// See [Wikipedia](https://en.wikipedia.org/wiki/Ethanol)
     pub fn ethanol(self) -> MoleculeObject {
-        let len = self.fwd.len();
+        let len = self.up.len();
         let [rad1, rad2, rad3, len1, len2] = dimensions(len);
         let carbon = atom_builder(rad1, CARBON);
         let oxygen = atom_builder(rad1, OXYGEN);
@@ -328,7 +340,7 @@ impl Molecule {
 
     /// See [Wikipedia](https://en.wikipedia.org/wiki/Carbon_dioxide)
     pub fn carbon_dioxide(self) -> MoleculeObject {
-        let len = self.fwd.len();
+        let len = self.up.len();
         let [rad1, rad2, rad3, len1, len2] = dimensions(len);
         let oxygen = atom_builder(rad1, OXYGEN);
         let carbon = atom_builder(rad1, CARBON);
@@ -351,7 +363,7 @@ impl Molecule {
 
 
     pub fn dinitrogen(self) -> MoleculeObject {
-        let len = self.fwd.len();
+        let len = self.up.len();
         let [rad1, rad2, rad3, len1, len2] = dimensions(len);
         let nitrogen = atom_builder(rad1, NITROGEN);
         let link = triple_builder(rad3);
@@ -371,7 +383,7 @@ impl Molecule {
 
     /// See [Wikipedia](https://en.wikipedia.org/wiki/Benzene)
     pub fn benzene(self) -> MoleculeObject {
-        let len = self.fwd.len();
+        let len = self.up.len();
         let [rad1, rad2, rad3, len1, len2] = dimensions(len);
         let carbon = atom_builder(rad1, CARBON);
         let hydrogen = atom_builder(rad2, HYDROGEN);
@@ -440,7 +452,7 @@ impl Molecule {
 
     /// Debug structure
     pub fn test(self) -> MoleculeObject {
-        let len = self.fwd.len();
+        let len = self.up.len();
         let [rad1, _, rad3, len1, _] = dimensions(len);
 
         let [t, u, v, w, x, y, z] = self.directions();
