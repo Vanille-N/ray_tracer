@@ -6,7 +6,7 @@ edition = "2018"
 include = ["src/**/*", "README.md"]
 license = "GPL-3.0"
 description = "A Python library for ray tracing and image generation"
-readme = "README.md"
+readme = "crate-info.md"
 repository = "https://github.com/Vanille-N/ray_tracer"
 keywords = ["ray-tracing", "graphics", "python-library"]
 
