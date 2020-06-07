@@ -92,11 +92,16 @@ impl Cradle {
     pub fn tick(&mut self, dt: f64) {
         self.time += dt;
     }
+
+    #[text_signature = "($self, t, /)"]
+    pub fn set_time(&mut self, t: f64) {
+        self.time = t;
+    }
 }
 
 impl Cradle {
     fn calc_balls(&self) -> [f64; 5] {
-        let c = self.time.sin() * self.amplitude;
+        let c = (self.time * 2. * std::f64::consts::PI).sin() * self.amplitude;
         if c < 0. {
             [c, 0., 0., 0., 0.]
         } else {

@@ -3,7 +3,6 @@ use pyo3::prelude::*;
 use std::process::Command;
 
 use crate::external::*;
-use pytrace_core::composite;
 use pytrace_core::internal;
 use pytrace_core::render::*;
 

@@ -4,7 +4,7 @@ from pytrace import *
 from os import system
 
 
-tr = Cfg(200, 200, 20)
+tr = Cfg(100, 100, 10)
 sky = Sky.uniform(RGB(1, 1, 1))
 tr.set_sky(sky)
 tr.set_background(RGB(0, 0, 0))
@@ -17,7 +17,7 @@ tr.start_movie("cradle")
 crad = Cradle(Vec3(-5, 0, -5), 0, 10)
 crad.raise_ball(60)
 for i in range(360):
-    crad.tick(0.2)
+    crad.set_time(15 * i / 360)
     tr.clear()
     tr.populate(crad.build())
     cam.angle = i
