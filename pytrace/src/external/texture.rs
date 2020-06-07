@@ -1,5 +1,6 @@
 use pyo3::prelude::*;
 use pytrace_core::internal;
+use pyo3::PyNumberProtocol;
 
 #[pyclass]
 #[text_signature = "(r, g, b, /)"]
@@ -107,5 +108,21 @@ impl Texture {
 impl Texture {
     pub fn to_internal(self) -> internal::Texture {
         self.contents
+    }
+}
+
+#[pyproto]
+impl PyNumberProtocol for RGB {
+    fn __add__(lhs: RGB, rhs: RGB) -> PyResult<RGB> {
+        Ok(RGB{r: lhs.r + rhs.r, g: lhs.g + rhs.g, b: lhs.b + rhs.b})
+    }
+
+    fn __sub__(lhs: RGB, rhs: RGB) -> PyResult<RGB> {
+        Ok(RGB{r: lhs.r - rhs.r, g: lhs.g - rhs.g, b: lhs.b - rhs.b})
+    }
+
+    fn __mod__(lhs: RGB, rhs: f64) -> PyResult<RGB> {
+        let f = rhs / 100.;
+        Ok(RGB{r: lhs.r * f, g: lhs.g * f, b: lhs.b + f})
     }
 }
