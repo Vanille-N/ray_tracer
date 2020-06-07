@@ -1,6 +1,7 @@
 use crate::internal;
 use pyo3::prelude::*;
 use std::sync::Arc;
+use pyo3::PyNumberProtocol;
 
 pub trait ToInternal {
     fn to_internal(&self) -> internal::Primitive;
@@ -144,6 +145,24 @@ impl Construct {
         }
     }
 }
+
+
+#[pyproto]
+impl PyNumberProtocol for Construct {
+    fn __and__(lhs: Construct, rhs: Construct) -> PyResult<Construct> {
+        Ok(lhs.inter(&rhs))
+    }
+
+    fn __or__(lhs: Construct, rhs: Construct) -> PyResult<Construct> {
+        Ok(lhs.union(&rhs))
+    }
+
+    fn __sub__(lhs: Construct, rhs: Construct) -> PyResult<Construct> {
+        Ok(lhs.diff(&rhs))
+    }
+}
+
+
 
 // About the InterTree::canonical() function
 //
