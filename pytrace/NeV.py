@@ -3,7 +3,7 @@
 from pytrace import *
 from os import system
 
-tr = Cfg(500, 250, 40)
+tr = Cfg(200, 100, 20)
 
 cam = Camera(75, 15, 15)
 cam.rise = 20
@@ -22,31 +22,45 @@ x = Vec3(10, 0, 0);
 y = Vec3(0, 10, 0);
 z = Vec3(0, 0, 30);
 
-nbase = Rhomboid(x.mul(-0.2), y.mul(0.5), x.mul(1.4), z, t1)
-nlbar = Rhomboid(x.mul(0.25), y.mul(4.55), x.mul(0.5), z, t1)
+nbase = Rhomboid(-x*0.2, y*0.5, x*1.4, z, t1)
+nlbar = Rhomboid(x*0.25, y*4.55, x*0.5, z, t1)
 
-nlserif = Rhomboid(y.mul(0.5), y.mul(0.25), x, z, t1).diff(Cylinder(y.mul(0.75).add(z.mul(-0.1)), y.mul(0.75).add(z.mul(1.1)), 2.5, t1)).diff(Cylinder(x.add(y.mul(0.75)).add(z.mul(-0.1)), x.add(y.mul(0.75)).add(z.mul(1.1)), 2.5, t1))
+nlserif = Rhomboid(y*0.5, y*0.25, x, z, t1) \
+    - Cylinder(y*0.75 - z*0.1, y*0.75 + z*1.1, 2.5, t1) \
+    - Cylinder(x + y*0.75 - z*0.1, x + y*0.75 + z*1.1, 2.5, t1)
 
-nmidbar = Rhomboid(x.mul(-0.2).add(y.mul(5.)), x.mul(1.65), x.mul(5.).add(y.mul(-5.)), z, t1).diff(Rhomboid(x.mul(0.62).add(y.mul(4.7)).add(z.mul(-0.1)), x.mul(0.6), x.mul(5.).add(y.mul(-5.)), z.mul(1.2), t1)).diff(Cylinder(x.mul(5.), x.mul(7.), 40., t1))
+nmidbar = Rhomboid(-x*0.2 + y*5., x*1.65, x*5 - y*5, z, t1) \
+    - Rhomboid(x*0.62 + y*4.7 - z*0.1, x*0.6, x*5 - y*5, z*1.2, t1) \
+    - Cylinder(x*5, x*7, 40, t1)
 
-nrbar = Rhomboid(x.mul(4.8), y.mul(5.), x.mul(0.5), z, t1)
-ntop = Rhomboid(x.mul(4.30).add(y.mul(4.5)), y.mul(0.5), x.mul(1.4), z, t1)
+nrbar = Rhomboid(x*4.8, y*5, x*0.5, z, t1)
+ntop = Rhomboid(x*4.30 + y*4.5, y*0.5, x*1.4, z, t1)
 
-nrserif = Rhomboid(x.mul(4.55).add(y.mul(4.25)), y.mul(0.25), x, z, t1).diff(Cylinder(x.mul(4.55).add(y.mul(4.25)).add(z.mul(-0.1)), x.mul(4.55).add(y.mul(4.25)).add(z.mul(1.1)), 2.5, t1)).diff(Cylinder(x.mul(5.55).add(y.mul(4.25)).add(z.mul(-0.1)), x.mul(5.55).add(y.mul(4.25)).add(z.mul(1.1)), 2.5, t1))
+nrserif = Rhomboid(x*4.55 + y*4.25, y*0.25, x, z, t1) \
+    - Cylinder(x*4.55 + y*4.25 - z*0.1, x*4.55 + y*4.25 + z*1.1, 2.5, t1) \
+    - Cylinder(x*5.55 + y*4.25 - z*0.1, x*5.55 + y*4.25 + z*1.1, 2.5, t1)
 
-ecirc = Cylinder(x.mul(7.5).add(y.mul(1.5)), x.mul(7.5).add(y.mul(1.5)).add(z), 15., t2).diff(Cylinder(x.mul(7.5).add(y.mul(1.5)).add(z.mul(-0.1)), x.mul(7.5).add(y.mul(1.5)).add(z.mul(1.1)), 10., t2)).diff(Rhomboid(x.mul(7.5).add(y.mul(1.5)).add(z.mul(-0.1)), x.mul(10.).add(y.mul(5.)), x.mul(10.).add(y.mul(-5.)), z.mul(1.2), t2,))
+ecirc = Cylinder(x*7.5 + y*1.5, x*7.5 + y*1.5 + z, 15., t2) \
+    - Cylinder(x*7.5 + y*1.5 - z*0.1, x*7.5 + y*1.5 + z*1.1, 10., t2) \
+    - Rhomboid(x*7.5 + y*1.5 - z*0.1, x*10. + y*5., x*10.- y*5., z*1.2, t2)
 
-ehbar = Rhomboid(x.mul(6.5).add(y.mul(1.)), x.mul(2.).add(y.mul(1.)), y.mul(0.57), z, t2)
-vlbar = Rhomboid(x.mul(9.5), y.mul(5.), x.mul(0.5), z, t3)
-vltop = Rhomboid(x.mul(9.).add(y.mul(4.5)), y.mul(0.5), x.mul(1.4), z, t3)
+ehbar = Rhomboid(x*6.5 + y*1., x*2. + y*1., y*0.57, z, t2)
+vlbar = Rhomboid(x*9.5, y*5., x*0.5, z, t3)
+vltop = Rhomboid(x*9. + y*4.5, y*0.5, x*1.4, z, t3)
 
-vlserif = Rhomboid(x.mul(9.25).add(y.mul(4.25)), y.mul(0.25), x, z, t3).diff(Cylinder(x.mul(9.25).add(y.mul(4.25)).add(z.mul(-0.1)), x.mul(9.25).add(y.mul(4.25)).add(z.mul(1.1)), 2.5, t3)).diff(Cylinder(x.mul(10.25).add(y.mul(4.25)).add(z.mul(-0.1)), x.mul(10.25).add(y.mul(4.25)).add(z.mul(1.1)), 2.5, t3))
+vlserif = Rhomboid(x*9.25 + y*4.25, y*0.25, x, z, t3) \
+    - Cylinder(x*9.25 + y*4.25 - z*0.1, x*9.25 + y*4.25 + z*1.1, 2.5, t3) \
+    - Cylinder(x*10.25 + y*4.25 - z*0.1, x*10.25 + y*4.25 + z*1.1, 2.5, t3)
 
-vmidlo = Cylinder(x.mul(5.13).add(y.mul(9.88)), x.mul(5.13).add(y.mul(9.88)).add(z), 110.3, t3).inter(Rhomboid(x.mul(9.5).add(z.mul(-0.1)), y.mul(5.), x.mul(6.), z.mul(1.2), t3)).diff(Cylinder(x.mul(5.13).add(y.mul(9.88)).add(z.mul(-0.1)), x.mul(5.13).add(y.mul(9.88)).add(z.mul(1.1)), 105., t3))
+vmidlo = Cylinder(x*5.13 + y*9.88, x*5.13 + y*9.88 + z, 110.3, t3) \
+    & Rhomboid(x*9.5 - z*0.1, y*5., x*6., z*1.2, t3) \
+    - Cylinder(x*5.13 + y*9.88 - z*0.1, x*5.13 + y*9.88 + z*1.1, 105., t3)
 
-vmidhi = Cylinder(x.mul(5.13).add(y.mul(9.88)), x.mul(5.13).add(y.mul(9.88)).add(z), 100., t3).inter(Rhomboid(x.mul(9.5).add(z.mul(-0.1)), y.mul(5.), x.mul(6.), z.mul(1.2), t3)).diff(Cylinder(x.mul(5.13).add(y.mul(9.88)).add(z.mul(-0.1)), x.mul(5.13).add(y.mul(9.88)).add(z.mul(1.1)), 95., t3))
+vmidhi = Cylinder(x*5.13 + y*9.88, x*5.13 + y*9.88 + z, 100., t3) \
+    & Rhomboid(x*9.5 - z*0.1, y*5., x*6., z*1.2, t3) \
+    - Cylinder(x*5.13 + y*9.88 - z*0.1, x*5.13 + y*9.88 + z*1.1, 95., t3)
 
-vrtop = Rhomboid(x.mul(13.5).add(y.mul(4.5)), y.mul(0.5), x.mul(0.95), z, t3)
+vrtop = Rhomboid(x*13.5 + y*4.5, y*0.5, x*0.95, z, t3)
 
 tr.add_obj(nbase);
 tr.add_obj(nlbar);
