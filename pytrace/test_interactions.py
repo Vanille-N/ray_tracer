@@ -12,6 +12,6 @@ a = Sphere(Vec3(0, 0, 0), 1, Texture.lambertian(RGB(1, 0, 0)))
 b = Sphere(Vec3(1, 0, 0), 1, Texture.lambertian(RGB(0, 1, 0)))
 c = Sphere(Vec3(0.5, 0.5, 0), 1, Texture.lambertian(RGB(0, 0, 1)))
 
-tr.add_obj(a.diff(b).diff(c))
+tr.add_obj(a - b - c)
 
 tr.render("union")
