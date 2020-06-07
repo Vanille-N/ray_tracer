@@ -1,4 +1,5 @@
 use pyo3::prelude::*;
+use pyo3::PyNumberProtocol;
 
 use pytrace_core::internal;
 
@@ -43,11 +44,26 @@ impl Vec3 {
     }
 }
 
-// Fails for some unknown reason...
+#[pyproto]
+impl PyNumberProtocol for Vec3 {
+    fn __add__(lhs: Vec3, rhs: Vec3) -> PyResult<Vec3> {
+        Ok(Vec3{x: lhs.x + rhs.x, y: lhs.y + rhs.y, z: lhs.z + rhs.z})
+    }
 
-// #[pyproto]
-// impl PyNumberProtocol for Vec3 {
-//     fn __add__(&self, other: &Vec3) -> PyResult<Vec3> {
-//         Ok(Vec3{x: self.x + other.x, y: self.y + other.y, z: self.z + other.z})
-//     }
-// }
+
+    fn __neg__(self) -> PyResult<Vec3> {
+        Ok(Vec3{x: -self.x, y: -self.y, z: -self.z})
+    }
+
+    fn __sub__(lhs: Vec3, rhs: Vec3) -> PyResult<Vec3> {
+        Ok(Vec3{x: lhs.x - rhs.x, y: lhs.y - rhs.y, z: lhs.z - rhs.z})
+    }
+
+    fn __mul__(lhs: Vec3, rhs: f64) -> PyResult<Vec3> {
+        Ok(Vec3{x: lhs.x * rhs, y: lhs.y * rhs, z: lhs.z * rhs})
+    }
+
+    fn __truediv__(lhs: Vec3, rhs: f64) -> PyResult<Vec3> {
+        Ok(Vec3{x: lhs.x / rhs, y: lhs.y / rhs, z: lhs.z / rhs})
+    }
+}
