@@ -49,63 +49,63 @@ macro_rules! dvp {
 }
 
 dvp! {Sphere,
-    center: Vec3,
+    center: Vec,
     radius: f64,
 }
 
 dvp! {InfinitePlane,
-    orig: Vec3,
-    normal: Vec3,
+    orig: Vec,
+    normal: Vec,
 }
 
 dvp! {Triangle,
-    a: Vec3,
-    u: Vec3,
-    v: Vec3,
+    a: Vec,
+    u: Vec,
+    v: Vec,
 }
 
 dvp! {Parallelogram,
-    a: Vec3,
-    u: Vec3,
-    v: Vec3,
+    a: Vec,
+    u: Vec,
+    v: Vec,
 }
 
 dvp! {Rhomboid,
-    a: Vec3,
-    u: Vec3,
-    v: Vec3,
-    w: Vec3,
+    a: Vec,
+    u: Vec,
+    v: Vec,
+    w: Vec,
 }
 
 dvp! {EmptyCylinder,
-    center1: Vec3,
-    center2: Vec3,
+    center1: Vec,
+    center2: Vec,
     radius: f64,
 }
 
 dvp! {Disc,
-    center: Vec3,
-    normal: Vec3,
+    center: Vec,
+    normal: Vec,
     radius: f64,
 }
 
 dvp! {Cylinder,
-    center1: Vec3,
-    center2: Vec3,
+    center1: Vec,
+    center2: Vec,
     radius: f64,
 }
 
 dvp! {EmptyCone,
-    orig: Vec3,
-    dir: Vec3,
+    orig: Vec,
+    dir: Vec,
     angle: f64,
     begin: f64,
     end: f64,
 }
 
 dvp! {Cone,
-    orig: Vec3,
-    dir: Vec3,
+    orig: Vec,
+    dir: Vec,
     angle: f64,
     begin: f64,
     end: f64,

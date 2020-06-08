@@ -7,7 +7,7 @@ mod external;
 fn pytrace(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_class::<external::Cfg>().unwrap();
     m.add_class::<external::Camera>().unwrap();
-    m.add_class::<external::Vec3>().unwrap();
+    m.add_class::<external::Vec>().unwrap();
     m.add_class::<external::Sky>().unwrap();
     m.add_class::<external::RGB>().unwrap();
     m.add_class::<external::Texture>().unwrap();

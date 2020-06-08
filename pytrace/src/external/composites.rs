@@ -55,7 +55,7 @@ impl Develop for Axes {
 #[derive(Copy, Clone)]
 #[text_signature = "(position, rotation, size)"]
 pub struct Cradle {
-    #[pyo3(get, set)] pub position: Vec3,
+    #[pyo3(get, set)] pub position: Vec,
     #[pyo3(get, set)] pub rotation: f64,
     #[pyo3(get, set)] pub size: f64,
     pub amplitude: f64,
@@ -65,7 +65,7 @@ pub struct Cradle {
 #[pymethods]
 impl Cradle {
     #[new]
-    pub fn new(position: Vec3, rotation: f64, size: f64) -> Self {
+    pub fn new(position: Vec, rotation: f64, size: f64) -> Self {
         Self {
             position,
             rotation,

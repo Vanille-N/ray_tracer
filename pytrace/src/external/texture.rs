@@ -1,6 +1,7 @@
 use pyo3::prelude::*;
 use pytrace_core::internal;
 use pyo3::{PyNumberProtocol, PyIterProtocol};
+use std::vec;
 
 #[pyclass]
 #[text_signature = "(r, g, b, /)"]
@@ -135,11 +136,11 @@ impl PyNumberProtocol for RGB {
 #[derive(Clone)]
 pub struct Iterator {
     idx: usize,
-    contents: Vec<f64>,
+    contents: vec::Vec<f64>,
 }
 
 impl Iterator {
-    pub fn new(v: Vec<f64>) -> Self {
+    pub fn new(v: vec::Vec<f64>) -> Self {
         Self {
             idx: 0,
             contents: v,

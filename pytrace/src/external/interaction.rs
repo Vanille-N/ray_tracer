@@ -1,6 +1,7 @@
 use crate::internal;
 use pyo3::prelude::*;
 use std::sync::Arc;
+use std::vec;
 use pyo3::PyNumberProtocol;
 
 pub trait ToInternal {
@@ -60,7 +61,7 @@ impl InterTree {
     }
 
     // See explanations below
-    pub fn canonical(&self) -> Vec<internal::Interaction> {
+    pub fn canonical(&self) -> vec::Vec<internal::Interaction> {
         match self {
             Self::Item(p) => vec![p.clone().extract()],
             Self::Node(inter, a, b) => {
@@ -70,7 +71,7 @@ impl InterTree {
                     Interaction::Union => vec_union(&a_can, &b_can),
                     Interaction::Inter => {
                         // (A \ B) & (C \ D) = (A & C) \ (B | D)
-                        let mut res = Vec::new();
+                        let mut res = vec::Vec::new();
                         for x in &a_can {
                             for y in &b_can {
                                 let internal::Interaction(x_in, x_out) = x;
@@ -88,7 +89,7 @@ impl InterTree {
                         let mut res = a_can;
                         for y in b_can {
                             let acc = res;
-                            res = Vec::new();
+                            res = vec::Vec::new();
                             for x in acc {
                                 let internal::Interaction(x_in, x_out) = &x;
                                 let internal::Interaction(y_in, y_out) = &y;
@@ -114,8 +115,8 @@ impl InterTree {
     }
 }
 
-fn vec_union<T: Clone>(a: &[T], b: &[T]) -> Vec<T> {
-    let mut res = Vec::new();
+fn vec_union<T: Clone>(a: &[T], b: &[T]) -> vec::Vec<T> {
+    let mut res = vec::Vec::new();
     for x in a {
         res.push(x.clone());
     }
