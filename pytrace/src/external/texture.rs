@@ -1,6 +1,6 @@
 use pyo3::prelude::*;
 use pytrace_core::internal;
-use pyo3::PyNumberProtocol;
+use pyo3::{PyNumberProtocol, PyIterProtocol};
 
 #[pyclass]
 #[text_signature = "(r, g, b, /)"]
@@ -22,6 +22,10 @@ impl RGB {
 impl RGB {
     pub fn to_internal(self) -> internal::RGB {
         internal::RGB(self.r, self.g, self.b)
+    }
+
+    pub fn into_iter(self) -> Iterator {
+        Iterator::new(vec![self.r, self.g, self.b])
     }
 }
 
@@ -124,5 +128,42 @@ impl PyNumberProtocol for RGB {
     fn __mod__(lhs: RGB, rhs: f64) -> PyResult<RGB> {
         let f = rhs / 100.;
         Ok(RGB{r: lhs.r * f, g: lhs.g * f, b: lhs.b + f})
+    }
+}
+
+#[pyclass]
+#[derive(Clone)]
+pub struct Iterator {
+    idx: usize,
+    contents: Vec<f64>,
+}
+
+impl Iterator {
+    pub fn new(v: Vec<f64>) -> Self {
+        Self {
+            idx: 0,
+            contents: v,
+        }
+    }
+}
+
+#[pyproto]
+impl PyIterProtocol for Iterator {
+    fn __next__(mut item: PyRefMut<Iterator>) -> PyResult<Option<f64>> {
+        if item.idx < item.contents.len() {
+            let res = item.contents[item.idx];
+            item.idx += 1;
+            Ok(Some(res))
+        } else {
+            Ok(None)
+        }
+    }
+}
+
+
+#[pyproto]
+impl PyIterProtocol for RGB {
+    fn __iter__(item: PyRefMut<RGB>) -> PyResult<Iterator> {
+        Ok(item.into_iter())
     }
 }
