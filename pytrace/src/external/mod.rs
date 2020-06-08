@@ -1,17 +1,17 @@
 mod camera;
 mod cfg;
+mod composites;
 mod interaction;
 mod primitives;
 mod sky;
 mod texture;
 mod vec;
-mod composites;
 
 pub use camera::Camera;
 pub use cfg::Cfg;
+pub use composites::{Axes, Cradle, Prebuilt};
+pub use interaction::{Construct, Primitive, ToInternal};
 pub use primitives::*;
 pub use sky::Sky;
-pub use texture::{RGB, Texture};
+pub use texture::{Texture, RGB};
 pub use vec::Vec;
-pub use interaction::{Construct, ToInternal, Primitive};
-pub use composites::{Prebuilt, Axes, Cradle};

@@ -1,5 +1,5 @@
 use pyo3::prelude::*;
-use pyo3::{PyNumberProtocol, PyObjectProtocol, PyIterProtocol};
+use pyo3::{PyIterProtocol, PyNumberProtocol, PyObjectProtocol};
 use std::vec;
 
 use pytrace_core::internal;
@@ -48,24 +48,43 @@ impl Vec {
 #[pyproto]
 impl PyNumberProtocol for Vec {
     fn __add__(lhs: Vec, rhs: Vec) -> PyResult<Vec> {
-        Ok(Vec{x: lhs.x + rhs.x, y: lhs.y + rhs.y, z: lhs.z + rhs.z})
+        Ok(Vec {
+            x: lhs.x + rhs.x,
+            y: lhs.y + rhs.y,
+            z: lhs.z + rhs.z,
+        })
     }
 
-
     fn __neg__(self) -> PyResult<Vec> {
-        Ok(Vec{x: -self.x, y: -self.y, z: -self.z})
+        Ok(Vec {
+            x: -self.x,
+            y: -self.y,
+            z: -self.z,
+        })
     }
 
     fn __sub__(lhs: Vec, rhs: Vec) -> PyResult<Vec> {
-        Ok(Vec{x: lhs.x - rhs.x, y: lhs.y - rhs.y, z: lhs.z - rhs.z})
+        Ok(Vec {
+            x: lhs.x - rhs.x,
+            y: lhs.y - rhs.y,
+            z: lhs.z - rhs.z,
+        })
     }
 
     fn __mul__(lhs: Vec, rhs: f64) -> PyResult<Vec> {
-        Ok(Vec{x: lhs.x * rhs, y: lhs.y * rhs, z: lhs.z * rhs})
+        Ok(Vec {
+            x: lhs.x * rhs,
+            y: lhs.y * rhs,
+            z: lhs.z * rhs,
+        })
     }
 
     fn __truediv__(lhs: Vec, rhs: f64) -> PyResult<Vec> {
-        Ok(Vec{x: lhs.x / rhs, y: lhs.y / rhs, z: lhs.z / rhs})
+        Ok(Vec {
+            x: lhs.x / rhs,
+            y: lhs.y / rhs,
+            z: lhs.z / rhs,
+        })
     }
 }
 
@@ -97,7 +116,6 @@ impl PyIterProtocol for Iterator {
         }
     }
 }
-
 
 #[pyproto]
 impl PyIterProtocol for Vec {

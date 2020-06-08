@@ -1,4 +1,3 @@
-use crate::external::*;
 use pytrace_core::internal;
 
 use pyo3::prelude::*;

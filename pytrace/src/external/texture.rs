@@ -1,6 +1,6 @@
 use pyo3::prelude::*;
+use pyo3::{PyIterProtocol, PyNumberProtocol, PyObjectProtocol};
 use pytrace_core::internal;
-use pyo3::{PyNumberProtocol, PyIterProtocol, PyObjectProtocol};
 use std::vec;
 
 #[pyclass]
@@ -31,7 +31,7 @@ impl RGB {
 }
 
 macro_rules! color {
-    ( $name:ident : $alias:tt, $r:expr, $g:expr, $b:expr ) => {
+    ( $name:ident : $r:expr, $g:expr, $b:expr ) => {
         #[pymethods]
         impl RGB {
             #[staticmethod]
@@ -47,27 +47,27 @@ macro_rules! color {
     };
 }
 
-color!(red: _, 1.0, 0.0, 0.0);
-color!(dkred: drd, 0.5, 0.0, 0.0);
-color!(ltred: lrd, 1.0, 0.5, 0.5);
-color!(blue: blu, 0.0, 0.0, 1.0);
-color!(dkblue: dbl, 0.0, 0.0, 0.5);
-color!(ltblue: lbl, 0.3, 0.6, 1.0);
-color!(cyan: cyn, 0.0, 1.0, 1.0);
-color!(green: grn, 0.0, 1.0, 0.0);
-color!(dkgreen: dgr, 0.0, 0.5, 0.0);
-color!(ltgreen: lgr, 0.7, 1.0, 0.0);
-color!(purple: ppl, 0.7, 0.0, 0.0);
-color!(magenta: mgt, 1.0, 0.0, 1.0);
-color!(yellow: ylw, 1.0, 1.0, 0.0);
-color!(brown: brn, 0.3, 0.2, 0.0);
-color!(orange: org, 1.0, 0.4, 0.0);
-color!(turquoise: tqs, 0.0, 0.9, 0.6);
-color!(black: blk, 0.0, 0.0, 0.0);
-color!(white: wht, 1.0, 1.0, 1.0);
-color!(grey: gry, 0.5, 0.5, 0.5);
-color!(dkgrey: dgy, 0.2, 0.2, 0.2);
-color!(ltgrey: lgy, 0.8, 0.8, 0.8);
+color!(red: 1.0, 0.0, 0.0);
+color!(dkred: 0.5, 0.0, 0.0);
+color!(ltred: 1.0, 0.5, 0.5);
+color!(blue: 0.0, 0.0, 1.0);
+color!(dkblue: 0.0, 0.0, 0.5);
+color!(ltblue: 0.3, 0.6, 1.0);
+color!(cyan: 0.0, 1.0, 1.0);
+color!(green: 0.0, 1.0, 0.0);
+color!(dkgreen: 0.0, 0.5, 0.0);
+color!(ltgreen: 0.7, 1.0, 0.0);
+color!(purple: 0.7, 0.0, 0.0);
+color!(magenta: 1.0, 0.0, 1.0);
+color!(yellow: 1.0, 1.0, 0.0);
+color!(brown: 0.3, 0.2, 0.0);
+color!(orange: 1.0, 0.4, 0.0);
+color!(turquoise: 0.0, 0.9, 0.6);
+color!(black: 0.0, 0.0, 0.0);
+color!(white: 1.0, 1.0, 1.0);
+color!(grey: 0.5, 0.5, 0.5);
+color!(dkgrey: 0.2, 0.2, 0.2);
+color!(ltgrey: 0.8, 0.8, 0.8);
 
 #[pyclass]
 #[derive(Clone, Copy)]
@@ -119,16 +119,28 @@ impl Texture {
 #[pyproto]
 impl PyNumberProtocol for RGB {
     fn __add__(lhs: RGB, rhs: RGB) -> PyResult<RGB> {
-        Ok(RGB{r: lhs.r + rhs.r, g: lhs.g + rhs.g, b: lhs.b + rhs.b})
+        Ok(RGB {
+            r: lhs.r + rhs.r,
+            g: lhs.g + rhs.g,
+            b: lhs.b + rhs.b,
+        })
     }
 
     fn __sub__(lhs: RGB, rhs: RGB) -> PyResult<RGB> {
-        Ok(RGB{r: lhs.r - rhs.r, g: lhs.g - rhs.g, b: lhs.b - rhs.b})
+        Ok(RGB {
+            r: lhs.r - rhs.r,
+            g: lhs.g - rhs.g,
+            b: lhs.b - rhs.b,
+        })
     }
 
     fn __mod__(lhs: RGB, rhs: f64) -> PyResult<RGB> {
         let f = rhs / 100.;
-        Ok(RGB{r: lhs.r * f, g: lhs.g * f, b: lhs.b + f})
+        Ok(RGB {
+            r: lhs.r * f,
+            g: lhs.g * f,
+            b: lhs.b + f,
+        })
     }
 }
 
@@ -160,7 +172,6 @@ impl PyIterProtocol for Iterator {
         }
     }
 }
-
 
 #[pyproto]
 impl PyIterProtocol for RGB {

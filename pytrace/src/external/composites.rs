@@ -1,8 +1,8 @@
 use crate::external::*;
 use pyo3::prelude::*;
+use pyo3::PyObjectProtocol;
 use pytrace_core::{composite, internal};
 use std::sync::Arc;
-use pyo3::PyObjectProtocol;
 
 #[pyclass]
 #[derive(Clone)]
@@ -24,31 +24,28 @@ pub trait Develop {
 #[derive(Copy, Clone)]
 #[text_signature = "(scale, /)"]
 pub struct Axes {
-    #[pyo3(get, set)] pub scale: f64,
+    #[pyo3(get, set)]
+    pub scale: f64,
 }
 
 #[pymethods]
 impl Axes {
     #[new]
     pub fn new(scale: f64) -> Self {
-        Self {
-            scale,
-        }
+        Self { scale }
     }
 
     #[text_signature = "($self, /)"]
     pub fn build(self) -> Prebuilt {
         Prebuilt {
-            contents: Arc::new(self)
+            contents: Arc::new(self),
         }
     }
 }
 
 impl Develop for Axes {
     fn develop(&self) -> internal::Composite {
-        composite::Axes {
-            scale: self.scale,
-        }.build()
+        composite::Axes { scale: self.scale }.build()
     }
 }
 
@@ -63,15 +60,16 @@ impl PyObjectProtocol for Axes {
     }
 }
 
-
-
 #[pyclass]
 #[derive(Copy, Clone)]
 #[text_signature = "(position, rotation, size)"]
 pub struct Cradle {
-    #[pyo3(get, set)] pub position: Vec,
-    #[pyo3(get, set)] pub rotation: f64,
-    #[pyo3(get, set)] pub size: f64,
+    #[pyo3(get, set)]
+    pub position: Vec,
+    #[pyo3(get, set)]
+    pub rotation: f64,
+    #[pyo3(get, set)]
+    pub size: f64,
     pub amplitude: f64,
     pub time: f64,
 }
@@ -92,7 +90,7 @@ impl Cradle {
     #[text_signature = "($self, /)"]
     pub fn build(self) -> Prebuilt {
         Prebuilt {
-            contents: Arc::new(self)
+            contents: Arc::new(self),
         }
     }
 
@@ -131,17 +129,26 @@ impl Develop for Cradle {
             angle: self.rotation,
             size: self.size,
             pos: Some(self.calc_balls()),
-        }.build()
+        }
+        .build()
     }
 }
 
 #[pyproto]
 impl PyObjectProtocol for Cradle {
     fn __repr__(self) -> PyResult<String> {
-        Ok(format!("Cradle({}, {})", self.position.__repr__().ok().unwrap(), self.size))
+        Ok(format!(
+            "Cradle({}, {})",
+            self.position.__repr__().ok().unwrap(),
+            self.size
+        ))
     }
 
     fn __str__(self) -> PyResult<String> {
-        Ok(format!("<Cradle object at {} with size {}>", self.position.__repr__().ok().unwrap(), self.size))
+        Ok(format!(
+            "<Cradle object at {} with size {}>",
+            self.position.__repr__().ok().unwrap(),
+            self.size
+        ))
     }
 }

@@ -1,11 +1,11 @@
 use crate::internal;
 use pyo3::prelude::*;
+use pyo3::{PyNumberProtocol, PyObjectProtocol};
+use std::fmt;
 use std::sync::Arc;
 use std::vec;
-use std::fmt;
-use pyo3::{PyNumberProtocol, PyObjectProtocol};
 
-pub trait ToInternal: {
+pub trait ToInternal {
     fn to_internal(&self) -> internal::Primitive;
     fn display(&self) -> String;
 }
@@ -59,7 +59,6 @@ impl fmt::Display for Interaction {
         }
     }
 }
-
 
 #[derive(Clone)]
 pub enum InterTree {
@@ -178,7 +177,6 @@ impl Construct {
     }
 }
 
-
 #[pyproto]
 impl PyNumberProtocol for Construct {
     fn __and__(lhs: Construct, rhs: Construct) -> PyResult<Construct> {
@@ -193,8 +191,6 @@ impl PyNumberProtocol for Construct {
         Ok(lhs.diff(&rhs))
     }
 }
-
-
 
 // About the InterTree::canonical() function
 //

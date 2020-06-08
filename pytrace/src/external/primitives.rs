@@ -1,8 +1,8 @@
 use crate::external::*;
 use pyo3::prelude::*;
+use pyo3::PyObjectProtocol;
 use pytrace_core::internal;
 use std::sync::Arc;
-use pyo3::PyObjectProtocol;
 
 macro_rules! internalize {
     ( $caller:ident, $member:ident, f64 ) => {
@@ -19,7 +19,7 @@ macro_rules! printable {
     };
     ( $caller:ident, $item:ident, $t:tt ) => {
         $caller.$item.__repr__().ok().unwrap()
-    }
+    };
 }
 
 macro_rules! dvp {
