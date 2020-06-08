@@ -14,21 +14,21 @@ glass = Texture.dielectric(RGB(0.9, 0.9, 0.9), 1.7)
 e = 1.5
 r = 50
 
-s1 = Sphere(Vec3(0, 0, e/2 - r), r, glass)
-s2 = Sphere(Vec3(0, 0, -e/2 + r), r, glass)
+s1 = Sphere(Vec(0, 0, e/2 - r), r, glass)
+s2 = Sphere(Vec(0, 0, -e/2 + r), r, glass)
 
 rtext = Texture.lambertian(RGB(0.1, 0.1, 0.1))
 
-ring = Cylinder(Vec3(0, 0, e/10), Vec3(0, 0, -e/10), (e*r)**(0.5), rtext) \
-    - Cylinder(Vec3(0, 0, e), Vec3(0, 0, -e), (e*r)**(0.5) * 0.9, rtext)
+ring = Cylinder(Vec(0, 0, e/10), Vec(0, 0, -e/10), (e*r)**(0.5), rtext) \
+    - Cylinder(Vec(0, 0, e), Vec(0, 0, -e), (e*r)**(0.5) * 0.9, rtext)
 
 def target(y, z):
-    orig = Vec3(-2, y, z)
+    orig = Vec(-2, y, z)
     bg = Texture.lambertian(RGB(0.5, 0.8, 0))
     fg = Texture.lambertian(RGB(0, 0.2, 1))
-    triangle = Triangle(orig, Vec3(60, 0, 0), Vec3(0, 20, 0), bg)
-    arrowrec = Parallelogram(orig + Vec3(2, 1, 0.01), Vec3(1, 0, 0), Vec3(0, 3, 0), fg)
-    arrowhead = Triangle(orig + Vec3(2.5, 6, 0.01), Vec3(-1, -2, 0), Vec3(1, -2, 0), fg)
+    triangle = Triangle(orig, Vec(60, 0, 0), Vec(0, 20, 0), bg)
+    arrowrec = Parallelogram(orig + Vec(2, 1, 0.01), Vec(1, 0, 0), Vec(0, 3, 0), fg)
+    arrowhead = Triangle(orig + Vec(2.5, 6, 0.01), Vec(-1, -2, 0), Vec(1, -2, 0), fg)
     return triangle | arrowrec | arrowhead
 
 cam.distance = 100

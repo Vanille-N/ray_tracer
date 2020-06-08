@@ -18,11 +18,11 @@ impl Sky {
         }
     }
 
-    #[text_signature = "(color, /)"]
+    #[text_signature = "(r, g, b, /)"]
     #[staticmethod]
-    pub fn uniform(c: RGB) -> Self {
+    pub fn uniform(r: f64, g: f64, b: f64) -> Self {
         Self {
-            contents: internal::Sky::uniform(c.to_internal()),
+            contents: internal::Sky::uniform(internal::RGB(r, g, b)),
         }
     }
 }

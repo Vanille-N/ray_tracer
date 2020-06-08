@@ -8,9 +8,9 @@ cam = Camera(0, 0, 0)
 cam.distance = 8
 tr.set_cam(cam)
 
-a = Sphere(Vec3(0, 0, 0), 1, Texture.lambertian(RGB(1, 0, 0)))
-b = Sphere(Vec3(1, 0, 0), 1, Texture.lambertian(RGB(0, 1, 0)))
-c = Sphere(Vec3(0.5, 0.5, 0), 1, Texture.lambertian(RGB(0, 0, 1)))
+a = Sphere(Vec(0, 0, 0), 1, Texture.lambertian(RGB(1, 0, 0)))
+b = Sphere(Vec(1, 0, 0), 1, Texture.lambertian(RGB(0, 1, 0)))
+c = Sphere(Vec(0.5, 0.5, 0), 1, Texture.lambertian(RGB(0, 0, 1)))
 
 tr.add_obj(a - b - c)
 

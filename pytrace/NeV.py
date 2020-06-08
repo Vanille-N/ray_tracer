@@ -10,17 +10,17 @@ cam.rise = 20
 cam.distance = 300
 cam.aperture = 20
 
-sky = Sky.uniform(RGB(1, 1, 1))
+sky = Sky.uniform(1, 1, 1)
 tr.set_sky(sky)
-tr.set_background(RGB(0, 0, 0))
+tr.set_background(0, 0, 0)
 
 t1 = Texture.lambertian(RGB(0.0, 0.7, 0.7));
 t2 = Texture.lambertian(RGB(0.2, 0.8, 0.3));
 t3 = Texture.lambertian(RGB(0.5, 0.7, 0.0));
 
-x = Vec3(10, 0, 0);
-y = Vec3(0, 10, 0);
-z = Vec3(0, 0, 30);
+x = Vec(10, 0, 0);
+y = Vec(0, 10, 0);
+z = Vec(0, 0, 30);
 
 nbase = Rhomboid(-x*0.2, y*0.5, x*1.4, z, t1)
 nlbar = Rhomboid(x*0.25, y*4.55, x*0.5, z, t1)

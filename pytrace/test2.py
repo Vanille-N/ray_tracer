@@ -11,9 +11,9 @@ cam.set_distance(5)
 tr.set_cam(cam)
 
 ground = Texture.lambertian(RGB(1, 0, 0))
-tr.add_obj(InfinitePlane(Vec3(0, 0, 0), Vec3(0, 1, 0), ground))
+tr.add_obj(InfinitePlane(Vec(0, 0, 0), Vec(0, 1, 0), ground))
 
-s = Sphere(Vec3(0, 0, 0), 1, Texture.metal(RGB(1, 1, 1), 0))
+s = Sphere(Vec(0, 0, 0), 1, Texture.metal(RGB(1, 1, 1), 0))
 tr.add_obj(s)
 
 tr.render("test2.ppm")
