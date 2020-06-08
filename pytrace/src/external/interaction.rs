@@ -2,16 +2,25 @@ use crate::internal;
 use pyo3::prelude::*;
 use std::sync::Arc;
 use std::vec;
-use pyo3::PyNumberProtocol;
+use std::fmt;
+use pyo3::{PyNumberProtocol, PyObjectProtocol};
 
-pub trait ToInternal {
+pub trait ToInternal: {
     fn to_internal(&self) -> internal::Primitive;
+    fn display(&self) -> String;
 }
 
 #[pyclass]
 #[derive(Clone)]
 pub struct Construct {
     pub contents: InterTree,
+}
+
+#[pyproto]
+impl PyObjectProtocol for Construct {
+    fn __str__(self) -> PyResult<String> {
+        Ok(self.contents.display())
+    }
 }
 
 #[pyclass]
@@ -28,6 +37,10 @@ impl Primitive {
     pub fn wrap(self) -> Construct {
         InterTree::Item(self).wrap()
     }
+
+    pub fn display(&self) -> String {
+        self.obj.display()
+    }
 }
 
 #[derive(Copy, Clone)]
@@ -36,6 +49,17 @@ pub enum Interaction {
     Diff,
     Union,
 }
+
+impl fmt::Display for Interaction {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            Self::Inter => write!(f, "&"),
+            Self::Union => write!(f, "|"),
+            Self::Diff => write!(f, "-"),
+        }
+    }
+}
+
 
 #[derive(Clone)]
 pub enum InterTree {
@@ -111,6 +135,13 @@ impl InterTree {
                     }
                 }
             }
+        }
+    }
+
+    pub fn display(&self) -> String {
+        match self {
+            Self::Item(p) => p.display(),
+            Self::Node(i, lt, rt) => format!("({}){}({})", lt.display(), i, rt.display()),
         }
     }
 }
