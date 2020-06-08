@@ -1,6 +1,6 @@
 use pyo3::prelude::*;
 use pytrace_core::internal;
-use pyo3::{PyNumberProtocol, PyIterProtocol};
+use pyo3::{PyNumberProtocol, PyIterProtocol, PyObjectProtocol};
 use std::vec;
 
 #[pyclass]
@@ -166,5 +166,16 @@ impl PyIterProtocol for Iterator {
 impl PyIterProtocol for RGB {
     fn __iter__(item: PyRefMut<RGB>) -> PyResult<Iterator> {
         Ok(item.into_iter())
+    }
+}
+
+#[pyproto]
+impl PyObjectProtocol for RGB {
+    fn __repr__(self) -> PyResult<String> {
+        Ok(format!("{{{}, {}, {}}}", self.r, self.g, self.b))
+    }
+
+    fn __str__(self) -> PyResult<String> {
+        Ok(format!("RGB{{{}, {}, {}}}", self.r, self.g, self.b))
     }
 }
