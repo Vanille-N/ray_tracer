@@ -18,7 +18,7 @@ impl Sky {
         }
     }
 
-    #[text_signature = "()"]
+    #[text_signature = "(color, /)"]
     #[staticmethod]
     pub fn uniform(c: RGB) -> Self {
         Self {
