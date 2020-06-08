@@ -78,19 +78,19 @@ impl Cfg {
         }
     }
 
-    #[text_signature = "($self, color, /)"]
-    pub fn set_background(&mut self, color: RGB) {
-        self.world.background = Some(color.to_internal());
+    #[text_signature = "($self, r, g, b, /)"]
+    pub fn set_background(&mut self, r: f64, g: f64, b: f64) {
+        self.world.background = Some(internal::RGB(r, g, b));
         self.refresh();
     }
 
-    #[text_signature = "($self)"]
+    #[text_signature = "($self, /)"]
     pub fn true_background(&mut self) {
         self.world.background = None;
         self.refresh();
     }
 
-    #[text_signature = "($self, sky, /)"]
+    #[text_signature = "($self, camera, /)"]
     pub fn set_cam(&mut self, cam: Camera) {
         self.cam = Some(cam);
         self.refresh();
