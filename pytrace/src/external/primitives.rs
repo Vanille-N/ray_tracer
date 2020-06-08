@@ -13,100 +13,122 @@ macro_rules! internalize {
 }
 
 macro_rules! dvp {
-    ($name:ident, $( $member:ident : $t:tt, )*) => {
-        #[pyclass]
-        #[derive(Copy, Clone)]
-        pub struct $name {
-            $(
-                #[pyo3(get, set)] pub $member: $t,
-            )*
-            #[pyo3(get, set)] pub texture: Texture,
-        }
-
-        #[pymethods]
-        impl $name {
-            #[new]
-            #[allow(clippy::new_ret_no_self)]
-            pub fn new( $( $member: $t, )* texture: Texture ) -> Construct {
-                Primitive {
-                    obj: Arc::new(Self {
-                        $( $member, )*
-                        texture,
-                    }),
-                }.wrap()
+    (
+        $(
+            #[sig=$sig:tt]
+            $name:ident {
+                $( $member:ident : $t:tt ($alias:ident), )*
+            };
+        )*
+    ) => {
+        $(
+            #[pyclass]
+            #[derive(Copy, Clone)]
+            #[text_signature = $sig]
+            pub struct $name {
+                $(
+                    #[pyo3(get, set)] pub $member: $t,
+                )*
+                #[pyo3(get, set)] pub texture: Texture,
             }
-        }
 
-        impl ToInternal for $name {
-            fn to_internal(&self) -> internal::Primitive {
-                internal:: $name {
-                    $( $member: internalize![self, $member, $t], )*
-                    texture: self.texture.to_internal(),
-                }.build()
+            #[pymethods]
+            impl $name {
+                #[new]
+                #[allow(clippy::new_ret_no_self)]
+                pub fn new( $( $member: $t, )* texture: Texture ) -> Construct {
+                    Primitive {
+                        obj: Arc::new(Self {
+                            $( $member, )*
+                            texture,
+                        }),
+                    }.wrap()
+                }
             }
-        }
+
+            impl ToInternal for $name {
+                fn to_internal(&self) -> internal::Primitive {
+                    internal:: $name {
+                        $( $alias: internalize![self, $member, $t], )*
+                        texture: self.texture.to_internal(),
+                    }.build()
+                }
+            }
+        )*
     }
 }
 
-dvp! {Sphere,
-    center: Vec,
-    radius: f64,
-}
+dvp! {
+    #[sig="(center, radius, /)"]
+    Sphere {
+        center: Vec (center),
+        radius: f64 (radius),
+    };
 
-dvp! {InfinitePlane,
-    orig: Vec,
-    normal: Vec,
-}
+    #[sig="(origin, normal, /)"]
+    InfinitePlane {
+        origin: Vec (orig),
+        normal: Vec (normal),
+    };
 
-dvp! {Triangle,
-    a: Vec,
-    u: Vec,
-    v: Vec,
-}
+    #[sig="(vertex, edge1, edge2, /)"]
+    Triangle {
+        vertex: Vec (a),
+        edge1: Vec (u),
+        edge2: Vec (v),
+    };
 
-dvp! {Parallelogram,
-    a: Vec,
-    u: Vec,
-    v: Vec,
-}
+    #[sig="(vertex, edge1, edge2, /)"]
+    Parallelogram {
+        vertex: Vec (a),
+        edge1: Vec (u),
+        edge2: Vec (v),
+    };
 
-dvp! {Rhomboid,
-    a: Vec,
-    u: Vec,
-    v: Vec,
-    w: Vec,
-}
+    #[sig="(vertex, edge1, edge2, edge3, /)"]
+    Rhomboid {
+        vertex: Vec (a),
+        edge1: Vec (u),
+        edge2: Vec (v),
+        edge3: Vec (w),
+    };
 
-dvp! {EmptyCylinder,
-    center1: Vec,
-    center2: Vec,
-    radius: f64,
-}
+    #[sig="(center1, center2, radius, /)"]
+    EmptyCylinder {
+        center1: Vec (center1),
+        center2: Vec (center2),
+        radius: f64 (radius),
+    };
 
-dvp! {Disc,
-    center: Vec,
-    normal: Vec,
-    radius: f64,
-}
+    #[sig="(center, normal, radius, /)"]
+    Disc {
+        center: Vec (center),
+        normal: Vec (normal),
+        radius: f64 (radius),
+    };
 
-dvp! {Cylinder,
-    center1: Vec,
-    center2: Vec,
-    radius: f64,
-}
+    #[sig="(center1, center2, radius, /)"]
+    Cylinder {
+        center1: Vec (center1),
+        center2: Vec (center2),
+        radius: f64 (radius),
+    };
 
-dvp! {EmptyCone,
-    orig: Vec,
-    dir: Vec,
-    angle: f64,
-    begin: f64,
-    end: f64,
-}
+    #[sig="(vertex, direction, angle, begin, end, /)"]
+    EmptyCone {
+        vertex: Vec (orig),
+        direction: Vec (dir),
+        angle: f64 (angle),
+        begin: f64 (begin),
+        end: f64 (end),
+    };
 
-dvp! {Cone,
-    orig: Vec,
-    dir: Vec,
-    angle: f64,
-    begin: f64,
-    end: f64,
+    #[sig="(vertex, direction, angle, begin, end, /)"]
+    Cone{
+        vertex: Vec (orig),
+        direction: Vec (dir),
+        angle: f64 (angle),
+        begin: f64 (begin),
+        end: f64 (end),
+    };
 }
