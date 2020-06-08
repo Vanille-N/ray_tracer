@@ -1,5 +1,7 @@
 # PyTrace (core)
 
+[![crates.io](http://meritbadge.herokuapp.com/pytrace_core)](https://crates.io/crates/pytrace_core)
+
 Originally inspired by _Ray Tracing in One Weekend_ (Peter Shirley).
 
 This library cannot be executed as-is, but it can provide tools that `pytrace` can then use.
