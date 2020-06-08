@@ -1,5 +1,6 @@
 use pyo3::prelude::*;
-use pyo3::{PyNumberProtocol, PyObjectProtocol};
+use pyo3::{PyNumberProtocol, PyObjectProtocol, PyIterProtocol};
+use std::vec;
 
 use pytrace_core::internal;
 
@@ -38,6 +39,10 @@ impl Vec {
     pub fn to_internal(self) -> internal::Vec3 {
         internal::Vec3(self.x, self.y, self.z)
     }
+
+    pub fn into_iter(self) -> Iterator {
+        Iterator::new(vec![self.x, self.y, self.z])
+    }
 }
 
 #[pyproto]
@@ -61,5 +66,42 @@ impl PyNumberProtocol for Vec {
 
     fn __truediv__(lhs: Vec, rhs: f64) -> PyResult<Vec> {
         Ok(Vec{x: lhs.x / rhs, y: lhs.y / rhs, z: lhs.z / rhs})
+    }
+}
+
+#[pyclass]
+#[derive(Clone)]
+pub struct Iterator {
+    idx: usize,
+    contents: vec::Vec<f64>,
+}
+
+impl Iterator {
+    pub fn new(v: vec::Vec<f64>) -> Self {
+        Self {
+            idx: 0,
+            contents: v,
+        }
+    }
+}
+
+#[pyproto]
+impl PyIterProtocol for Iterator {
+    fn __next__(mut item: PyRefMut<Iterator>) -> PyResult<Option<f64>> {
+        if item.idx < item.contents.len() {
+            let res = item.contents[item.idx];
+            item.idx += 1;
+            Ok(Some(res))
+        } else {
+            Ok(None)
+        }
+    }
+}
+
+
+#[pyproto]
+impl PyIterProtocol for Vec {
+    fn __iter__(item: PyRefMut<Vec>) -> PyResult<Iterator> {
+        Ok(item.into_iter())
     }
 }
