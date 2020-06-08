@@ -3,7 +3,11 @@
 The images in this folder are all too wide to fit in the Github image visualizer, so this file will provide an overview without the need for loading large images and scrolling.
 
 <img src="cradle.gif" width="600"/>
-<br><br>
+<br>
+
+Note that this is _not_ the result of a physics engine, but a precalculated animation.
+
+<br>
 
 ### High-quality images
 
