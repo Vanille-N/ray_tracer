@@ -1,10 +1,11 @@
 use pyo3::prelude::*;
-use pyo3::PyNumberProtocol;
+use pyo3::{PyNumberProtocol, PyObjectProtocol};
 
 use pytrace_core::internal;
 
 #[pyclass]
 #[derive(Clone, Copy)]
+#[text_signature = "(x, y, z)"]
 pub struct Vec3 {
     #[pyo3(get, set)]
     pub x: f64,
@@ -20,21 +21,16 @@ impl Vec3 {
     pub fn new(x: f64, y: f64, z: f64) -> Self {
         Self { x, y, z }
     }
+}
 
-    pub fn mul(self, f: f64) -> Self {
-        Self {
-            x: self.x * f,
-            y: self.y * f,
-            z: self.z * f,
-        }
+#[pyproto]
+impl PyObjectProtocol for Vec3 {
+    fn __repr__(self) -> PyResult<String> {
+        Ok(format!("⟨{}, {}, {}⟩", self.x, self.y, self.z))
     }
 
-    pub fn add(self, v: Self) -> Self {
-        Self {
-            x: self.x + v.x,
-            y: self.y + v.y,
-            z: self.z + v.z,
-        }
+    fn __str__(self) -> PyResult<String> {
+        Ok(format!("Vector⟨{}, {}, {}⟩", self.x, self.y, self.z))
     }
 }
 
