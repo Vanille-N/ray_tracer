@@ -2,6 +2,7 @@ use crate::external::*;
 use pyo3::prelude::*;
 use pytrace_core::{composite, internal};
 use std::sync::Arc;
+use pyo3::PyObjectProtocol;
 
 #[pyclass]
 #[derive(Clone)]
@@ -50,6 +51,19 @@ impl Develop for Axes {
         }.build()
     }
 }
+
+#[pyproto]
+impl PyObjectProtocol for Axes {
+    fn __repr__(self) -> PyResult<String> {
+        Ok(format!("Axes({})", self.scale))
+    }
+
+    fn __str__(self) -> PyResult<String> {
+        Ok(format!("<Axes object with scale {}>", self.scale))
+    }
+}
+
+
 
 #[pyclass]
 #[derive(Copy, Clone)]
