@@ -1,6 +1,9 @@
 # PyTrace
 
 [![crates.io](http://meritbadge.herokuapp.com/pytrace)](https://crates.io/crates/pytrace)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![API](https://docs.rs/pytrace/badge.svg)](https://docs.rs/pytrace)
+
 
 ```diff
 - WARNING

@@ -57,6 +57,9 @@ impl Vec3 {
     ///
     /// Expected to fail about half of the time, meaning that the inner loop
     /// should run an average of two times per function call.
+    ///
+    /// See [this blog post](http://datagenetics.com/blog/january32020/index.html)
+    /// for a discussion on the subject
     pub fn random_unit() -> Self {
         let mut p = Self(1.0, 1.0, 1.0);
         while p.dot_self() >= 1. {

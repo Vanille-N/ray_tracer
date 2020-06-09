@@ -43,12 +43,13 @@ impl Hit for Sphere {
         let discriminant = b.powi(2) - a * c;
         let mut rec = HitRecord::Blank;
         if discriminant > EPSILON {
-            let temp = (-b - (b.powi(2) - a * c).sqrt()) / a;
+            let sqdet = discriminant.sqrt();
+            let temp = (-b - sqdet) / a;
             if EPSILON < temp {
                 let pos = r.project(temp);
                 rec.compare(HitRecord::make(temp, pos, pos - self.center, self.texture))
             }
-            let temp = (-b + (b.powi(2) - a * c).sqrt()) / a;
+            let temp = (-b + sqdet) / a;
             if EPSILON < temp {
                 let pos = r.project(temp);
                 rec.compare(HitRecord::make(temp, pos, pos - self.center, self.texture))
@@ -299,16 +300,17 @@ impl Hit for EmptyCylinder {
         let aoxab = ao.cross(ab);
         let vxab = ray.dir.cross(ab);
         let ab2 = ab.dot_self();
-        let a = vxab.dot_self();
+        let a = 2. * vxab.dot_self();
         let b = 2.0 * vxab.dot(aoxab);
         let c = aoxab.dot_self() - self.radius.powi(2) * ab2;
 
-        let det = b.powi(2) - 4.0 * a * c;
+        let det = b.powi(2) - a * c;
         if det < EPSILON {
             return HitRecord::Blank;
         }
+        let sqdet = det.sqrt();
         let mut rec = HitRecord::Blank;
-        let temp = -(b + det.sqrt()) / (2.0 * a);
+        let temp = -(b + sqdet) / a;
         if EPSILON < temp {
             let pos = ray.project(temp);
             let u = pos - self.center1;
@@ -320,7 +322,7 @@ impl Hit for EmptyCylinder {
                 rec.compare(HitRecord::make(temp, pos, normal, self.texture));
             }
         }
-        let temp = -(b - det.sqrt()) / (2.0 * a);
+        let temp = -(b - sqdet) / a;
         if EPSILON < temp {
             let pos = ray.project(temp);
             let u = pos - self.center1;

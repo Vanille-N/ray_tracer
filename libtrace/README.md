@@ -1,6 +1,8 @@
 # PyTrace (core)
 
 [![crates.io](http://meritbadge.herokuapp.com/pytrace_core)](https://crates.io/crates/pytrace_core)
+[![API](https://docs.rs/pytrace_core/badge.svg)](https://docs.rs/pytrace_core)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Originally inspired by _Ray Tracing in One Weekend_ (Peter Shirley).
 

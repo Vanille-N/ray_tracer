@@ -39,9 +39,9 @@ macro_rules! dvp {
             #[text_signature = $sig]
             pub struct $name {
                 $(
-                    #[pyo3(get, set)] pub $member: $t,
+                    pub $member: $t,
                 )*
-                #[pyo3(get, set)] pub texture: Texture,
+                pub texture: Texture,
             }
 
             #[pymethods]

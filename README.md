@@ -1,5 +1,11 @@
 # Ray Tracer
 
+[![crates.io](http://meritbadge.herokuapp.com/pytrace)](https://crates.io/crates/pytrace)
+[![API](https://docs.rs/pytrace/badge.svg)](https://docs.rs/pytrace)
+[![crates.io](http://meritbadge.herokuapp.com/pytrace_core)](https://crates.io/crates/pytrace_core)
+[![API](https://docs.rs/pytrace_core/badge.svg)](https://docs.rs/pytrace_core)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 ## A Rust library for ray path tracing and image generation
 
 <img src="img/NeV.gif" size=600>

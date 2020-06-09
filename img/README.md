@@ -1,5 +1,11 @@
 # Preview of some images
 
+[![crates.io](http://meritbadge.herokuapp.com/pytrace)](https://crates.io/crates/pytrace)
+[![API](https://docs.rs/pytrace/badge.svg)](https://docs.rs/pytrace)
+[![crates.io](http://meritbadge.herokuapp.com/pytrace_core)](https://crates.io/crates/pytrace)
+[![API](https://docs.rs/pytrace_core/badge.svg)](https://docs.rs/pytrace_core)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 The images in this folder are all too wide to fit in the Github image visualizer, so this file will provide an overview without the need for loading large images and scrolling.
 
 <img src="cradle.gif" width="600"/>
