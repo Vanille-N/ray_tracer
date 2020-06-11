@@ -28,6 +28,10 @@ impl RGB {
     pub fn into_iter(self) -> Iterator {
         Iterator::new(vec![self.r, self.g, self.b])
     }
+
+    pub fn from(c: internal::RGB) -> Self {
+        Self { r: c.0, g: c.1, b: c.2 }
+    }
 }
 
 macro_rules! color {
@@ -73,6 +77,27 @@ color!(ltgrey: 0.8, 0.8, 0.8);
 #[derive(Clone, Copy)]
 pub struct Texture {
     contents: internal::Texture,
+}
+
+#[pyproto]
+impl PyObjectProtocol for Texture {
+    fn __str__(self) -> PyResult<String> {
+        match self.contents {
+            internal::Texture::Lambertian(c) => Ok(format!("<Lambertian Texture with color {}>", RGB::from(c).__repr__().ok().unwrap())),
+            internal::Texture::Metal(c, f) => Ok(format!("<Metallic Texture with color {} and fuzziness {}>", RGB::from(c).__repr__().ok().unwrap(), f)),
+            internal::Texture::Light(c) => Ok(format!("<Light Texture with color {}>", RGB::from(c).__repr__().ok().unwrap())),
+            internal::Texture::Dielectric(c, n) => Ok(format!("<Dielectric Texture with color {} and index {}>", RGB::from(c).__repr__().ok().unwrap(), n)),
+        }
+    }
+
+    fn __repr__(self) -> PyResult<String> {
+        match self.contents {
+            internal::Texture::Lambertian(c) => Ok(format!("Lambertian[{}]", RGB::from(c).__repr__().ok().unwrap())),
+            internal::Texture::Metal(c, f) => Ok(format!("Metal[{},{}]", RGB::from(c).__repr__().ok().unwrap(), f)),
+            internal::Texture::Light(c) => Ok(format!("Light[{}]", RGB::from(c).__repr__().ok().unwrap())),
+            internal::Texture::Dielectric(c, n) => Ok(format!("Dielectric[{},{}]", RGB::from(c).__repr__().ok().unwrap(), n)),
+        }
+    }
 }
 
 #[pymethods]
