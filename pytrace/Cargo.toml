@@ -1,6 +1,6 @@
 [package]
 name = "pytrace"
-version = "0.3.0"
+version = "0.3.1"
 authors = ["Vanille-N <neven.villani@gmail.com>"]
 edition = "2018"
 include = ["src/**/*", "README.md"]
