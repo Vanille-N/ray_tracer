@@ -199,18 +199,14 @@ impl Cfg {
 impl PyObjectProtocol for Cfg {
     fn __str__(self) -> PyResult<String> {
         Ok(format!(
-"Cfg {{
+            "Cfg {{
     silent: {},
     hgt:    {},
     wth:    {},
     iter:   {},
     nbsync: {},
 }}",
-            self.silent,
-            self.hgt,
-            self.wth,
-            self.iter,
-            self.nbsync,
+            self.silent, self.hgt, self.wth, self.iter, self.nbsync,
         ))
     }
 }

@@ -144,7 +144,7 @@ impl InterTree {
                 let s = String::from("Interaction of:");
                 let s = lt.accumulate_display(s);
                 rt.accumulate_display(s)
-            },
+            }
         }
     }
 
@@ -154,7 +154,7 @@ impl InterTree {
             Self::Node(_, lt, rt) => {
                 let s = lt.accumulate_display(s);
                 rt.accumulate_display(s)
-            },
+            }
         }
     }
 }

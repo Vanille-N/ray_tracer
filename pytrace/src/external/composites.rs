@@ -137,11 +137,7 @@ impl Develop for Cradle {
 #[pyproto]
 impl PyObjectProtocol for Cradle {
     fn __repr__(self) -> PyResult<String> {
-        Ok(format!(
-            "Cradle({}, {})",
-            repr!(self.position),
-            self.size
-        ))
+        Ok(format!("Cradle({}, {})", repr!(self.position), self.size))
     }
 
     fn __str__(self) -> PyResult<String> {
@@ -171,9 +167,21 @@ pub struct Die {
 #[pymethods]
 impl Die {
     #[new]
-    pub fn new(position: Vec, direction: Vec, rotation: f64, side_texture: Texture, edge_texture: Texture, dot_texture: Texture) -> Self {
+    pub fn new(
+        position: Vec,
+        direction: Vec,
+        rotation: f64,
+        side_texture: Texture,
+        edge_texture: Texture,
+        dot_texture: Texture,
+    ) -> Self {
         Self {
-            position, direction, rotation, side_texture, edge_texture, dot_texture,
+            position,
+            direction,
+            rotation,
+            side_texture,
+            edge_texture,
+            dot_texture,
         }
     }
 
