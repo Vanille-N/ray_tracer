@@ -140,7 +140,21 @@ impl InterTree {
     pub fn display(&self) -> String {
         match self {
             Self::Item(p) => p.display(),
-            Self::Node(i, lt, rt) => format!("({}){}({})", lt.display(), i, rt.display()),
+            Self::Node(_, lt, rt) => {
+                let s = String::from("Interaction of:");
+                let s = lt.accumulate_display(s);
+                rt.accumulate_display(s)
+            },
+        }
+    }
+
+    fn accumulate_display(&self, s: String) -> String {
+        match self {
+            Self::Item(p) => format!("{}\n    {}", s, p.display()),
+            Self::Node(_, lt, rt) => {
+                let s = lt.accumulate_display(s);
+                rt.accumulate_display(s)
+            },
         }
     }
 }
