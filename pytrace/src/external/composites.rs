@@ -316,3 +316,10 @@ Please provide one of:
         }
     }
 }
+
+#[pyproto]
+impl PyObjectProtocol for Molecule {
+    fn __repr__(self) -> PyResult<String> {
+        Ok(format!("<Molecule object at {} with orientation {} ({})>", repr!(self.origin), repr!(self.direction), self.rotation))
+    }
+}
