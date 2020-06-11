@@ -246,12 +246,15 @@ impl Molecule {
     #[new]
     pub fn new(origin: Vec, direction: Vec, rotation: f64, structure: String) -> Self {
         Self {
-            origin, direction, rotation, structure: MoleculeStructure::from(structure)
+            origin,
+            direction,
+            rotation,
+            structure: MoleculeStructure::from(structure),
         }
     }
 
     #[text_signature = "($self, /)"]
-    pub fn build(self, ) -> Prebuilt {
+    pub fn build(self) -> Prebuilt {
         Prebuilt {
             contents: Arc::new(self),
         }
@@ -273,7 +276,8 @@ impl Develop for Molecule {
             MoleculeStructure::CarbonDioxide => m.carbon_dioxide(),
             MoleculeStructure::Dinitrogen => m.dinitrogen(),
             MoleculeStructure::Benzene => m.benzene(),
-        }.build()
+        }
+        .build()
     }
 }
 
@@ -298,7 +302,8 @@ impl MoleculeStructure {
             "carbon dioxide" => Self::CarbonDioxide,
             "dinitrogen" => Self::Dinitrogen,
             "benzene" => Self::Benzene,
-            _ => panic!("Unknown structure.
+            _ => panic!(
+                "Unknown structure.
 Please provide one of:
 - cyclohexanol
 - water
@@ -306,7 +311,8 @@ Please provide one of:
 - ethanol
 - carbon dioxide
 - dinitrogen
-- benzene"),
-}
+- benzene"
+            ),
+        }
     }
 }
