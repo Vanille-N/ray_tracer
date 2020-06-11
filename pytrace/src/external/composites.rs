@@ -230,3 +230,83 @@ impl PyObjectProtocol for Die {
         ))
     }
 }
+
+#[pyclass]
+#[derive(Clone, Copy)]
+#[text_signature = "(origin, direction, rotation, structure, /)"]
+pub struct Molecule {
+    pub origin: Vec,
+    pub direction: Vec,
+    pub rotation: f64,
+    structure: MoleculeStructure,
+}
+
+#[pymethods]
+impl Molecule {
+    #[new]
+    pub fn new(origin: Vec, direction: Vec, rotation: f64, structure: String) -> Self {
+        Self {
+            origin, direction, rotation, structure: MoleculeStructure::from(structure)
+        }
+    }
+
+    #[text_signature = "($self, /)"]
+    pub fn build(self, ) -> Prebuilt {
+        Prebuilt {
+            contents: Arc::new(self),
+        }
+    }
+}
+
+impl Develop for Molecule {
+    fn develop(&self) -> internal::Composite {
+        let m = composite::Molecule {
+            orig: self.origin.to_internal(),
+            up: self.direction.to_internal(),
+            rot: self.rotation,
+        };
+        match self.structure {
+            MoleculeStructure::Cyclohexanol => m.cyclohexanol(),
+            MoleculeStructure::Water => m.water(),
+            MoleculeStructure::Methane => m.methane(),
+            MoleculeStructure::Ethanol => m.ethanol(),
+            MoleculeStructure::CarbonDioxide => m.carbon_dioxide(),
+            MoleculeStructure::Dinitrogen => m.dinitrogen(),
+            MoleculeStructure::Benzene => m.benzene(),
+        }.build()
+    }
+}
+
+#[derive(Clone, Copy)]
+pub enum MoleculeStructure {
+    Cyclohexanol,
+    Water,
+    Methane,
+    Ethanol,
+    CarbonDioxide,
+    Dinitrogen,
+    Benzene,
+}
+
+impl MoleculeStructure {
+    pub fn from(s: String) -> Self {
+        match &s[..] {
+            "cyclohexanol" => Self::Cyclohexanol,
+            "water" => Self::Water,
+            "methane" => Self::Methane,
+            "ethanol" => Self::Ethanol,
+            "carbon dioxide" => Self::CarbonDioxide,
+            "dinitrogen" => Self::Dinitrogen,
+            "benzene" => Self::Benzene,
+            _ => panic!("Unknown structure.
+Please provide one of:
+- cyclohexanol
+- water
+- methane
+- ethanol
+- carbon dioxide
+- dinitrogen
+- benzene"),
+}
+    }
+}
