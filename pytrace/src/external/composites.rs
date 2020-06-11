@@ -152,3 +152,50 @@ impl PyObjectProtocol for Cradle {
         ))
     }
 }
+
+#[pyclass]
+#[derive(Copy, Clone)]
+#[text_signature = "(position, rotation, size)"]
+pub struct Die {
+    #[pyo3(get, set)]
+    pub position: Vec,
+    #[pyo3(get, set)]
+    pub direction: Vec,
+    #[pyo3(get, set)]
+    pub rotation: f64,
+    pub side_texture: Texture,
+    pub edge_texture: Texture,
+    pub dot_texture: Texture,
+}
+
+#[pymethods]
+impl Die {
+    #[new]
+    pub fn new(position: Vec, direction: Vec, rotation: f64, side_texture: Texture, edge_texture: Texture, dot_texture: Texture) -> Self {
+        Self {
+            position, direction, rotation, side_texture, edge_texture, dot_texture,
+        }
+    }
+
+    #[text_signature = "($self, /)"]
+    pub fn build(self) -> Prebuilt {
+        Prebuilt {
+            contents: Arc::new(self),
+        }
+    }
+}
+
+impl Develop for Die {
+    fn develop(&self) -> internal::Composite {
+        composite::Die {
+            a: self.position.to_internal(),
+            up: self.direction.to_internal(),
+            rot: self.rotation,
+            side_texture: self.side_texture.to_internal(),
+            edge_texture: self.edge_texture.to_internal(),
+            dot_texture: self.dot_texture.to_internal(),
+        }
+        .build()
+    }
+}
+
