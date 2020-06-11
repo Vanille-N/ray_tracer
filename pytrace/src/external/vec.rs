@@ -43,6 +43,10 @@ impl Vec {
     pub fn into_iter(self) -> Iterator {
         Iterator::new(vec![self.x, self.y, self.z])
     }
+
+    pub fn from(v: internal::Vec3) -> Self {
+        Self { x: v.0, y: v.1, z: v.2 }
+    }
 }
 
 #[pyproto]

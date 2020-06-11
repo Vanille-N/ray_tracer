@@ -1,6 +1,8 @@
 use pyo3::prelude::*;
+use pyo3::PyObjectProtocol;
 
 use crate::internal;
+use crate::external::Vec;
 
 #[pyclass]
 #[text_signature = "(x, y, z, /)"]
@@ -53,5 +55,23 @@ impl Camera {
     #[text_signature = "($self, x, y, z, /)"]
     pub fn set_target(&mut self, x: f64, y: f64, z: f64) {
         self.target = internal::Vec3(x, y, z);
+    }
+}
+
+#[pyproto]
+impl PyObjectProtocol for Camera {
+    fn __str__(self) -> PyResult<String> {
+        Ok(format!("Camera {{
+    target:   {},
+    angle:    {},
+    rise:     {},
+    distance: {},
+    tilt:     {},
+    aperture: {},
+    aspect:   {},
+}}",
+                   repr!(Vec, self.target),
+                   self.angle, self.rise, self.distance, self.tilt, self.aperture, self.aspect,
+               ))
     }
 }
