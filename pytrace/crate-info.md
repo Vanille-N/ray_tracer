@@ -1,7 +1,7 @@
 # PyTrace
 
 [![](https://img.shields.io/badge/github-Vanille--N/ray__tracer-8da0cb?logo=github)](https://github.com/Vanille-N/ray_tracer)
-[![License](https://img.shields.io/crates/l/rand.svg)](http://opensource.org/licenses/MIT)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![API](https://docs.rs/pytrace/badge.svg)](https://docs.rs/pytrace)
 
 ```diff

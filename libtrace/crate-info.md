@@ -2,7 +2,7 @@
 
 [![](https://img.shields.io/badge/github-Vanille--N/ray__tracer-8da0cb?logo=github)](https://github.com/Vanille-N/ray_tracer)
 [![](http://meritbadge.herokuapp.com/pytrace_core)](https://crates.io/crates/pytrace_core)
-[![License](https://img.shields.io/apm/l/one-monokai.svg)](http://opensource.org/licenses/MIT)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![API](https://docs.rs/pytrace_core/badge.svg)](https://docs.rs/pytrace_core)
 
 
