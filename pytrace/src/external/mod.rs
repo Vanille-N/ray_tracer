@@ -1,3 +1,8 @@
+macro_rules! repr {
+    ( $t:tt, $x:expr ) => {$t::from($x).__repr__().ok().unwrap() };
+    ( $x:expr ) => { $x.__repr__().ok().unwrap() };
+}
+
 mod camera;
 mod cfg;
 mod composites;

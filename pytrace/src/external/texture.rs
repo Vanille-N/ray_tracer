@@ -83,19 +83,19 @@ pub struct Texture {
 impl PyObjectProtocol for Texture {
     fn __str__(self) -> PyResult<String> {
         match self.contents {
-            internal::Texture::Lambertian(c) => Ok(format!("<Lambertian Texture with color {}>", RGB::from(c).__repr__().ok().unwrap())),
-            internal::Texture::Metal(c, f) => Ok(format!("<Metallic Texture with color {} and fuzziness {}>", RGB::from(c).__repr__().ok().unwrap(), f)),
-            internal::Texture::Light(c) => Ok(format!("<Light Texture with color {}>", RGB::from(c).__repr__().ok().unwrap())),
-            internal::Texture::Dielectric(c, n) => Ok(format!("<Dielectric Texture with color {} and index {}>", RGB::from(c).__repr__().ok().unwrap(), n)),
+            internal::Texture::Lambertian(c) => Ok(format!("<Lambertian Texture with color {}>", repr!(RGB, c))),
+            internal::Texture::Metal(c, f) => Ok(format!("<Metallic Texture with color {} and fuzziness {}>", repr!(RGB, c), f)),
+            internal::Texture::Light(c) => Ok(format!("<Light Texture with color {}>", repr!(RGB, c))),
+            internal::Texture::Dielectric(c, n) => Ok(format!("<Dielectric Texture with color {} and index {}>", repr!(RGB, c), n)),
         }
     }
 
     fn __repr__(self) -> PyResult<String> {
         match self.contents {
-            internal::Texture::Lambertian(c) => Ok(format!("Lambertian[{}]", RGB::from(c).__repr__().ok().unwrap())),
-            internal::Texture::Metal(c, f) => Ok(format!("Metal[{},{}]", RGB::from(c).__repr__().ok().unwrap(), f)),
-            internal::Texture::Light(c) => Ok(format!("Light[{}]", RGB::from(c).__repr__().ok().unwrap())),
-            internal::Texture::Dielectric(c, n) => Ok(format!("Dielectric[{},{}]", RGB::from(c).__repr__().ok().unwrap(), n)),
+            internal::Texture::Lambertian(c) => Ok(format!("Lambertian[{}]", repr!(RGB, c))),
+            internal::Texture::Metal(c, f) => Ok(format!("Metal[{},{}]", repr!(RGB, c), f)),
+            internal::Texture::Light(c) => Ok(format!("Light[{}]", repr!(RGB, c))),
+            internal::Texture::Dielectric(c, n) => Ok(format!("Dielectric[{},{}]", repr!(RGB, c), n)),
         }
     }
 }
