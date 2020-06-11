@@ -30,7 +30,11 @@ impl RGB {
     }
 
     pub fn from(c: internal::RGB) -> Self {
-        Self { r: c.0, g: c.1, b: c.2 }
+        Self {
+            r: c.0,
+            g: c.1,
+            b: c.2,
+        }
     }
 }
 
@@ -83,10 +87,22 @@ pub struct Texture {
 impl PyObjectProtocol for Texture {
     fn __str__(self) -> PyResult<String> {
         match self.contents {
-            internal::Texture::Lambertian(c) => Ok(format!("<Lambertian Texture with color {}>", repr!(RGB, c))),
-            internal::Texture::Metal(c, f) => Ok(format!("<Metallic Texture with color {} and fuzziness {}>", repr!(RGB, c), f)),
-            internal::Texture::Light(c) => Ok(format!("<Light Texture with color {}>", repr!(RGB, c))),
-            internal::Texture::Dielectric(c, n) => Ok(format!("<Dielectric Texture with color {} and index {}>", repr!(RGB, c), n)),
+            internal::Texture::Lambertian(c) => {
+                Ok(format!("<Lambertian Texture with color {}>", repr!(RGB, c)))
+            }
+            internal::Texture::Metal(c, f) => Ok(format!(
+                "<Metallic Texture with color {} and fuzziness {}>",
+                repr!(RGB, c),
+                f
+            )),
+            internal::Texture::Light(c) => {
+                Ok(format!("<Light Texture with color {}>", repr!(RGB, c)))
+            }
+            internal::Texture::Dielectric(c, n) => Ok(format!(
+                "<Dielectric Texture with color {} and index {}>",
+                repr!(RGB, c),
+                n
+            )),
         }
     }
 
@@ -95,7 +111,9 @@ impl PyObjectProtocol for Texture {
             internal::Texture::Lambertian(c) => Ok(format!("Lambertian[{}]", repr!(RGB, c))),
             internal::Texture::Metal(c, f) => Ok(format!("Metal[{},{}]", repr!(RGB, c), f)),
             internal::Texture::Light(c) => Ok(format!("Light[{}]", repr!(RGB, c))),
-            internal::Texture::Dielectric(c, n) => Ok(format!("Dielectric[{},{}]", repr!(RGB, c), n)),
+            internal::Texture::Dielectric(c, n) => {
+                Ok(format!("Dielectric[{},{}]", repr!(RGB, c), n))
+            }
         }
     }
 }

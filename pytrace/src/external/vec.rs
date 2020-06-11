@@ -45,7 +45,11 @@ impl Vec {
     }
 
     pub fn from(v: internal::Vec3) -> Self {
-        Self { x: v.0, y: v.1, z: v.2 }
+        Self {
+            x: v.0,
+            y: v.1,
+            z: v.2,
+        }
     }
 }
 

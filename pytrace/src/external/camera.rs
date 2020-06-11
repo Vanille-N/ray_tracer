@@ -1,8 +1,8 @@
 use pyo3::prelude::*;
 use pyo3::PyObjectProtocol;
 
-use crate::internal;
 use crate::external::Vec;
+use crate::internal;
 
 #[pyclass]
 #[text_signature = "(x, y, z, /)"]
@@ -61,7 +61,8 @@ impl Camera {
 #[pyproto]
 impl PyObjectProtocol for Camera {
     fn __str__(self) -> PyResult<String> {
-        Ok(format!("Camera {{
+        Ok(format!(
+            "Camera {{
     target:   {},
     angle:    {},
     rise:     {},
@@ -70,8 +71,13 @@ impl PyObjectProtocol for Camera {
     aperture: {},
     aspect:   {},
 }}",
-                   repr!(Vec, self.target),
-                   self.angle, self.rise, self.distance, self.tilt, self.aperture, self.aspect,
-               ))
+            repr!(Vec, self.target),
+            self.angle,
+            self.rise,
+            self.distance,
+            self.tilt,
+            self.aperture,
+            self.aspect,
+        ))
     }
 }
