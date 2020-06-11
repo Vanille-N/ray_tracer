@@ -199,3 +199,26 @@ impl Develop for Die {
     }
 }
 
+#[pyproto]
+impl PyObjectProtocol for Die {
+    fn __repr__(self) -> PyResult<String> {
+        Ok(format!(
+            "Die({}, {}, {}) with textures [{} {} {}]",
+            repr!(self.position),
+            repr!(self.direction),
+            self.rotation,
+            repr!(self.side_texture),
+            repr!(self.edge_texture),
+            repr!(self.dot_texture),
+        ))
+    }
+
+    fn __str__(self) -> PyResult<String> {
+        Ok(format!(
+            "<Die object at {} facing {} ({})>",
+            repr!(self.position),
+            repr!(self.direction),
+            self.rotation,
+        ))
+    }
+}
