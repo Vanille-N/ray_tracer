@@ -1,5 +1,6 @@
 use glob::glob;
 use pyo3::prelude::*;
+use pyo3::PyObjectProtocol;
 use std::process::Command;
 
 use crate::external::*;
@@ -191,5 +192,25 @@ impl Cfg {
         if let Some(m) = &mut self.mov {
             m.modif = true;
         }
+    }
+}
+
+#[pyproto]
+impl PyObjectProtocol for Cfg {
+    fn __str__(self) -> PyResult<String> {
+        Ok(format!(
+"Cfg {{
+    silent: {},
+    hgt:    {},
+    wth:    {},
+    iter:   {},
+    nbsync: {},
+}}",
+            self.silent,
+            self.hgt,
+            self.wth,
+            self.iter,
+            self.nbsync,
+        ))
     }
 }
