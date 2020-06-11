@@ -139,7 +139,7 @@ impl PyObjectProtocol for Cradle {
     fn __repr__(self) -> PyResult<String> {
         Ok(format!(
             "Cradle({}, {})",
-            self.position.__repr__().ok().unwrap(),
+            repr!(self.position),
             self.size
         ))
     }
@@ -147,7 +147,7 @@ impl PyObjectProtocol for Cradle {
     fn __str__(self) -> PyResult<String> {
         Ok(format!(
             "<Cradle object at {} with size {}>",
-            self.position.__repr__().ok().unwrap(),
+            repr!(self.position),
             self.size
         ))
     }
