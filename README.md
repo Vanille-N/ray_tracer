@@ -1,10 +1,13 @@
 # Ray Tracer
 
-[![crates.io](http://meritbadge.herokuapp.com/pytrace)](https://crates.io/crates/pytrace)
-[![API](https://docs.rs/pytrace/badge.svg)](https://docs.rs/pytrace)
-[![crates.io](http://meritbadge.herokuapp.com/pytrace_core)](https://crates.io/crates/pytrace_core)
-[![API](https://docs.rs/pytrace_core/badge.svg)](https://docs.rs/pytrace_core)
+[![](https://img.shields.io/badge/github-Vanille--N/ray__tracer-8da0cb?logo=github)](https://github.com/Vanille-N/ray_tracer)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+`pytrace` [![crates.io](http://meritbadge.herokuapp.com/pytrace)](https://crates.io/crates/pytrace)
+[![API](https://docs.rs/pytrace/badge.svg)](https://docs.rs/pytrace)
+
+`pytrace_core` [![crates.io](http://meritbadge.herokuapp.com/pytrace_core)](https://crates.io/crates/pytrace_core)
+[![API](https://docs.rs/pytrace_core/badge.svg)](https://docs.rs/pytrace_core)
 
 ## A Rust library for ray path tracing and image generation
 
