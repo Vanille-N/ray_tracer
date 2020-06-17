@@ -12,9 +12,11 @@ NAME
 
 CLASSES
     builtins.object
+        builtins.Axes
         builtins.Camera
         builtins.Cfg
         builtins.Cone
+        builtins.Cradle
         builtins.Cylinder
         builtins.Disc
         builtins.EmptyCone
@@ -27,12 +29,39 @@ CLASSES
         builtins.Sphere
         builtins.Texture
         builtins.Triangle
-        builtins.Vec3
+        builtins.Vec
+
+    class Axes(object)
+     |  Axes(scale, /)
+     |
+     |  Methods defined here:
+     |
+     |  __repr__(self, /)
+     |      Return repr(self).
+     |
+     |  __str__(self, /)
+     |      Return str(self).
+     |
+     |  build(self, /)
+     |
+     |  ----------------------------------------------------------------------
+     |  Static methods defined here:
+     |
+     |  __new__(*args, **kwargs) from builtins.type
+     |      Create and return a new object.  See help(type) for accurate signature.
+     |
+     |  ----------------------------------------------------------------------
+     |  Data descriptors defined here:
+     |
+     |  scale
 
     class Camera(object)
      |  Camera(x, y, z, /)
      |
      |  Methods defined here:
+     |
+     |  __str__(self, /)
+     |      Return str(self).
      |
      |  set_target(self, x, y, z, /)
      |
@@ -62,6 +91,9 @@ CLASSES
      |
      |  Methods defined here:
      |
+     |  __str__(self, /)
+     |      Return str(self).
+     |
      |  add_obj(self, object, /)
      |
      |  clear(self, /)
@@ -70,13 +102,13 @@ CLASSES
      |
      |  frame(self, name, /)
      |
-     |  populate(self, /)
+     |  populate(self, object, /)
      |
      |  render(self, name, /)
      |
-     |  set_background(self, color, /)
+     |  set_background(self, r, g, b, /)
      |
-     |  set_cam(self, sky, /)
+     |  set_cam(self, camera, /)
      |
      |  set_sky(self, sky, /)
      |
@@ -99,9 +131,47 @@ CLASSES
      |
      |  iter
      |
+     |  nbsync
+     |
      |  wth
 
     class Cone(object)
+     |  Cone(vertex, direction, angle, begin, end, texture, /)
+     |
+     |  Methods defined here:
+     |
+     |  __repr__(self, /)
+     |      Return repr(self).
+     |
+     |  __str__(self, /)
+     |      Return str(self).
+     |
+     |  ----------------------------------------------------------------------
+     |  Static methods defined here:
+     |
+     |  __new__(*args, **kwargs) from builtins.type
+     |      Create and return a new object.  See help(type) for accurate signature.
+
+    class Cradle(object)
+     |  Cradle(position, rotation, size)
+     |
+     |  Methods defined here:
+     |
+     |  __repr__(self, /)
+     |      Return repr(self).
+     |
+     |  __str__(self, /)
+     |      Return str(self).
+     |
+     |  build(self, /)
+     |
+     |  raise_ball(self, amount, /)
+     |
+     |  set_time(self, t, /)
+     |
+     |  tick(self, dt, /)
+     |
+     |  ----------------------------------------------------------------------
      |  Static methods defined here:
      |
      |  __new__(*args, **kwargs) from builtins.type
@@ -110,125 +180,147 @@ CLASSES
      |  ----------------------------------------------------------------------
      |  Data descriptors defined here:
      |
-     |  angle
+     |  position
      |
-     |  begin
+     |  rotation
      |
-     |  dir
-     |
-     |  end
-     |
-     |  orig
-     |
-     |  texture
+     |  size
 
     class Cylinder(object)
+     |  Cylinder(center1, center2, radius, texture, /)
+     |
+     |  Methods defined here:
+     |
+     |  __repr__(self, /)
+     |      Return repr(self).
+     |
+     |  __str__(self, /)
+     |      Return str(self).
+     |
+     |  ----------------------------------------------------------------------
      |  Static methods defined here:
      |
      |  __new__(*args, **kwargs) from builtins.type
      |      Create and return a new object.  See help(type) for accurate signature.
-     |
-     |  ----------------------------------------------------------------------
-     |  Data descriptors defined here:
-     |
-     |  center1
-     |
-     |  center2
-     |
-     |  radius
-     |
-     |  texture
 
     class Disc(object)
+     |  Disc(center, normal, radius, texture, /)
+     |
+     |  Methods defined here:
+     |
+     |  __repr__(self, /)
+     |      Return repr(self).
+     |
+     |  __str__(self, /)
+     |      Return str(self).
+     |
+     |  ----------------------------------------------------------------------
      |  Static methods defined here:
      |
      |  __new__(*args, **kwargs) from builtins.type
      |      Create and return a new object.  See help(type) for accurate signature.
-     |
-     |  ----------------------------------------------------------------------
-     |  Data descriptors defined here:
-     |
-     |  center
-     |
-     |  normal
-     |
-     |  radius
-     |
-     |  texture
 
     class EmptyCone(object)
+     |  EmptyCone(vertex, direction, angle, begin, end, texture, /)
+     |
+     |  Methods defined here:
+     |
+     |  __repr__(self, /)
+     |      Return repr(self).
+     |
+     |  __str__(self, /)
+     |      Return str(self).
+     |
+     |  ----------------------------------------------------------------------
      |  Static methods defined here:
      |
      |  __new__(*args, **kwargs) from builtins.type
      |      Create and return a new object.  See help(type) for accurate signature.
-     |
-     |  ----------------------------------------------------------------------
-     |  Data descriptors defined here:
-     |
-     |  angle
-     |
-     |  begin
-     |
-     |  dir
-     |
-     |  end
-     |
-     |  orig
-     |
-     |  texture
 
     class EmptyCylinder(object)
+     |  EmptyCylinder(center1, center2, radius, texture, /)
+     |
+     |  Methods defined here:
+     |
+     |  __repr__(self, /)
+     |      Return repr(self).
+     |
+     |  __str__(self, /)
+     |      Return str(self).
+     |
+     |  ----------------------------------------------------------------------
      |  Static methods defined here:
      |
      |  __new__(*args, **kwargs) from builtins.type
      |      Create and return a new object.  See help(type) for accurate signature.
-     |
-     |  ----------------------------------------------------------------------
-     |  Data descriptors defined here:
-     |
-     |  center1
-     |
-     |  center2
-     |
-     |  radius
-     |
-     |  texture
 
     class InfinitePlane(object)
+     |  InfinitePlane(origin, normal, texture, /)
+     |
+     |  Methods defined here:
+     |
+     |  __repr__(self, /)
+     |      Return repr(self).
+     |
+     |  __str__(self, /)
+     |      Return str(self).
+     |
+     |  ----------------------------------------------------------------------
      |  Static methods defined here:
      |
      |  __new__(*args, **kwargs) from builtins.type
      |      Create and return a new object.  See help(type) for accurate signature.
-     |
-     |  ----------------------------------------------------------------------
-     |  Data descriptors defined here:
-     |
-     |  normal
-     |
-     |  orig
-     |
-     |  texture
 
     class Parallelogram(object)
+     |  Parallelogram(vertex, edge1, edge2, texture, /)
+     |
+     |  Methods defined here:
+     |
+     |  __repr__(self, /)
+     |      Return repr(self).
+     |
+     |  __str__(self, /)
+     |      Return str(self).
+     |
+     |  ----------------------------------------------------------------------
      |  Static methods defined here:
      |
      |  __new__(*args, **kwargs) from builtins.type
      |      Create and return a new object.  See help(type) for accurate signature.
-     |
-     |  ----------------------------------------------------------------------
-     |  Data descriptors defined here:
-     |
-     |  a
-     |
-     |  texture
-     |
-     |  u
-     |
-     |  v
 
     class RGB(object)
      |  RGB(r, g, b, /)
      |
+     |  Methods defined here:
+     |
+     |  __add__(self, value, /)
+     |      Return self+value.
+     |
+     |  __iter__(self, /)
+     |      Implement iter(self).
+     |
+     |  __mod__(self, value, /)
+     |      Return self%value.
+     |
+     |  __radd__(self, value, /)
+     |      Return value+self.
+     |
+     |  __repr__(self, /)
+     |      Return repr(self).
+     |
+     |  __rmod__(self, value, /)
+     |      Return value%self.
+     |
+     |  __rsub__(self, value, /)
+     |      Return value-self.
+     |
+     |  __str__(self, /)
+     |      Return str(self).
+     |
+     |  __sub__(self, value, /)
+     |      Return self-value.
+     |
+     |  ----------------------------------------------------------------------
      |  Static methods defined here:
      |
      |  __new__(*args, **kwargs) from builtins.type
@@ -277,23 +369,21 @@ CLASSES
      |  yellow()
 
     class Rhomboid(object)
+     |  Rhomboid(vertex, edge1, edge2, edge3, texture, /)
+     |
+     |  Methods defined here:
+     |
+     |  __repr__(self, /)
+     |      Return repr(self).
+     |
+     |  __str__(self, /)
+     |      Return str(self).
+     |
+     |  ----------------------------------------------------------------------
      |  Static methods defined here:
      |
      |  __new__(*args, **kwargs) from builtins.type
      |      Create and return a new object.  See help(type) for accurate signature.
-     |
-     |  ----------------------------------------------------------------------
-     |  Data descriptors defined here:
-     |
-     |  a
-     |
-     |  texture
-     |
-     |  u
-     |
-     |  v
-     |
-     |  w
 
     class Sky(object)
      |  Static methods defined here:
@@ -301,24 +391,35 @@ CLASSES
      |  __new__(*args, **kwargs) from builtins.type
      |      Create and return a new object.  See help(type) for accurate signature.
      |
-     |  uniform()
+     |  uniform(r, g, b, /)
 
     class Sphere(object)
+     |  Sphere(center, radius, texture, /)
+     |
+     |  Methods defined here:
+     |
+     |  __repr__(self, /)
+     |      Return repr(self).
+     |
+     |  __str__(self, /)
+     |      Return str(self).
+     |
+     |  ----------------------------------------------------------------------
      |  Static methods defined here:
      |
      |  __new__(*args, **kwargs) from builtins.type
      |      Create and return a new object.  See help(type) for accurate signature.
-     |
-     |  ----------------------------------------------------------------------
-     |  Data descriptors defined here:
-     |
-     |  center
-     |
-     |  radius
-     |
-     |  texture
 
     class Texture(object)
+     |  Methods defined here:
+     |
+     |  __repr__(self, /)
+     |      Return repr(self).
+     |
+     |  __str__(self, /)
+     |      Return str(self).
+     |
+     |  ----------------------------------------------------------------------
      |  Static methods defined here:
      |
      |  dielectric(color, index, /)
@@ -330,28 +431,62 @@ CLASSES
      |  metal(color, fuzzy, /)
 
     class Triangle(object)
+     |  Triangle(vertex, edge1, edge2, texture, /)
+     |
+     |  Methods defined here:
+     |
+     |  __repr__(self, /)
+     |      Return repr(self).
+     |
+     |  __str__(self, /)
+     |      Return str(self).
+     |
+     |  ----------------------------------------------------------------------
      |  Static methods defined here:
      |
      |  __new__(*args, **kwargs) from builtins.type
      |      Create and return a new object.  See help(type) for accurate signature.
-     |
-     |  ----------------------------------------------------------------------
-     |  Data descriptors defined here:
-     |
-     |  a
-     |
-     |  texture
-     |
-     |  u
-     |
-     |  v
 
-    class Vec3(object)
+    class Vec(object)
+     |  Vec(x, y, z)
+     |
      |  Methods defined here:
      |
-     |  add(...)
+     |  __add__(self, value, /)
+     |      Return self+value.
      |
-     |  mul(...)
+     |  __iter__(self, /)
+     |      Implement iter(self).
+     |
+     |  __mul__(self, value, /)
+     |      Return self*value.
+     |
+     |  __neg__(self, /)
+     |      -self
+     |
+     |  __radd__(self, value, /)
+     |      Return value+self.
+     |
+     |  __repr__(self, /)
+     |      Return repr(self).
+     |
+     |  __rmul__(self, value, /)
+     |      Return value*self.
+     |
+     |  __rsub__(self, value, /)
+     |      Return value-self.
+     |
+     |  __rtruediv__(self, value, /)
+     |      Return value/self.
+     |
+     |  __str__(self, /)
+     |      Return str(self).
+     |
+     |  __sub__(self, value, /)
+     |      Return self-value.
+     |
+     |  __truediv__(self, value, /)
+     |      Return self/value.
      |
      |  ----------------------------------------------------------------------
      |  Static methods defined here:
@@ -369,7 +504,7 @@ CLASSES
      |  z
 
 DATA
-    __all__ = ['__doc__', 'Cfg', 'Camera', 'Vec3', 'Sky', 'RGB', 'Texture'...
+    __all__ = ['__doc__', 'Cfg', 'Camera', 'Vec', 'Sky', 'RGB', 'Texture',...
 
 FILE
     home.pytrace.so
