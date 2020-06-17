@@ -6,6 +6,7 @@ use std::process::Command;
 use crate::external::*;
 use pytrace_core::internal;
 use pytrace_core::render::*;
+use ctrlc;
 
 #[pyclass]
 #[text_signature = "(wth, hgt, iter, /)"]
@@ -60,6 +61,7 @@ impl Cfg {
                 cam.aspect = self.wth as f64 / self.hgt as f64;
             }
             if let Some(sky) = &self.sky {
+                ctrlc::set_handler(|| std::process::exit(2)).unwrap();
                 render(Builder {
                     name,
                     silent: self.silent,
