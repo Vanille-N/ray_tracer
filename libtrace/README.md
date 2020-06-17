@@ -1,8 +1,23 @@
 # PyTrace (core)
 
-[![crates.io](http://meritbadge.herokuapp.com/pytrace_core)](https://crates.io/crates/pytrace_core)
-[![API](https://docs.rs/pytrace_core/badge.svg)](https://docs.rs/pytrace_core)
+[![](https://img.shields.io/badge/github-Vanille--N/ray__tracer-8da0cb?logo=github)](https://github.com/Vanille-N/ray_tracer)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+`pytrace_core` [![crates.io](http://meritbadge.herokuapp.com/pytrace_core)](https://crates.io/crates/pytrace_core)
+[![API](https://docs.rs/pytrace_core/badge.svg)](https://docs.rs/pytrace_core)
+
+---
+### Direct dependencies
+
+`rand` [![crates.io](http://meritbadge.herokuapp.com/rand)](https://crates.io/crates/rand)
+[![API](https://docs.rs/rand/badge.svg)](https://docs.rs/rand)
+
+`threadpool` [![crates.io](http://meritbadge.herokuapp.com/threadpool)](https://crates.io/crates/threadpool)
+[![API](https://docs.rs/threadpool/badge.svg)](https://docs.rs/threadpool)
+
+---
+
+
 
 Originally inspired by _Ray Tracing in One Weekend_ (Peter Shirley).
 

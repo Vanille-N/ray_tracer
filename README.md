@@ -3,11 +3,32 @@
 [![](https://img.shields.io/badge/github-Vanille--N/ray__tracer-8da0cb?logo=github)](https://github.com/Vanille-N/ray_tracer)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+---
+### Components
+
 `pytrace` [![crates.io](http://meritbadge.herokuapp.com/pytrace)](https://crates.io/crates/pytrace)
 [![API](https://docs.rs/pytrace/badge.svg)](https://docs.rs/pytrace)
 
 `pytrace_core` [![crates.io](http://meritbadge.herokuapp.com/pytrace_core)](https://crates.io/crates/pytrace_core)
 [![API](https://docs.rs/pytrace_core/badge.svg)](https://docs.rs/pytrace_core)
+
+---
+
+### Direct dependencies
+
+`rand` [![crates.io](http://meritbadge.herokuapp.com/rand)](https://crates.io/crates/rand)
+[![API](https://docs.rs/rand/badge.svg)](https://docs.rs/rand)
+
+`threadpool` [![crates.io](http://meritbadge.herokuapp.com/threadpool)](https://crates.io/crates/threadpool)
+[![API](https://docs.rs/threadpool/badge.svg)](https://docs.rs/threadpool)
+
+`glob` [![crates.io](http://meritbadge.herokuapp.com/glob)](https://crates.io/crates/glob)
+[![API](https://docs.rs/glob/badge.svg)](https://docs.rs/glob)
+
+`ctrlc` [![crates.io](http://meritbadge.herokuapp.com/ctrlc)](https://crates.io/crates/ctrlc)
+[![API](https://docs.rs/ctrlc/badge.svg)](https://docs.rs/ctrlc)
+
+---
 
 ## A Rust library for ray path tracing and image generation
 

@@ -17,6 +17,7 @@ crate-type = ["cdylib"]
 [dependencies]
 pytrace_core = "0.2.5"
 glob = "0.3.*"
+ctrlc = "*"
 
 [dependencies.pyo3]
 version = "0.10.1"

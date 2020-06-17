@@ -10,7 +10,8 @@ tr.set_sky(sky)
 tr.set_background(0, 0, 0)
 
 cam = Camera(0, 5, 0)
-cam.distance = 25
+cam.distance = 45
+cam.rise = 30
 
 tr.start_movie("cradle")
 

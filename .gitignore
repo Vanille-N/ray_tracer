@@ -9,5 +9,6 @@ Cargo.lock
 flame.svg
 *.so
 *.avi
+.gitnuke
 
 !data/*

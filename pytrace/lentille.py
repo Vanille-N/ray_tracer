@@ -4,7 +4,7 @@ from pytrace import *
 from os import system
 
 tr = Cfg(400, 400, 200)
-sky = Sky.uniform(RGB(1, 1, 1))
+sky = Sky.uniform(1, 1, 1)
 tr.set_sky(sky)
 #tr.set_background(RGB(0, 0, 0))
 
