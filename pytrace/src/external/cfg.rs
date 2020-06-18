@@ -6,7 +6,6 @@ use std::process::Command;
 use crate::external::*;
 use pytrace_core::internal;
 use pytrace_core::render::*;
-use ctrlc;
 
 #[pyclass]
 #[text_signature = "(wth, hgt, iter, /)"]
