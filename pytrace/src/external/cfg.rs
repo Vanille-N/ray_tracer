@@ -36,6 +36,8 @@ struct MovieCfg {
 impl Cfg {
     #[new]
     pub fn new(wth: usize, hgt: usize, iter: usize) -> Self {
+        ctrlc::set_handler(|| std::process::exit(2)).unwrap_or_else(|_| eprintln!("\x1b[33;1mWarning: you have multiple configurations at the same time.\x1b[0m
+That's ok, but don't mix them up."));
         Self {
             silent: false,
             hgt,
@@ -61,7 +63,6 @@ impl Cfg {
                 cam.aspect = self.wth as f64 / self.hgt as f64;
             }
             if let Some(sky) = &self.sky {
-                ctrlc::set_handler(|| std::process::exit(2)).unwrap();
                 render(Builder {
                     name,
                     silent: self.silent,
