@@ -78,15 +78,12 @@ tr.add_obj(vmidlo);
 tr.add_obj(vmidhi);
 tr.add_obj(vrtop);
 
-def lpad(l, n):
-    return "0" * (l - len(str(n))) + str(n)
+tr.start_movie("NeV")
 
 for i in range(180):
     cam.angle = i*2
     tr.set_cam(cam)
-    tr.render("NeV-" + lpad(5, i))
+    tr.frame()
     print(i)
 
-system("rm sky.avi")
-system("ffmpeg -pattern_type glob -framerate 25 -i \"img-NeV-*.ppm\" -vcodec libx264 sky.avi")
-system("rm img-NeV-*.ppm")
+tr.end_movie()

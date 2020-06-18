@@ -6,8 +6,8 @@ tr = Cfg(300, 300, 20)
 tr.set_sky(Sky("data/spectrum.ppm"))
 
 cam = Camera(0, 0, 0)
-cam.set_rise(20)
-cam.set_distance(5)
+cam.rise = 20
+cam.distance = 5
 tr.set_cam(cam)
 
 ground = Texture.lambertian(RGB(1, 0, 0))
