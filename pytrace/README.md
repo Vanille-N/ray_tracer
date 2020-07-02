@@ -20,12 +20,6 @@
 
 ---
 
-```diff
-- WARNING
-PyTrace uses PyO3.
-If you wish to compile this crate, you should use Rust nightly.
-```
-
 ### How to build
 
 ```shell

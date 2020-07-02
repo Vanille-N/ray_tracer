@@ -4,10 +4,6 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![API](https://docs.rs/pytrace/badge.svg)](https://docs.rs/pytrace)
 
-## WARNING
-PyTrace uses PyO3.
-If you wish to compile this crate, you should use Rust nightly.
-
 ### How to build
 
 ```shell
