@@ -8,7 +8,7 @@ use pytrace_core::internal;
 use pytrace_core::render::*;
 
 #[pyclass]
-#[text_signature = "(wth, hgt, iter, /)"]
+#[text_signature = "(wth: uint, hgt: uint, iter: uint, /)"]
 pub struct Cfg {
     pub silent: bool,
     #[pyo3(get, set)]
@@ -55,7 +55,7 @@ That's ok, but don't mix them up."));
         self.silent = true;
     }
 
-    #[text_signature = "($self, name, /)"]
+    #[text_signature = "($self, name: str, /)"]
     pub fn render(&self, name: String) {
         if let Some(mut cam) = self.cam {
             if cam.aspect < 0. {
@@ -81,7 +81,7 @@ That's ok, but don't mix them up."));
         }
     }
 
-    #[text_signature = "($self, r, g, b, /)"]
+    #[text_signature = "($self, r: float, g: float, b: float, /)"]
     pub fn set_background(&mut self, r: f64, g: f64, b: f64) {
         self.world.background = Some(internal::RGB(r, g, b));
         self.refresh();
@@ -93,19 +93,19 @@ That's ok, but don't mix them up."));
         self.refresh();
     }
 
-    #[text_signature = "($self, camera, /)"]
+    #[text_signature = "($self, camera: Camera, /)"]
     pub fn set_cam(&mut self, cam: Camera) {
         self.cam = Some(cam);
         self.refresh();
     }
 
-    #[text_signature = "($self, sky, /)"]
+    #[text_signature = "($self, sky: Sky, /)"]
     pub fn set_sky(&mut self, sky: Sky) {
         self.sky = Some(sky);
         self.refresh();
     }
 
-    #[text_signature = "($self, object, /)"]
+    #[text_signature = "($self, object: Prebuilt, /)"]
     pub fn populate(&mut self, object: Prebuilt) {
         self.world.push_vec(object.extract());
         self.refresh();
@@ -117,13 +117,13 @@ That's ok, but don't mix them up."));
         self.refresh();
     }
 
-    #[text_signature = "($self, object, /)"]
+    #[text_signature = "($self, object: Construct, /)"]
     pub fn add_obj(&mut self, object: Construct) {
         self.world.push_vec(object.contents.canonical());
         self.refresh();
     }
 
-    #[text_signature = "($self, name, /)"]
+    #[text_signature = "($self, name: str, /)"]
     pub fn start_movie(&mut self, name: String) {
         self.mov = Some(MovieCfg {
             name,
@@ -132,7 +132,7 @@ That's ok, but don't mix them up."));
         });
     }
 
-    #[text_signature = "($self, name, /)"]
+    #[text_signature = "($self, name: str, /)"]
     pub fn frame(&mut self) {
         if let Some(m) = &self.mov {
             println!("Creating frame {}", m.cnt);
