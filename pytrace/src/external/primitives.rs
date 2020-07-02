@@ -86,7 +86,7 @@ macro_rules! dvp {
 }
 
 dvp! {
-    #[sig="(center, radius, texture, /)"]
+    #[sig="(center: Vec, radius: float, texture: Texture, /)"]
     #[repr="Sphere({}, {})"]
     #[str="<Sphere object at {} with radius {}>"]
     Sphere {
@@ -94,7 +94,7 @@ dvp! {
         radius: f64 (radius),
     };
 
-    #[sig="(origin, normal, texture, /)"]
+    #[sig="(origin: Vec, normal: Vec, texture: Texture, /)"]
     #[repr="InfinitePlane({}, {})"]
     #[str="<InfinitePlane object at {} with normal {}>"]
     InfinitePlane {
@@ -102,7 +102,7 @@ dvp! {
         normal: Vec (normal),
     };
 
-    #[sig="(vertex, edge1, edge2, texture, /)"]
+    #[sig="(vertex: Vec, edge1: Vec, edge2: Vec, texture: Texture, /)"]
     #[repr="Triangle({}, {}, {})"]
     #[str="<Triangle object at {} with edges {}, {}>"]
     Triangle {
@@ -111,7 +111,7 @@ dvp! {
         edge2: Vec (v),
     };
 
-    #[sig="(vertex, edge1, edge2, texture, /)"]
+    #[sig="(vertex: Vec, edge1: Vec, edge2: Vec, texture: Texture, /)"]
     #[repr="Parallelogram({}, {}, {})"]
     #[str="<Parallelogram object at {} with edges {}, {}>"]
     Parallelogram {
@@ -120,7 +120,7 @@ dvp! {
         edge2: Vec (v),
     };
 
-    #[sig="(vertex, edge1, edge2, edge3, texture, /)"]
+    #[sig="(vertex: Vec, edge1: Vec, edge2: Vec, edge3: Vec, texture: Texture, /)"]
     #[repr="Rhomboid({}, {}, {}, {})"]
     #[str="<Rhomboid object at {} with edges {}, {}, {}>"]
     Rhomboid {
@@ -130,7 +130,7 @@ dvp! {
         edge3: Vec (w),
     };
 
-    #[sig="(center1, center2, radius, texture, /)"]
+    #[sig="(center1: Vec, center2: Vec, radius: float, texture: Texture, /)"]
     #[repr="EmptyCylinder({}, {}, {})"]
     #[str="<EmptyCylinder object between {} and {} with radius {}>"]
     EmptyCylinder {
@@ -139,7 +139,7 @@ dvp! {
         radius: f64 (radius),
     };
 
-    #[sig="(center, normal, radius, texture, /)"]
+    #[sig="(center: Vec, normal: Vec, radius: float, texture: Texture, /)"]
     #[repr="Disc({}, {}, {})"]
     #[str="<Disc object at {} with normal {} and radius {}>"]
     Disc {
@@ -148,7 +148,7 @@ dvp! {
         radius: f64 (radius),
     };
 
-    #[sig="(center1, center2, radius, texture, /)"]
+    #[sig="(center1: Vec, center2: Vec, radius: float, texture: Texture, /)"]
     #[repr="Cylinder({}, {}, {})"]
     #[str="<Cylinder object between {} and {} with radius {}>"]
     Cylinder {
@@ -157,7 +157,7 @@ dvp! {
         radius: f64 (radius),
     };
 
-    #[sig="(vertex, direction, angle, begin, end, texture, /)"]
+    #[sig="(vertex: Vec, direction: Vec, angle: float, begin: float, end: float, texture: Texture, /)"]
     #[repr="EmptyCone({}, {}, {}, {}, {})"]
     #[str="<EmptyCone object at {} with direction {}, angle {}, from {} to {}>"]
     EmptyCone {
@@ -168,7 +168,7 @@ dvp! {
         end: f64 (end),
     };
 
-    #[sig="(vertex, direction, angle, begin, end, texture, /)"]
+    #[sig="(vertex: Vec, direction: Vec, angle: float, begin: float, end: float, texture: Texture, /)"]
     #[repr="Cone({}, {}, {}, {}, {})"]
     #[str="<Cone object at {} with direction {}, angle {}, from {} to {}>"]
     Cone{
