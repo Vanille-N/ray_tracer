@@ -22,7 +22,7 @@ pub trait Develop: Send + Sync {
 
 #[pyclass]
 #[derive(Copy, Clone)]
-#[text_signature = "(scale, /)"]
+#[text_signature = "(scale: float, /)"]
 pub struct Axes {
     #[pyo3(get, set)]
     pub scale: f64,
@@ -62,7 +62,7 @@ impl PyObjectProtocol for Axes {
 
 #[pyclass]
 #[derive(Copy, Clone)]
-#[text_signature = "(position, rotation, size)"]
+#[text_signature = "(position: Vec, rotation: float, size: float, /)"
 pub struct Cradle {
     #[pyo3(get, set)]
     pub position: Vec,
@@ -87,25 +87,25 @@ impl Cradle {
         }
     }
 
-    #[text_signature = "($self, /)"]
+    #[text_signature = "($self, /) -> Prebuilt"]
     pub fn build(&self) -> Prebuilt {
         Prebuilt {
             contents: Arc::new(self.clone()),
         }
     }
 
-    #[text_signature = "($self, amount, /)"]
+    #[text_signature = "($self, amount: float, /)"]
     pub fn raise_ball(&mut self, amount: f64) {
         self.amplitude = amount;
         self.time = std::f64::consts::PI / 2.;
     }
 
-    #[text_signature = "($self, dt, /)"]
+    #[text_signature = "($self, dt: float, /)"]
     pub fn tick(&mut self, dt: f64) {
         self.time += dt;
     }
 
-    #[text_signature = "($self, t, /)"]
+    #[text_signature = "($self, t: float, /)"]
     pub fn set_time(&mut self, t: f64) {
         self.time = t;
     }
@@ -151,7 +151,7 @@ impl PyObjectProtocol for Cradle {
 
 #[pyclass]
 #[derive(Copy, Clone)]
-#[text_signature = "(position, rotation, size)"]
+#[text_signature = "(position: Vec, rotation: float, size: float, /)"]
 pub struct Die {
     #[pyo3(get, set)]
     pub position: Vec,
@@ -185,7 +185,7 @@ impl Die {
         }
     }
 
-    #[text_signature = "($self, /)"]
+    #[text_signature = "($self, /) -> Prebuilt"]
     pub fn build(&self) -> Prebuilt {
         Prebuilt {
             contents: Arc::new(self.clone()),
@@ -233,7 +233,7 @@ impl PyObjectProtocol for Die {
 
 #[pyclass]
 #[derive(Clone, Copy)]
-#[text_signature = "(origin, direction, rotation, structure, /)"]
+#[text_signature = "(origin: Vec, direction: float, rotation: float, structure: str, /)"]
 pub struct Molecule {
     pub origin: Vec,
     pub direction: Vec,
@@ -253,7 +253,7 @@ impl Molecule {
         }
     }
 
-    #[text_signature = "($self, /)"]
+    #[text_signature = "($self, /) -> Prebuilt"]
     pub fn build(&self) -> Prebuilt {
         Prebuilt {
             contents: Arc::new(self.clone()),
