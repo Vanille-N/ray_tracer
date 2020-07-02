@@ -16,7 +16,7 @@ impl Prebuilt {
     }
 }
 
-pub trait Develop {
+pub trait Develop: Send + Sync {
     fn develop(&self) -> internal::Composite;
 }
 
@@ -36,9 +36,9 @@ impl Axes {
     }
 
     #[text_signature = "($self, /)"]
-    pub fn build(self) -> Prebuilt {
+    pub fn build(&self) -> Prebuilt {
         Prebuilt {
-            contents: Arc::new(self),
+            contents: Arc::new(self.clone()),
         }
     }
 }
@@ -51,11 +51,11 @@ impl Develop for Axes {
 
 #[pyproto]
 impl PyObjectProtocol for Axes {
-    fn __repr__(self) -> PyResult<String> {
+    fn __repr__(&self) -> PyResult<String> {
         Ok(format!("Axes({})", self.scale))
     }
 
-    fn __str__(self) -> PyResult<String> {
+    fn __str__(&self) -> PyResult<String> {
         Ok(format!("<Axes object with scale {}>", self.scale))
     }
 }
@@ -88,9 +88,9 @@ impl Cradle {
     }
 
     #[text_signature = "($self, /)"]
-    pub fn build(self) -> Prebuilt {
+    pub fn build(&self) -> Prebuilt {
         Prebuilt {
-            contents: Arc::new(self),
+            contents: Arc::new(self.clone()),
         }
     }
 
@@ -136,11 +136,11 @@ impl Develop for Cradle {
 
 #[pyproto]
 impl PyObjectProtocol for Cradle {
-    fn __repr__(self) -> PyResult<String> {
+    fn __repr__(&self) -> PyResult<String> {
         Ok(format!("Cradle({}, {})", repr!(self.position), self.size))
     }
 
-    fn __str__(self) -> PyResult<String> {
+    fn __str__(&self) -> PyResult<String> {
         Ok(format!(
             "<Cradle object at {} with size {}>",
             repr!(self.position),
@@ -186,9 +186,9 @@ impl Die {
     }
 
     #[text_signature = "($self, /)"]
-    pub fn build(self) -> Prebuilt {
+    pub fn build(&self) -> Prebuilt {
         Prebuilt {
-            contents: Arc::new(self),
+            contents: Arc::new(self.clone()),
         }
     }
 }
@@ -209,7 +209,7 @@ impl Develop for Die {
 
 #[pyproto]
 impl PyObjectProtocol for Die {
-    fn __repr__(self) -> PyResult<String> {
+    fn __repr__(&self) -> PyResult<String> {
         Ok(format!(
             "Die({}, {}, {}) with textures [{} {} {}]",
             repr!(self.position),
@@ -221,7 +221,7 @@ impl PyObjectProtocol for Die {
         ))
     }
 
-    fn __str__(self) -> PyResult<String> {
+    fn __str__(&self) -> PyResult<String> {
         Ok(format!(
             "<Die object at {} facing {} ({})>",
             repr!(self.position),
@@ -254,9 +254,9 @@ impl Molecule {
     }
 
     #[text_signature = "($self, /)"]
-    pub fn build(self) -> Prebuilt {
+    pub fn build(&self) -> Prebuilt {
         Prebuilt {
-            contents: Arc::new(self),
+            contents: Arc::new(self.clone()),
         }
     }
 }

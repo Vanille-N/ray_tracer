@@ -5,7 +5,7 @@ use std::fmt;
 use std::sync::Arc;
 use std::vec;
 
-pub trait ToInternal {
+pub trait ToInternal: Send + Sync {
     fn to_internal(&self) -> internal::Primitive;
     fn display(&self) -> String;
 }
