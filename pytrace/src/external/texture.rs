@@ -4,7 +4,7 @@ use pytrace_core::internal;
 use std::vec;
 
 #[pyclass]
-#[text_signature = "(r, g, b, /)"]
+#[text_signature = "(r: float, g: float, b: float, /)"]
 #[derive(Copy, Clone)]
 pub struct RGB {
     pub r: f64,
@@ -43,7 +43,7 @@ macro_rules! color {
         #[pymethods]
         impl RGB {
             #[staticmethod]
-            #[text_signature = "(/)"]
+            #[text_signature = "(/) -> RGB"]
             pub fn $name() -> RGB {
                 RGB {
                     r: $r,
@@ -121,7 +121,7 @@ impl PyObjectProtocol for Texture {
 #[pymethods]
 impl Texture {
     #[staticmethod]
-    #[text_signature = "(color, /)"]
+    #[text_signature = "(color: RGB, /) -> Texture"]
     pub fn lambertian(color: RGB) -> Self {
         Self {
             contents: internal::Texture::Lambertian(color.to_internal()),
@@ -129,7 +129,7 @@ impl Texture {
     }
 
     #[staticmethod]
-    #[text_signature = "(color, fuzzy, /)"]
+    #[text_signature = "(color: RGB, fuzzy: float, /) -> Texture"]
     pub fn metal(color: RGB, fuzzy: f64) -> Self {
         Self {
             contents: internal::Texture::Metal(color.to_internal(), fuzzy),
@@ -137,7 +137,7 @@ impl Texture {
     }
 
     #[staticmethod]
-    #[text_signature = "(color, /)"]
+    #[text_signature = "(color: RGB, /) -> Texture"]
     pub fn light(color: RGB) -> Self {
         Self {
             contents: internal::Texture::Light(color.to_internal()),
@@ -145,7 +145,7 @@ impl Texture {
     }
 
     #[staticmethod]
-    #[text_signature = "(color, index, /)"]
+    #[text_signature = "(color: RGB, index: float, /) -> Texture"]
     pub fn dielectric(color: RGB, index: f64) -> Self {
         Self {
             contents: internal::Texture::Dielectric(color.to_internal(), index),
