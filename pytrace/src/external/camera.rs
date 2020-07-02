@@ -5,7 +5,7 @@ use crate::external::Vec;
 use crate::internal;
 
 #[pyclass]
-#[text_signature = "(x, y, z, /)"]
+#[text_signature = "(x: float, y: float, z: float, /)"]
 #[derive(Clone, Copy)]
 pub struct Camera {
     pub target: internal::Vec3,
@@ -52,7 +52,7 @@ impl Camera {
         }
     }
 
-    #[text_signature = "($self, x, y, z, /)"]
+    #[text_signature = "($self, x: float, y: float, z: float, /)"]
     pub fn set_target(&mut self, x: f64, y: f64, z: f64) {
         self.target = internal::Vec3(x, y, z);
     }
