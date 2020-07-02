@@ -6,7 +6,7 @@ use pytrace_core::internal;
 
 #[pyclass]
 #[derive(Clone, Copy)]
-#[text_signature = "(x, y, z)"]
+#[text_signature = "(x: float, y: float, z: float, /)"]
 pub struct Vec {
     #[pyo3(get, set)]
     pub x: f64,
