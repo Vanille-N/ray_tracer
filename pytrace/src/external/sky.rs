@@ -17,7 +17,7 @@ impl Sky {
         }
     }
 
-    #[text_signature = "(r: float, g: float, b: float, /) -> Sky"]
+    #[text_signature = "(r: float, g: float, b: float, /)"]
     #[staticmethod]
     pub fn uniform(r: f64, g: f64, b: f64) -> Self {
         Self {

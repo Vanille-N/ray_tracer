@@ -62,7 +62,7 @@ impl PyObjectProtocol for Axes {
 
 #[pyclass]
 #[derive(Copy, Clone)]
-#[text_signature = "(position: Vec, rotation: float, size: float, /)"
+#[text_signature = "(position: Vec, rotation: float, size: float, /)"]
 pub struct Cradle {
     #[pyo3(get, set)]
     pub position: Vec,
@@ -87,7 +87,7 @@ impl Cradle {
         }
     }
 
-    #[text_signature = "($self, /) -> Prebuilt"]
+    #[text_signature = "($self, /)"]
     pub fn build(&self) -> Prebuilt {
         Prebuilt {
             contents: Arc::new(self.clone()),
@@ -185,7 +185,7 @@ impl Die {
         }
     }
 
-    #[text_signature = "($self, /) -> Prebuilt"]
+    #[text_signature = "($self, /)"]
     pub fn build(&self) -> Prebuilt {
         Prebuilt {
             contents: Arc::new(self.clone()),
@@ -253,7 +253,7 @@ impl Molecule {
         }
     }
 
-    #[text_signature = "($self, /) -> Prebuilt"]
+    #[text_signature = "($self, /)"]
     pub fn build(&self) -> Prebuilt {
         Prebuilt {
             contents: Arc::new(self.clone()),
